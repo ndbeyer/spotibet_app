@@ -21,7 +21,7 @@ const filterTypes = ['JOINABLE', 'INVALID', 'RUNNING', 'ENDED'];
 const Border = styled.View`
   width: 100%;
   height: 1rem;
-  background-color: $main2;
+  background-color: $background;
 `;
 
 const FilterWrapper = styled.View`
@@ -32,7 +32,7 @@ const FilterWrapper = styled.View`
 `;
 
 const FilterItem = styled(TouchableOpacity)`
-  background-color: ${p => (p.selected ? `$accent` : `$main2`)};
+  background-color: ${p => (p.selected ? `$accent` : `$background`)};
   flex: 1;
   justify-content: center;
   align-items: center;
@@ -92,7 +92,7 @@ const DashboardScreen = () => {
             selected={selected === label}
             // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
             onPress={() => setSelected(label)}>
-            <Text>{label[0] + label.substr(1).toLowerCase()}</Text>
+            <Text label={label[0] + label.substr(1).toLowerCase()}/>
           </FilterItem>
         ))}
       </FilterWrapper>

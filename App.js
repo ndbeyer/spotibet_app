@@ -15,8 +15,8 @@ const theme = {
   rem: 4,
   colors: {
     main: 'black',
-    main2: '#001708',
-    main3: '#002e0f',
+    main2: 'blue',
+    main3: 'green',
     second: 'grey',
     background: 'white',
     accent: '#4169E1', // #4169E1

@@ -12,7 +12,7 @@ const Wrapper = styled.View`
 
 const Loading = () => (
   <Wrapper>
-    <Text>Loading...</Text>
+    <Text label="Loading..."/>
   </Wrapper>
 );
 

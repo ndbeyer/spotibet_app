@@ -20,10 +20,10 @@ const ArtistRow = ({image, name, popularity, followers, monthlyListeners}) => {
       <Row>
         <Image source={image ? {uri: image} : {uri: undefined}} />
         <TextBox>
-          <Text>{name}</Text>
-          <Text>Popularity: {popularity}</Text>
-          <Text>Followers: {followers}</Text>
-          <Text>Monthly listeners: {monthlyListeners}</Text>
+         <Text label={name}/>
+            <Text label={`Popularity: ${popularity}`}/>
+          <Text label={`Followers: ${followers}`}/>
+          <Text label={`Monthly listeners:: ${followers}`}/>
         </TextBox>
       </Row>
 
