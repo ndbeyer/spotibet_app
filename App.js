@@ -2,28 +2,30 @@
 //@flow
 
 // external
-import client from './util/client';
-import React from 'react';
-import {ThemeProvider} from 'styled-native-components';
-import {ApolloProvider} from '@apollo/react-hooks';
+import client from "./util/client";
+import React from "react";
+import { ThemeProvider } from "styled-native-components";
+import { ApolloProvider } from "@apollo/react-hooks";
 
 // componennts
-import Navigator from './screens/Navigator';
-import NavigationService from './util/NavigationService';
+import Navigator from "./screens/Navigator";
+import NavigationService from "./util/NavigationService";
 
 const theme = {
   rem: 4,
   colors: {
-    main: 'black',
-    main2: 'blue',
-    main3: 'green',
-    second: 'grey',
-    background: 'white',
-    accent: '#4169E1', // #4169E1
+    main: "black",
+    main2: "blue",
+    main3: "green",
+    second: "grey",
+    neutral: "grey",
+    overlayText: "white",
+    background: "white",
+    accent: "#4169E1", // #4169E1
   },
-  elevation: value => ({
-    shadowColor: 'black',
-    shadowOffset: {width: 0, height: value},
+  elevation: (value) => ({
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: value },
     shadowRadius: value * 2.5,
     shadowOpacity: 0.3,
     elevation: value,
@@ -32,13 +34,11 @@ const theme = {
 };
 
 const App = () => {
-  
-
-  const setRef = React.useCallback(navigatorRef => {
+  const setRef = React.useCallback((navigatorRef) => {
     NavigationService.setTopLevelNavigator(navigatorRef);
   }, []);
 
-  const screenProps = React.useMemo(() => ({theme}), []);
+  const screenProps = React.useMemo(() => ({ theme }), []);
 
   return (
     <ApolloProvider client={client}>

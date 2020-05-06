@@ -1,14 +1,14 @@
 //@format
 //@flow
 
-import React from 'react';
-import styled, {useTheme} from 'styled-native-components';
-import Slider from '@react-native-community/slider';
-import {debounce} from 'lodash';
-import {format, addDays} from 'date-fns';
-import {getStartOfNthDay} from '../util/dateHelpers';
+import React from "react";
+import styled, { useTheme } from "styled-native-components";
+import Slider from "@react-native-community/slider";
+import { debounce } from "lodash";
+import { format, addDays } from "date-fns";
+import { getStartOfNthDay } from "../util/dateHelpers";
 
-import Text from './Text';
+import Text from "./Text";
 
 const Row = styled.View`
   flex-direction: row;
@@ -41,34 +41,34 @@ const GeneralSlider = ({
   const theme = useTheme();
   const [sliderVal, setSliderVal] = React.useState(initialValue);
   const handleSliderChange = debounce(
-    React.useCallback(newSliderVal => {
+    React.useCallback((newSliderVal) => {
       setSliderVal(newSliderVal);
     }, []),
-    delay,
+    delay
   );
 
   React.useEffect(() => {
     switch (type) {
-      case 'LISTENERS':
+      case "LISTENERS":
         if (!monthlyListeners) {
           console.log(
-            "Slider: type is 'LISTENERS' but monthlyListeners is falsy",
+            "Slider: type is 'LISTENERS' but monthlyListeners is falsy"
           );
           return;
         }
         onChange({
           listeners: Math.floor(
-            monthlyListeners + (sliderVal / 100) * monthlyListeners,
+            monthlyListeners + (sliderVal / 100) * monthlyListeners
           ),
         });
         break;
-      case 'DATE':
+      case "DATE":
         onChange({
           endDate: addDays(getStartOfNthDay(3), sliderVal).toISOString(),
         });
         break;
-      case 'AMOUNT':
-        onChange({amount: sliderVal});
+      case "AMOUNT":
+        onChange({ amount: sliderVal });
         break;
       default:
         break;
@@ -77,35 +77,35 @@ const GeneralSlider = ({
 
   const renderText = React.useCallback(() => {
     switch (type) {
-      case 'LISTENERS':
+      case "LISTENERS":
         return (
           <>
             <Text>
-              {sliderVal}%{' '}
-              {sliderVal === 0 ? null : sliderVal > 0 ? 'increase' : 'decrease'}
+              {sliderVal}%{" "}
+              {sliderVal === 0 ? null : sliderVal > 0 ? "increase" : "decrease"}
             </Text>
             <Text>
-              {sliderVal === 0 ? '=' : sliderVal > 0 ? '>' : '<'}
+              {sliderVal === 0 ? "=" : sliderVal > 0 ? ">" : "<"}
               {Math.floor(
-                monthlyListeners + (sliderVal / 100) * monthlyListeners,
-              )}{' '}
+                monthlyListeners + (sliderVal / 100) * monthlyListeners
+              )}{" "}
               Monthly Listeners
             </Text>
           </>
         );
-      case 'DATE':
+      case "DATE":
         return (
           <>
             <Text>in {sliderVal + 3} days</Text>
             <Text>
               {format(
                 addDays(getStartOfNthDay(3), sliderVal),
-                'dd.MM.yyyy HH:mm:ss',
+                "dd.MM.yyyy HH:mm:ss"
               )}
             </Text>
           </>
         );
-      case 'AMOUNT':
+      case "AMOUNT":
         return (
           <>
             <Text>
