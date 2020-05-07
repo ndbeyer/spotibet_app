@@ -4,10 +4,9 @@
 import React from "react";
 import { Switch } from "react-native";
 import styled from "styled-native-components";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import { useNavigation } from "react-navigation-hooks";
-import { NavigationActions, StackActions } from "react-navigation";
+import { useNavigation, useNavigationParam } from "react-navigation-hooks";
 
 import Loading from "../components/Loading";
 import Screen from "../components/Screen";
@@ -19,64 +18,16 @@ import Row from "../components/Row";
 import Text from "../components/Text";
 import BetCard from "../components/BetCard";
 
+import { useBet } from "../state/bet";
+import { useUser } from "../state/user";
+
 const JoinBetScreen = () => {
   console.log("JoinBetScreen");
   const navigation = useNavigation();
+  const betId = useNavigationParam("betId");
 
-  const {
-    loading: queryLoading,
-    data: queryData,
-    error: queryError,
-  } = useQuery(
-    gql`
-      query bet($id: ID!) {
-        bet(id: $id) {
-          id
-          artistId
-          listeners
-          type
-          startDate
-          endDate
-          quote
-          currentUserAmount
-          currentUserSupports
-          status
-          listenersAtEndDate
-          artist {
-            id
-            name
-            image
-            popularity
-            followers
-            spotifyUrl
-            monthlyListeners
-          }
-        }
-        currentUser {
-          id
-          money
-        }
-      }
-    `,
-    {
-      variables: {
-        id: navigation.state.params.betId,
-      },
-    }
-  );
-
-  console.log(
-    "JoinBet data",
-    queryData,
-    "\nerror",
-    queryError,
-    "\nloading",
-    queryLoading
-  );
-
-  const { bet, currentUser } = queryData || {};
-  const { id } = bet || {};
-  const { money } = currentUser || {};
+  const bet = useBet(betId);
+  const currentUser = useUser();
 
   const [state, setState] = React.useState({
     amount: null,
@@ -110,7 +61,7 @@ const JoinBetScreen = () => {
     if (state.amount > 0) {
       joinBet({
         variables: {
-          betId: id,
+          betId: bet?.id,
           support: state.support,
           amount: state.amount,
         },
@@ -118,26 +69,17 @@ const JoinBetScreen = () => {
     } else {
       console.log("Error, inputs are missing");
     }
-  }, [joinBet, id, state]);
-
-  const resetAction = React.useMemo(() => {
-    return StackActions.reset({
-      index: 0,
-      actions: [NavigationActions.navigate({ routeName: "Playlists" })],
-    });
-  }, []);
+  }, [state.amount, state.support, joinBet, bet]);
 
   React.useEffect(() => {
     if (mutationData && mutationData.joinBet && mutationData.joinBet.success) {
-      (async () => {
-        navigation.dispatch(resetAction);
-      })();
+      navigation.replace("Playlists");
     }
-  }, [mutationData, navigation, resetAction]);
+  }, [mutationData, navigation]);
 
   return (
     <Screen>
-      {queryLoading ? (
+      {!bet ? (
         <Loading />
       ) : (
         <Scroll>
@@ -148,9 +90,9 @@ const JoinBetScreen = () => {
               initialValue={0}
               step={1}
               minSliderVal={0}
-              maxSliderVal={money}
+              maxSliderVal={currentUser?.money}
               onChange={handleChange}
-              money={money}
+              money={currentUser?.money}
             />
             <Row margin="2rem 0rem 3rem 0rem">
               <Switch
