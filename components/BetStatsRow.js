@@ -5,7 +5,7 @@ import React from "react";
 import styled from "styled-native-components";
 
 import Text from "./Text";
-import BetTimer from "../util/BetTimer";
+import { format } from "date-fns";
 
 const TextBox = styled.View`
   flex: 1;
@@ -22,16 +22,12 @@ const BetStatsRow = ({
   endDate,
   currentUserAmount,
 }) => {
-  console.log({
-    startDate,
-    endDate,
-  });
-
-  const betTimer = React.useMemo(() => new BetTimer(), []);
-
+  console.log({ startDate, endDate });
   return (
     <TextBox>
-      <Text label={`Started ${betTimer.formatter(startDate, "format")}`} />
+      <Text
+        label={`Started ${format(new Date(startDate), "dd.MM.yyyy HH:mm:ss")}`}
+      />
       <Text label={`Quote: ${quote}`} />
       <Text
         label={`That the artist: ${
@@ -39,7 +35,9 @@ const BetStatsRow = ({
         }`}
       />
       <Text label={listeners} />
-      <Text label={`Ending ${betTimer.formatter(endDate, "format")}`} />
+      <Text
+        label={`Ending ${format(new Date(endDate), "dd.MM.yyyy HH:mm:ss")}`}
+      />
       {currentUserAmount ? (
         <Text label={`You joined this bet with: ${currentUserAmount}`} />
       ) : null}

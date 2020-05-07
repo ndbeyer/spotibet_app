@@ -26,7 +26,6 @@ export class BetTimer {
       this.startWeek + this.minimumRunTimeWeeks + this.additionalRunTimeWeeks;
   }
   formatter(ms, type) {
-    ms = typeof ms === "string" ? parseInt(ms) : ms;
     switch (type) {
       case "format":
         if (!ms) return "Invalid";

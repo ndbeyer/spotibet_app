@@ -17,6 +17,7 @@ import ArtistRow from "../components/ArtistRow";
 import OpenBet from "../components/OpenBet";
 
 const ArtistScreen = () => {
+  console.log("ArtistScreen");
   const navigation = useNavigation();
 
   // query

@@ -6,7 +6,7 @@ import styled from "styled-native-components";
 
 import CardWrapper from "../components/CardWrapper";
 import Text from "../components/Text";
-import BetTimer from "../util/BetTimer";
+import { format } from "date-fns";
 
 const RowWrapper = styled.View`
   flex-direction: row;
@@ -15,12 +15,11 @@ const RowWrapper = styled.View`
 `;
 
 const TransactionCard = ({ id, type, amount, betId, datetime }) => {
-  const betTimer = React.useMemo(() => new BetTimer(), []);
   return (
     <>
       <CardWrapper>
         <RowWrapper>
-          <Text label={`${betTimer.formatter(datetime, "format")}`} />
+          <Text label={format(new Date(datetime), "dd.MM.yyyy HH:mm:ss")} />
           <Text label={type === "MINUS" ? "-" : "+"} />
           <Text label={amount} />
         </RowWrapper>
