@@ -18,14 +18,13 @@ import Row from "../components/Row";
 import Text from "../components/Text";
 import BetCard from "../components/BetCard";
 
-import { useBet } from "../state/bet";
+import { useBet, joinBet } from "../state/bet";
 import { useUser } from "../state/user";
 
 const JoinBetScreen = () => {
   console.log("JoinBetScreen");
   const navigation = useNavigation();
   const betId = useNavigationParam("betId");
-
   const bet = useBet(betId);
   const currentUser = useUser();
 
@@ -34,48 +33,30 @@ const JoinBetScreen = () => {
     support: true,
   });
 
+  const [loading, setLoading] = React.useState(false);
+
   const handleChange = React.useCallback((obj) => {
     setState((before) => ({ ...before, ...obj }));
   }, []);
 
-  const [
-    joinBet,
-    { data: mutationData, loading: mutationLoading },
-  ] = useMutation(
-    gql`
-      mutation joinBet($betId: ID!, $support: Boolean!, $amount: Int!) {
-        joinBet(betId: $betId, support: $support, amount: $amount) {
-          success
-        }
-      }
-    `,
-    {
-      refetchQueries: ["header", "dashboard", "transaction"],
-      // update(cache, {data}) {
-      //   console.log('data', data);
-      // },
-    }
-  );
-
-  const handleSubmit = React.useCallback(() => {
+  const handleSubmit = React.useCallback(async () => {
     if (state.amount > 0) {
-      joinBet({
-        variables: {
-          betId: bet?.id,
-          support: state.support,
-          amount: state.amount,
-        },
+      setLoading(true);
+      const { success, error } = await joinBet({
+        betId: bet?.id,
+        support: state.support,
+        amount: state.amount,
       });
+      setLoading(false);
+      if (success) {
+        navigation.replace("Playlists");
+      } else {
+        console.log("error", error);
+      }
     } else {
-      console.log("Error, inputs are missing");
+      console.log("not enough money");
     }
-  }, [state.amount, state.support, joinBet, bet]);
-
-  React.useEffect(() => {
-    if (mutationData && mutationData.joinBet && mutationData.joinBet.success) {
-      navigation.replace("Playlists");
-    }
-  }, [mutationData, navigation]);
+  }, [state.amount, state.support, bet, navigation]);
 
   return (
     <Screen>
@@ -112,10 +93,10 @@ const JoinBetScreen = () => {
             </Row>
             <Row margin="0rem 0rem 2rem 0rem">
               <Button
-                loading={mutationLoading}
+                loading={loading}
                 onPress={handleSubmit}
                 label="Sumbit"
-                disabled={state.amount === 0 || Boolean(mutationData)}
+                disabled={state.amount === 0}
               />
             </Row>
           </CardWrapper>
