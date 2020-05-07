@@ -6,7 +6,7 @@ import styled from "styled-native-components";
 
 import CardWrapper from "../components/CardWrapper";
 import Text from "../components/Text";
-import { BetTimer } from "../util/dateHelpers";
+import BetTimer from "../util/BetTimer";
 
 const RowWrapper = styled.View`
   flex-direction: row;

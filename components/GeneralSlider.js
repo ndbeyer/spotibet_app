@@ -5,7 +5,8 @@ import React from "react";
 import styled, { useTheme } from "styled-native-components";
 import Slider from "@react-native-community/slider";
 import { debounce } from "lodash";
-import { BetTimer, formatWeeks } from "../util/dateHelpers";
+import { formatWeeks } from "../util/dateHelpers";
+import BetTimer from "../util/BetTimer";
 
 import Text from "./Text";
 
