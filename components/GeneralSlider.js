@@ -5,8 +5,7 @@ import React from "react";
 import styled, { useTheme } from "styled-native-components";
 import Slider from "@react-native-community/slider";
 import { debounce } from "lodash";
-import { format, addDays } from "date-fns";
-import { getStartOfNthDay } from "../util/dateHelpers";
+import { BetTimer, formatWeeks } from "../util/dateHelpers";
 
 import Text from "./Text";
 
@@ -47,6 +46,8 @@ const GeneralSlider = ({
     delay
   );
 
+  const betTimer = React.useMemo(() => new BetTimer(0, sliderVal), [sliderVal]);
+
   React.useEffect(() => {
     switch (type) {
       case "LISTENERS":
@@ -64,7 +65,7 @@ const GeneralSlider = ({
         break;
       case "DATE":
         onChange({
-          endDate: addDays(getStartOfNthDay(3), sliderVal).toISOString(),
+          endDate: betTimer.ends("iso"),
         });
         break;
       case "AMOUNT":
@@ -73,7 +74,7 @@ const GeneralSlider = ({
       default:
         break;
     }
-  }, [monthlyListeners, sliderVal, onChange, type]);
+  }, [monthlyListeners, sliderVal, onChange, type, betTimer]);
 
   const renderText = React.useCallback(() => {
     switch (type) {
@@ -93,18 +94,14 @@ const GeneralSlider = ({
             </Text>
           </>
         );
-      case "DATE":
+      case "DATE": {
         return (
           <>
-            <Text>in {sliderVal + 3} days</Text>
-            <Text>
-              {format(
-                addDays(getStartOfNthDay(3), sliderVal),
-                "dd.MM.yyyy HH:mm:ss"
-              )}
-            </Text>
+            <Text label={formatWeeks(sliderVal)} />
+            <Text label={new BetTimer(0, sliderVal).ends("format")} />
           </>
         );
+      }
       case "AMOUNT":
         return (
           <>

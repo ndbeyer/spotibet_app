@@ -1,26 +1,30 @@
 //@format
 //@flow
 
-import React from 'react';
-import {useQuery, useMutation} from '@apollo/react-hooks';
-import {gql} from 'apollo-boost';
-import {useNavigation} from 'react-navigation-hooks';
+import React from "react";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { gql } from "apollo-boost";
+import { useNavigation } from "react-navigation-hooks";
 
-import Loading from '../components/Loading';
-import Screen from '../components/Screen';
-import Scroll from '../components/Scroll';
-import Button from '../components/Button';
-import GeneralSlider from '../components/GeneralSlider';
-import CardWrapper from '../components/CardWrapper';
-import Row from '../components/Row';
-import ArtistRow from '../components/ArtistRow';
-import OpenBet from '../components/OpenBet';
+import Loading from "../components/Loading";
+import Screen from "../components/Screen";
+import Scroll from "../components/Scroll";
+import Button from "../components/Button";
+import GeneralSlider from "../components/GeneralSlider";
+import CardWrapper from "../components/CardWrapper";
+import Row from "../components/Row";
+import ArtistRow from "../components/ArtistRow";
+import OpenBet from "../components/OpenBet";
 
 const ArtistScreen = () => {
   const navigation = useNavigation();
 
   // query
-  const {loading: queryLoading, data: queryData, error: queryError} = useQuery(
+  const {
+    loading: queryLoading,
+    data: queryData,
+    error: queryError,
+  } = useQuery(
     gql`
       query artist($id: ID!) {
         artist(id: $id) {
@@ -47,20 +51,20 @@ const ArtistScreen = () => {
       variables: {
         id: navigation.state.params.artistId,
       },
-    },
+    }
   );
 
   console.log(
-    'Artist: data',
+    "Artist: data",
     queryData,
-    '\n loading',
+    "\n loading",
     queryLoading,
-    '\n error',
-    queryError,
+    "\n error",
+    queryError
   );
 
-  const {artist} = queryData || {};
-  const {id, spotifyUrl, monthlyListeners, onPress, joinableBets, name} =
+  const { artist } = queryData || {};
+  const { id, spotifyUrl, monthlyListeners, onPress, joinableBets, name } =
     artist || {};
 
   // state
@@ -69,14 +73,14 @@ const ArtistScreen = () => {
     endDate: null,
   });
 
-  const handleChange = React.useCallback(obj => {
-    setState(before => ({...before, ...obj}));
+  const handleChange = React.useCallback((obj) => {
+    setState((before) => ({ ...before, ...obj }));
   }, []);
 
   // mutation
   const [
     createBet,
-    {data: mutationData, loading: mutationLoading},
+    { data: mutationData, loading: mutationLoading },
   ] = useMutation(
     gql`
       mutation createBet(
@@ -103,8 +107,8 @@ const ArtistScreen = () => {
       }
     `,
     {
-      refetchQueries: ['artist'],
-    },
+      refetchQueries: ["artist"],
+    }
   );
 
   const handleSubmit = React.useCallback(() => {
@@ -113,14 +117,14 @@ const ArtistScreen = () => {
         variables: {
           artistId: id,
           artistName: name,
-          type: state.listeners > monthlyListeners ? 'HIGHER' : 'LOWER',
+          type: state.listeners > monthlyListeners ? "HIGHER" : "LOWER",
           listeners: state.listeners,
           endDate: state.endDate,
           spotifyUrl,
         },
       });
     } else {
-      console.log('Error, inputs are missing');
+      console.log("Error, inputs are missing");
     }
   }, [createBet, id, state, monthlyListeners, spotifyUrl, name]);
 
@@ -131,7 +135,9 @@ const ArtistScreen = () => {
       mutationData.createBet.success
     ) {
       (async () => {
-        navigation.navigate('JoinBet', {betId: mutationData.createBet.bet.id});
+        navigation.navigate("JoinBet", {
+          betId: mutationData.createBet.bet.id,
+        });
       })();
     }
   }, [mutationData, navigation]);
@@ -175,7 +181,7 @@ const ArtistScreen = () => {
             </>
           </CardWrapper>
           {joinableBets
-            ? joinableBets.map(bet => <OpenBet key={bet.id} {...bet} />)
+            ? joinableBets.map((bet) => <OpenBet key={bet.id} {...bet} />)
             : null}
         </Scroll>
       )}

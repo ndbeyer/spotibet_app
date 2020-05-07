@@ -1,5 +1,4 @@
 export default {
-    delaySplashScreen: true,
-    showBuildingScreen: true,
-}
-
+  delaySplashScreen: false,
+  showBuildingScreen: true,
+};

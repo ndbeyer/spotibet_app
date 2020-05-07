@@ -60,3 +60,4 @@ buck-out/
 
 consts.js
 dev.js
+dev.config.js

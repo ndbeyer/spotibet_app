@@ -1,43 +1,60 @@
-import {format} from 'date-fns';
+import { format } from "date-fns";
 
-export const formatMilliSeconds = ms => {
-  return format(new Date(new Date(Number(ms)) + ' UTC'), 'dd.MM.yyyy HH:mm:ss');
+export const formatWeeks = (nWeeks) => {
+  if (nWeeks === 0) return "As soon as possible";
+  if (nWeeks < 4) return `In ${nWeeks} weeks`;
+  if (nWeeks >= 4 && nWeeks % 4)
+    return `In ${Math.floor(nWeeks / 4)} months and ${nWeeks % 4} weeks`;
+  if (nWeeks >= 4 && !(nWeeks % 4))
+    return `In ${Math.floor(nWeeks / 4)} months`;
 };
 
-export const getStartOfNthDay = n => {
-  const msPerDay = 1000 * 60 * 60 * 24;
-  const startOfDay = (Math.floor(Date.now() / msPerDay) + n) * msPerDay;
-  const nextLocalDateTime = new Date(startOfDay);
-  return nextLocalDateTime;
-};
-
-export class Bet {
-  constructor(obj = {start: 0, end: 1}) {
+export class BetTimer {
+  constructor(additionalJoinTimeWeeks = 0, additionalRunTimeWeeks = 0) {
+    this.minimumJoinTimeWeeks = 2;
+    this.minimumRunTimeWeeks = 1;
+    this.secondsPerWeek = 7 * 24 * 60 * 60 * 1000;
     this.now = Date.now();
-    this.start = typeof obj.start === 'number' ? Math.floor(obj.start) : 0;
-    this.end = typeof obj.end === 'number' ? Math.floor(obj.end) : 1;
+    this.additionalJoinTimeWeeks = additionalJoinTimeWeeks;
+    this.additionalRunTimeWeeks = additionalRunTimeWeeks;
+    this.currentWeek = Math.floor(this.now / this.secondsPerWeek);
+    this.startWeek =
+      this.currentWeek +
+      this.minimumJoinTimeWeeks +
+      this.additionalJoinTimeWeeks;
+    this.endWeek =
+      this.startWeek + this.minimumRunTimeWeeks + this.additionalRunTimeWeeks;
   }
-  secondsPerWeek() {
-    return 7 * 24 * 60 * 60 * 1000;
+  formatter(ms, type) {
+    switch (type) {
+      case "format":
+        if (!ms) return "Invalid";
+        return format(new Date(ms), "dd.MM.yyyy HH:mm:ss");
+      case "iso":
+        return new Date(ms).toISOString();
+      case "object":
+        return new Date(ms);
+      default:
+        return ms;
+    }
   }
-  currentWeek() {
-    return Math.floor(this.now / this.secondsPerWeek());
+  starts(type) {
+    return this.formatter(this.startWeek * this.secondsPerWeek, type);
   }
-  nextWeek() {
-    return Math.ceil(this.now / this.secondsPerWeek());
+  ends(type) {
+    return this.formatter(this.endWeek * this.secondsPerWeek, type);
   }
-  startOfNextWeek() {
-    return this.nextWeek() * this.secondsPerWeek();
-  }
-  startOfBet() {
-    return (this.nextWeek() + 1 + this.start) * this.secondsPerWeek();
-  }
-  endOfBet() {
+  validate(endDate) {
+    if (typeof endDate !== "string") {
+      return false;
+    }
+    const startWeek = this.startWeek; // get from validates 2nd argument new Date(startDate).getTime() / this.secondsPerWeek;
+    const endWeek = new Date(endDate).getTime() / this.secondsPerWeek;
     return (
-      (this.nextWeek() + 1 + this.start + this.end) * this.secondsPerWeek()
+      startWeek >= this.currentWeek + this.minimumJoinTimeWeeks &&
+      endWeek >= startWeek + this.minimumRunTimeWeeks &&
+      endWeek % 1 === 0 &&
+      startWeek % 1 === 0
     );
   }
 }
-// const bet = new Bet({start: 1, end: 5})
-// console.log(new Date(bet.startOfBet()))
-// console.log(new Date(bet.endOfBet()))
