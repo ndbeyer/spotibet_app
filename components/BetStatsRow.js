@@ -1,11 +1,11 @@
 //@format
 //@flow
 
-import React from 'react';
-import styled from 'styled-native-components';
-import {formatMilliSeconds} from "../util/dateHelpers"
+import React from "react";
+import styled from "styled-native-components";
 
-import Text from './Text';
+import Text from "./Text";
+import { BetTimer } from "../util/dateHelpers";
 
 const TextBox = styled.View`
   flex: 1;
@@ -22,26 +22,29 @@ const BetStatsRow = ({
   endDate,
   currentUserAmount,
 }) => {
+  const betTimer = React.useMemo(() => new BetTimer(), []);
+
   return (
     <TextBox>
-      <Text>
-        Started{' '}
-        {formatMilliSeconds(startDate)}
-      </Text>
-      <Text>Quote: {quote}</Text>
-      <Text>
-        That the artist {type === 'HIGHER' ? 'exceeds' : 'falls below'}{' '}
-        {listeners}
-      </Text>
-      <Text>
-        Ending:{' '}
-        {formatMilliSeconds(endDate)}
-      </Text>
+      <Text label={`Started ${betTimer.formatter(startDate, "format")}`} />
+      <Text label={`Quote: ${quote}`} />
+      <Text
+        label={`QuThat the artist: ${
+          type === "HIGHER" ? "exceeds" : "falls below"
+        }`}
+      />
+      <Text label={listeners} />
+      <Text
+        label={`QuThat the artist: ${
+          type === "HIGHER" ? "exceeds" : "falls below"
+        }`}
+      />
+      <Text label={`Ending ${betTimer.formatter(endDate, "format")}`} />
       {currentUserAmount ? (
-        <Text>You joined this bet with: {currentUserAmount}</Text>
+        <Text label={`You joined this bet with: ${currentUserAmount}`} />
       ) : null}
     </TextBox>
   );
 };
 
-export default BetStatsRow
+export default BetStatsRow;
