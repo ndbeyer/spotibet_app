@@ -97,7 +97,7 @@ const ArtistScreen = () => {
               </Row>
             </>
           </CardWrapper>
-          {artist.joinableBets.length
+          {artist.joinableBets?.length
             ? artist.joinableBets.map((bet) => (
                 <OpenBet key={bet.id} {...bet} />
               ))

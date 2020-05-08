@@ -4,19 +4,25 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import client from "../util/client";
 
+export const BetInfoFragment = gql`
+  fragment BetInfoFragment on Bet {
+    id
+    currentUserAmount
+    endDate
+    listeners
+    quote
+    startDate
+    type
+  }
+`;
+
 export const useBet = (id: string) => {
   const { data } = useQuery(
     gql`
       query bet($id: ID!) {
         bet(id: $id) {
-          id
+          ...BetInfoFragment
           artistId
-          listeners
-          type
-          startDate
-          endDate
-          quote
-          currentUserAmount
           currentUserSupports
           status
           listenersAtEndDate
@@ -31,6 +37,7 @@ export const useBet = (id: string) => {
           }
         }
       }
+      ${BetInfoFragment}
     `,
     {
       variables: {
@@ -122,16 +129,11 @@ export const createBet = async ({
             spotifyUrl: $spotifyUrl
           ) {
             bet {
-              currentUserAmount
-              endDate
-              id
-              listeners
-              quote
-              startDate
-              type
+              ...BetInfoFragment
             }
           }
         }
+        ${BetInfoFragment}
       `,
       errorPolicy: "all",
       update: (
@@ -147,16 +149,11 @@ export const createBet = async ({
             artist(id: $id) {
               id
               joinableBets {
-                id
-                quote
-                listeners
-                type
-                startDate
-                endDate
-                currentUserAmount
+                ...BetInfoFragment
               }
             }
           }
+          ${BetInfoFragment}
         `;
         const oldData = cache.readQuery({
           query,

@@ -2,7 +2,7 @@
 import React from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-// import client from "../util/client";
+import { BetInfoFragment } from "./bet";
 
 export const useArtistsOfPlaylist = (id) => {
   const { data } = useQuery(
@@ -38,16 +38,11 @@ export const useArtist = (id) => {
           monthlyListeners
           spotifyUrl
           joinableBets {
-            id
-            quote
-            listeners
-            type
-            startDate
-            endDate
-            currentUserAmount
+            ...BetInfoFragment
           }
         }
       }
+      ${BetInfoFragment}
     `,
     {
       variables: {
