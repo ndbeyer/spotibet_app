@@ -25,10 +25,10 @@ export const useBet = (id: string) => {
       query bet($id: ID!) {
         bet(id: $id) {
           ...BetInfoFragment
-          artistId
-          currentUserSupports
-          status
-          listenersAtEndDate
+          # artistId
+          # currentUserSupports
+          # status
+          # listenersAtEndDate
           artist {
             id
             name
@@ -46,6 +46,7 @@ export const useBet = (id: string) => {
       variables: {
         id: id,
       },
+      fetchPolicy: "cache-only",
     }
   );
 
