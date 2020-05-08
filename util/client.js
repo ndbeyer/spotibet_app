@@ -43,9 +43,9 @@ const client = new ApolloClient({
   cache,
   link,
   defaultOptions: {
-    watchQuery: { errorPolicy: "all", fetchPolicy: "cache-and-network" },
-    query: { errorPolicy: "all", fetchPolicy: "cache-and-network" },
-    mutation: { errorPolicy: "all", fetchPolicy: "cache-and-network" },
+    watchQuery: { errorPolicy: "all", fetchPolicy: "cache-first" },
+    query: { errorPolicy: "all", fetchPolicy: "cache-first" },
+    mutation: { errorPolicy: "all", fetchPolicy: "cache-first" },
   },
   dataIdFromObject: (object) => object.id || null,
 });

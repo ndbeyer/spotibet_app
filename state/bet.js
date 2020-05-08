@@ -46,7 +46,6 @@ export const useBet = (id: string) => {
       variables: {
         id: id,
       },
-      fetchPolicy: "cache-only",
     }
   );
 
