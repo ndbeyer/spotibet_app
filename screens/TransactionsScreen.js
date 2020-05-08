@@ -1,18 +1,18 @@
 //@format
 //@flow
 
-import React from 'react';
-import {useQuery} from '@apollo/react-hooks';
-import {gql} from 'apollo-boost';
+import React from "react";
+import { useQuery } from "@apollo/react-hooks";
+import { gql } from "apollo-boost";
 
-import Screen from '../components/Screen';
-import Scroll from '../components/Scroll';
-import Loading from '../components/Loading';
-import EmptyCard from '../components/EmptyCard';
-import TransactionCard from '../components/TransactionCard';
+import Screen from "../components/Screen";
+import Scroll from "../components/Scroll";
+import Loading from "../components/Loading";
+import EmptyCard from "../components/EmptyCard";
+import TransactionCard from "../components/TransactionCard";
 
 const TransactionsScreen = () => {
-  const {loading, data, error, refetch} = useQuery(
+  const { loading, data, error, refetch } = useQuery(
     gql`
       query transaction {
         currentUser {
@@ -26,13 +26,11 @@ const TransactionsScreen = () => {
           }
         }
       }
-    `,
+    `
   );
 
-  const { currentUser } = data || {}
-  const { transactions } = currentUser || {} 
-  
-  console.log("Transactions data", data, "\nerror", error, "\nloading", loading)
+  const { currentUser } = data || {};
+  const { transactions } = currentUser || {};
 
   return (
     <Screen>
@@ -41,7 +39,7 @@ const TransactionsScreen = () => {
       ) : (
         <Scroll onRefresh={refetch}>
           {transactions.length ? (
-            transactions.map(transaction => {
+            transactions.map((transaction) => {
               return <TransactionCard key={transaction.id} {...transaction} />;
             })
           ) : (

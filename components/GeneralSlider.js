@@ -53,9 +53,6 @@ const GeneralSlider = ({
     switch (type) {
       case "LISTENERS":
         if (!monthlyListeners) {
-          console.log(
-            "Slider: type is 'LISTENERS' but monthlyListeners is falsy"
-          );
           return;
         }
         onChange({

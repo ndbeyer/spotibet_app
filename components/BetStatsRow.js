@@ -22,7 +22,6 @@ const BetStatsRow = ({
   endDate,
   currentUserAmount,
 }) => {
-  console.log({ startDate, endDate });
   return (
     <TextBox>
       <Text

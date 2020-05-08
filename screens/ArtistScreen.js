@@ -51,10 +51,10 @@ const ArtistScreen = () => {
           betId: id,
         });
       } else {
-        console.log("createBet error");
+        console.log("createBet error"); // TODO: dialog
       }
     } else {
-      console.log("Error, inputs are missing");
+      console.log("Error, inputs are missing"); // TODO: dialog
     }
   }, [state.listeners, state.endDate, artist, navigation]);
 

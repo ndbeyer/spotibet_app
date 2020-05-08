@@ -51,10 +51,10 @@ const JoinBetScreen = () => {
       if (success) {
         navigation.replace("Playlists");
       } else {
-        console.log("error", error);
+        console.log("error", error); // TODO: dialog
       }
     } else {
-      console.log("not enough money");
+      console.log("not enough money"); // TODO: dialog
     }
   }, [state.amount, state.support, bet, navigation]);
 

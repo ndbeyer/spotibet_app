@@ -1,22 +1,22 @@
 //@format
 //@flow
 
-import React from 'react';
-import {TouchableOpacity} from 'react-native';
-import {useQuery, useMutation} from '@apollo/react-hooks';
-import {gql} from 'apollo-boost';
-import styled from 'styled-native-components';
+import React from "react";
+import { TouchableOpacity } from "react-native";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { gql } from "apollo-boost";
+import styled from "styled-native-components";
 
-import Screen from '../components/Screen';
-import Scroll from '../components/Scroll';
-import Loading from '../components/Loading';
-import EmptyCard from '../components/EmptyCard';
-import BetCard from '../components/BetCard';
-import Text from '../components/Text';
+import Screen from "../components/Screen";
+import Scroll from "../components/Scroll";
+import Loading from "../components/Loading";
+import EmptyCard from "../components/EmptyCard";
+import BetCard from "../components/BetCard";
+import Text from "../components/Text";
 
-import delay from '../util/delay';
+import delay from "../util/delay";
 
-const filterTypes = ['JOINABLE', 'INVALID', 'RUNNING', 'ENDED'];
+const filterTypes = ["JOINABLE", "INVALID", "RUNNING", "ENDED"];
 
 const Border = styled.View`
   width: 100%;
@@ -32,14 +32,14 @@ const FilterWrapper = styled.View`
 `;
 
 const FilterItem = styled(TouchableOpacity)`
-  background-color: ${p => (p.selected ? `$accent` : `$background`)};
+  background-color: ${(p) => (p.selected ? `$accent` : `$background`)};
   flex: 1;
   justify-content: center;
   align-items: center;
 `;
 
 const DashboardScreen = () => {
-  const {loading, error, data, refetch} = useQuery(
+  const { loading, error, data, refetch } = useQuery(
     gql`
       query dashboard {
         currentUser {
@@ -70,10 +70,8 @@ const DashboardScreen = () => {
           }
         }
       }
-    `,
+    `
   );
-
-  console.log('Dashboard data', data, '\nerror', error, '\nloading', loading);
 
   const [selected, setSelected] = React.useState(filterTypes[0]);
 
@@ -81,18 +79,19 @@ const DashboardScreen = () => {
     data &&
     data.currentUser &&
     data.currentUser.bets &&
-    data.currentUser.bets.filter(({status}) => status === selected);
+    data.currentUser.bets.filter(({ status }) => status === selected);
 
   return (
     <Screen>
       <FilterWrapper>
-        {filterTypes.map(label => (
+        {filterTypes.map((label) => (
           <FilterItem
             key={label}
             selected={selected === label}
             // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
-            onPress={() => setSelected(label)}>
-            <Text label={label[0] + label.substr(1).toLowerCase()}/>
+            onPress={() => setSelected(label)}
+          >
+            <Text label={label[0] + label.substr(1).toLowerCase()} />
           </FilterItem>
         ))}
       </FilterWrapper>
@@ -102,7 +101,7 @@ const DashboardScreen = () => {
       ) : (
         <Scroll loading={loading} onRefresh={refetch}>
           {filteredBets.length ? (
-            filteredBets.map(bet => {
+            filteredBets.map((bet) => {
               return <BetCard key={bet.id} {...bet} />;
             })
           ) : (
