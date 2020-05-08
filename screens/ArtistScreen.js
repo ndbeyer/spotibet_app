@@ -2,9 +2,7 @@
 //@flow
 
 import React from "react";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
-import { useNavigation } from "react-navigation-hooks";
+import { useNavigation, useNavigationParam } from "react-navigation-hooks";
 
 import Loading from "../components/Loading";
 import Screen from "../components/Screen";
@@ -16,140 +14,57 @@ import Row from "../components/Row";
 import ArtistRow from "../components/ArtistRow";
 import OpenBet from "../components/OpenBet";
 
+import { useArtist } from "../state/artist";
+import { createBet } from "../state/bet";
+
 const ArtistScreen = () => {
   console.log("ArtistScreen");
   const navigation = useNavigation();
+  const artistId = useNavigationParam("artistId");
+  const artist = useArtist(artistId);
 
-  // query
-  const {
-    loading: queryLoading,
-    data: queryData,
-    error: queryError,
-  } = useQuery(
-    gql`
-      query artist($id: ID!) {
-        artist(id: $id) {
-          id
-          name
-          image
-          popularity
-          followers
-          monthlyListeners
-          spotifyUrl
-          joinableBets {
-            id
-            quote
-            listeners
-            type
-            startDate
-            endDate
-            currentUserAmount
-          }
-        }
-      }
-    `,
-    {
-      variables: {
-        id: navigation.state.params.artistId,
-      },
-    }
-  );
-
-  console.log(
-    "Artist: data",
-    queryData,
-    "\n loading",
-    queryLoading,
-    "\n error",
-    queryError
-  );
-
-  const { artist } = queryData || {};
-  const { id, spotifyUrl, monthlyListeners, onPress, joinableBets, name } =
-    artist || {};
-
-  // state
   const [state, setState] = React.useState({
     listeners: null,
     endDate: null,
   });
 
+  const [loading, setLoading] = React.useState(false);
+
   const handleChange = React.useCallback((obj) => {
     setState((before) => ({ ...before, ...obj }));
   }, []);
 
-  // mutation
-  const [
-    createBet,
-    { data: mutationData, loading: mutationLoading },
-  ] = useMutation(
-    gql`
-      mutation createBet(
-        $artistId: ID!
-        $artistName: String!
-        $type: BetType!
-        $listeners: Int!
-        $endDate: String!
-        $spotifyUrl: String!
-      ) {
-        createBet(
-          artistId: $artistId
-          artistName: $artistName
-          type: $type
-          listeners: $listeners
-          endDate: $endDate
-          spotifyUrl: $spotifyUrl
-        ) {
-          bet {
-            id
-          }
-          success
-        }
-      }
-    `,
-    {
-      refetchQueries: ["artist"],
-    }
-  );
-
-  const handleSubmit = React.useCallback(() => {
-    if (state.listeners !== monthlyListeners && state.endDate) {
-      createBet({
-        variables: {
-          artistId: id,
-          artistName: name,
-          type: state.listeners > monthlyListeners ? "HIGHER" : "LOWER",
-          listeners: state.listeners,
-          endDate: state.endDate,
-          spotifyUrl,
-        },
+  const handleSubmit = React.useCallback(async () => {
+    if (state.listeners !== artist?.monthlyListeners && state.endDate) {
+      setLoading(true);
+      const { success, id } = await createBet({
+        artistId: artist?.id,
+        artistName: artist?.name,
+        type: state.listeners > artist?.monthlyListeners ? "HIGHER" : "LOWER",
+        listeners: state.listeners,
+        endDate: state.endDate,
+        spotifyUrl: artist?.spotifyUrl,
       });
+      setLoading(false);
+      if (success) {
+        navigation.navigate("JoinBet", {
+          betId: id,
+        });
+      } else {
+        console.log("createBet error");
+      }
     } else {
       console.log("Error, inputs are missing");
     }
-  }, [createBet, id, state, monthlyListeners, spotifyUrl, name]);
-
-  React.useEffect(() => {
-    if (
-      mutationData &&
-      mutationData.createBet &&
-      mutationData.createBet.success
-    ) {
-      (async () => {
-        navigation.navigate("JoinBet", {
-          betId: mutationData.createBet.bet.id,
-        });
-      })();
-    }
-  }, [mutationData, navigation]);
+  }, [state.listeners, state.endDate, artist, navigation]);
 
   return (
     <Screen>
-      {queryLoading ? (
+      {!artist ? (
         <Loading />
       ) : (
         <Scroll>
-          <CardWrapper key={id} onPress={onPress}>
+          <CardWrapper key={artist.id}>
             <ArtistRow {...artist} />
             <>
               <GeneralSlider
@@ -159,7 +74,7 @@ const ArtistScreen = () => {
                 minSliderVal={-100}
                 maxSliderVal={100}
                 onChange={handleChange}
-                monthlyListeners={monthlyListeners}
+                monthlyListeners={artist.monthlyListeners}
               />
               <GeneralSlider
                 type="DATE"
@@ -171,18 +86,21 @@ const ArtistScreen = () => {
               />
               <Row>
                 <Button
-                  loading={mutationLoading}
+                  loading={loading}
                   onPress={handleSubmit}
                   label="Sumbit"
                   disabled={
-                    state.listeners === monthlyListeners || !state.endDate
+                    state.listeners === artist.monthlyListeners ||
+                    !state.endDate
                   }
                 />
               </Row>
             </>
           </CardWrapper>
-          {joinableBets
-            ? joinableBets.map((bet) => <OpenBet key={bet.id} {...bet} />)
+          {artist.joinableBets.length
+            ? artist.joinableBets.map((bet) => (
+                <OpenBet key={bet.id} {...bet} />
+              ))
             : null}
         </Scroll>
       )}

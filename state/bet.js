@@ -84,3 +84,66 @@ export const joinBet = async ({
     else throw e;
   }
 };
+
+export const createBet = async ({
+  artistId,
+  artistName,
+  type,
+  listeners,
+  endDate,
+  spotifyUrl,
+}: {
+  artistId: string,
+  artistName: string,
+  type: string,
+  listeners: number,
+  endDate: string,
+  spotifyUrl: string,
+}) => {
+  try {
+    const { errors, data } = await client.mutate({
+      mutation: gql`
+        mutation createBet(
+          $artistId: ID!
+          $artistName: String!
+          $type: BetType!
+          $listeners: Int!
+          $endDate: String!
+          $spotifyUrl: String!
+        ) {
+          createBet(
+            artistId: $artistId
+            artistName: $artistName
+            type: $type
+            listeners: $listeners
+            endDate: $endDate
+            spotifyUrl: $spotifyUrl
+          ) {
+            bet {
+              id
+            }
+            success
+          }
+        }
+      `,
+      refetchQueries: ["artist"],
+      errorPolicy: "all",
+      variables: {
+        artistId,
+        artistName,
+        type,
+        listeners,
+        endDate,
+        spotifyUrl,
+      },
+    });
+    if (errors) {
+      return { success: false, error: errors[0] };
+    } else {
+      return { success: true, id: data?.createBet?.bet?.id };
+    }
+  } catch (e) {
+    if (e.networkError) return { success: false, error: "NETWORK_ERROR" };
+    else throw e;
+  }
+};
