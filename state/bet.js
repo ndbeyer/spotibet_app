@@ -122,7 +122,6 @@ export const createBet = async ({
             bet {
               id
             }
-            success
           }
         }
       `,
