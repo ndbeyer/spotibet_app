@@ -62,7 +62,9 @@ export const joinBet = async ({
       mutation: gql`
         mutation joinBet($betId: ID!, $support: Boolean!, $amount: Int!) {
           joinBet(betId: $betId, support: $support, amount: $amount) {
-            success
+            bet {
+              id
+            }
           }
         }
       `,
