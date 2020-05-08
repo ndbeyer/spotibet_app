@@ -122,13 +122,58 @@ export const createBet = async ({
             spotifyUrl: $spotifyUrl
           ) {
             bet {
+              currentUserAmount
+              endDate
               id
+              listeners
+              quote
+              startDate
+              type
             }
           }
         }
       `,
-      refetchQueries: ["artist"],
       errorPolicy: "all",
+      update: (
+        cache,
+        {
+          data: {
+            createBet: { bet },
+          },
+        }
+      ) => {
+        const query = gql`
+          query artist($id: ID!) {
+            artist(id: $id) {
+              id
+              joinableBets {
+                id
+                quote
+                listeners
+                type
+                startDate
+                endDate
+                currentUserAmount
+              }
+            }
+          }
+        `;
+        const oldData = cache.readQuery({
+          query,
+          variables: {
+            id: artistId,
+          },
+        });
+        const newData = {
+          ...oldData,
+          artist: {
+            ...oldData.artist,
+            joinableBets: [...oldData.artist.joinableBets, bet],
+          },
+        };
+        cache.writeQuery({ query, data: newData });
+        return { success: true, id: data?.createBet?.bet?.id };
+      },
       variables: {
         artistId,
         artistName,
