@@ -13,6 +13,9 @@ export const BetInfoFragment = gql`
     quote
     startDate
     type
+    artist {
+      id
+    }
   }
 `;
 
