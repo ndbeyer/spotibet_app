@@ -1,29 +1,29 @@
 //@format
 //@flow
 
-import React from 'react';
-import 'react-native-gesture-handler';
+import React from "react";
+import "react-native-gesture-handler";
 import {
   createAppContainer,
   createSwitchNavigator,
   ThemeColors,
-} from 'react-navigation';
-import {createStackNavigator} from 'react-navigation-stack';
-import {createBottomTabNavigator} from 'react-navigation-tabs';
+} from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+import { createBottomTabNavigator } from "react-navigation-tabs";
 
-import DashboardScreen from './DashboardScreen';
-import PlaylistScreen from './PlaylistScreen';
-import ArtistsScreen from './ArtistsScreen';
-import ArtistScreen from './ArtistScreen';
-import LoginScreen from './LoginScreen';
-import FailedLogin from './FailedLogin';
-import TransactionsScreen from './TransactionsScreen';
-import JoinBetScreen from './JoinBetScreen';
-import Header from '../components/Header';
-import SplashScreen from './SplashScreen';
-import BuildScreen from './BuildScreen';
+import DashboardScreen from "./DashboardScreen";
+import PlaylistScreen from "./PlaylistScreen";
+import ArtistsOfPlaylistScreen from "./ArtistsOfPlaylistScreen";
+import ArtistScreen from "./ArtistScreen";
+import LoginScreen from "./LoginScreen";
+import FailedLogin from "./FailedLogin";
+import TransactionsScreen from "./TransactionsScreen";
+import JoinBetScreen from "./JoinBetScreen";
+import Header from "../components/Header";
+import SplashScreen from "./SplashScreen";
+import BuildScreen from "./BuildScreen";
 
-import devConfig from "../dev.config"
+import devConfig from "../dev.config";
 
 const Navigator = createAppContainer(
   createSwitchNavigator(
@@ -35,14 +35,14 @@ const Navigator = createAppContainer(
           Create: createStackNavigator(
             {
               Playlists: PlaylistScreen,
-              Artists: ArtistsScreen,
+              Artists: ArtistsOfPlaylistScreen,
               Bet: ArtistScreen,
               JoinBet: JoinBetScreen,
             },
             {
-              initialRouteName: 'Playlists',
-              defaultNavigationOptions: ({navigation, screenProps}) => {
-                const {theme} = screenProps || {};
+              initialRouteName: "Playlists",
+              defaultNavigationOptions: ({ navigation, screenProps }) => {
+                const { theme } = screenProps || {};
                 return {
                   headerTitle: () => <Header navigation={navigation} />,
                   headerStyle: {
@@ -54,34 +54,34 @@ const Navigator = createAppContainer(
                   },
                 };
               },
-            },
+            }
           ),
           Transactions: TransactionsScreen,
-          ...(devConfig.showBuildingScreen ? { Build: BuildScreen } : {})
+          ...(devConfig.showBuildingScreen ? { Build: BuildScreen } : {}),
         },
         {
-          initialRouteName: devConfig.showBuildingScreen ? 'Build' : 'Create',
+          initialRouteName: devConfig.showBuildingScreen ? "Build" : "Create",
           headerStyle: {
-            backgroundColor: '#1ed760',
+            backgroundColor: "#1ed760",
           },
           tabBarOptions: {
-            activeTintColor: 'black',
+            activeTintColor: "black",
             labelStyle: {
               fontSize: 12,
             },
             style: {
-              backgroundColor: 'white',
+              backgroundColor: "white",
             },
           },
-        },
+        }
       ),
       loggedOut: LoginScreen,
       failedLogin: FailedLogin,
     },
     {
-      initialRouteName: 'loggedOut',
-    },
-  ),
+      initialRouteName: "loggedOut",
+    }
+  )
 );
 
 export default Navigator;
