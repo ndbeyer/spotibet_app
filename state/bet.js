@@ -70,12 +70,42 @@ export const joinBet = async ({
         mutation joinBet($betId: ID!, $support: Boolean!, $amount: Int!) {
           joinBet(betId: $betId, support: $support, amount: $amount) {
             bet {
-              id
+              ...BetInfoFragment
             }
           }
         }
+        ${BetInfoFragment}
       `,
-      refetchQueries: ["header", "dashboard", "transaction"],
+      update: (
+        cache,
+        {
+          data: {
+            joinBet: { bet },
+          },
+        }
+      ) => {
+        const query = gql`
+          query currentUser {
+            currentUser {
+              id
+              bets {
+                ...BetInfoFragment
+              }
+            }
+          }
+          ${BetInfoFragment}
+        `;
+        const oldData = cache.readQuery({ query });
+        const newData = {
+          ...oldData,
+          currentUser: {
+            ...oldData.currentUser,
+            bets: [...oldData.currentUser.bets, bet],
+          },
+        };
+        cache.writeQuery({ query, data: newData });
+      },
+      refetchQueries: ["header", "transaction"],
       errorPolicy: "all",
       variables: {
         betId,
@@ -169,7 +199,6 @@ export const createBet = async ({
           },
         };
         cache.writeQuery({ query, data: newData });
-        return { success: true, id: data?.createBet?.bet?.id };
       },
       variables: {
         artistId,

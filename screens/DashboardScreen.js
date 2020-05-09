@@ -15,6 +15,7 @@ import BetCard from "../components/BetCard";
 import Text from "../components/Text";
 
 import { BetInfoFragment } from "../state/bet";
+import { ArtistInfoFragment } from "../state/artist";
 
 const filterTypes = ["JOINABLE", "INVALID", "RUNNING", "ENDED"];
 
@@ -49,18 +50,12 @@ const DashboardScreen = () => {
           bets {
             ...BetInfoFragment
             artist {
-              id
-              name
-              image
-              popularity
-              followers
-              spotifyUrl
-              monthlyListeners
-              id
+              ...ArtistInfoFragment
             }
           }
         }
       }
+      ${ArtistInfoFragment}
       ${BetInfoFragment}
     `
   );
