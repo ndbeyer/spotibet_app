@@ -25,6 +25,17 @@ export const BetInfoFragment = gql`
   }
 `;
 
+export const TransactionInfoFragment = gql`
+  fragment TransactionInfoFragment on Bet {
+    id
+    amount
+    betId
+    userId
+    type
+    datetime
+  }
+`;
+
 export const useBet = (id: string) => {
   const { data } = useQuery(
     gql`
@@ -72,15 +83,19 @@ export const joinBet = async ({
             bet {
               ...BetInfoFragment
             }
+            transaction {
+              ...TransactionInfoFragment
+            }
           }
         }
         ${BetInfoFragment}
+        ${TransactionInfoFragment}
       `,
       update: (
         cache,
         {
           data: {
-            joinBet: { bet },
+            joinBet: { bet, transaction }, // TODO: merge transaction into currentUser.transactions, get amount of transaction and update user.money
           },
         }
       ) => {

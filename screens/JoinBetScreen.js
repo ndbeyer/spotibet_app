@@ -49,7 +49,7 @@ const JoinBetScreen = () => {
       });
       setLoading(false);
       if (success) {
-        navigation.replace("Playlists");
+        navigation.goBack();
       } else {
         console.log("error", error); // TODO: dialog
       }
