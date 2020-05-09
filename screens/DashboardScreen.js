@@ -3,7 +3,7 @@
 
 import React from "react";
 import { TouchableOpacity } from "react-native";
-import { useQuery, useMutation } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import styled from "styled-native-components";
 
@@ -14,7 +14,7 @@ import EmptyCard from "../components/EmptyCard";
 import BetCard from "../components/BetCard";
 import Text from "../components/Text";
 
-import delay from "../util/delay";
+import { BetInfoFragment } from "../state/bet";
 
 const filterTypes = ["JOINABLE", "INVALID", "RUNNING", "ENDED"];
 
@@ -47,17 +47,7 @@ const DashboardScreen = () => {
           spotify_profile_id
           money
           bets {
-            id
-            artistId
-            listeners
-            type
-            startDate
-            endDate
-            quote
-            currentUserAmount
-            currentUserSupports
-            status
-            listenersAtEndDate
+            ...BetInfoFragment
             artist {
               id
               name
@@ -66,10 +56,12 @@ const DashboardScreen = () => {
               followers
               spotifyUrl
               monthlyListeners
+              id
             }
           }
         }
       }
+      ${BetInfoFragment}
     `
   );
 

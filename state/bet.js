@@ -4,15 +4,21 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import client from "../util/client";
 
+import { ArtistInfoFragment } from "../state/artist";
+
 export const BetInfoFragment = gql`
   fragment BetInfoFragment on Bet {
     id
-    currentUserAmount
-    endDate
+    artistId
     listeners
-    quote
-    startDate
     type
+    startDate
+    endDate
+    quote
+    currentUserAmount
+    currentUserSupports
+    status
+    listenersAtEndDate
     artist {
       id
     }
@@ -25,21 +31,12 @@ export const useBet = (id: string) => {
       query bet($id: ID!) {
         bet(id: $id) {
           ...BetInfoFragment
-          # artistId
-          # currentUserSupports
-          # status
-          # listenersAtEndDate
           artist {
-            id
-            name
-            image
-            popularity
-            followers
-            spotifyUrl
-            monthlyListeners
+            ...ArtistInfoFragment
           }
         }
       }
+      ${ArtistInfoFragment}
       ${BetInfoFragment}
     `,
     {
