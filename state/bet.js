@@ -103,6 +103,7 @@ export const joinBet = async ({
           query currentUser {
             currentUser {
               id
+              money
               bets {
                 ...BetInfoFragment
               }
@@ -119,15 +120,15 @@ export const joinBet = async ({
           ...oldData,
           currentUser: {
             ...oldData.currentUser,
+            money: oldData.currentUser.money - transaction.amount,
             ...(oldData.currentUser.bets.some(({ id }) => id === bet.id)
               ? {}
-              : { bets: [...oldData.currentUser.bets, bet] }),
-            transactions: [...oldData.currentUser.transactions, transaction],
+              : { bets: [bet, ...oldData.currentUser.bets] }),
+            transactions: [transaction, ...oldData.currentUser.transactions],
           },
         };
         cache.writeQuery({ query, data: newData });
       },
-      refetchQueries: ["header"],
       errorPolicy: "all",
       variables: {
         betId,
