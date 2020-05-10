@@ -6,12 +6,10 @@ import Screen from "../components/Screen";
 import styled from "styled-native-components";
 import { useNavigation } from "react-navigation-hooks";
 import { Dimensions } from "react-native";
-import { useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
 
 import delay from "../util/delay";
 import devConfig from "../dev.config";
-import { useUser } from "../state/user";
+import { useUser, makeUserBetTransactions } from "../state/user";
 
 const Image = styled.Image`
   resize-mode: contain;
@@ -20,45 +18,35 @@ const Image = styled.Image`
 `;
 
 const SplashScreen = () => {
+  const started = React.useRef(Date.now());
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = Dimensions.get("window");
-  const [state] = React.useState(Date.now());
-
-  // load current user initially
+  const [loading, setLoading] = React.useState(true);
 
   const user = useUser();
 
-  // mutation
-  const [runMutation, { data, loading, error }] = useMutation(
-    gql`
-      mutation makeUserBetTransactions {
-        makeUserBetTransactions {
-          success
-        }
+  React.useEffect(() => {
+    (async () => {
+      const { success } = await makeUserBetTransactions();
+      if (!success) {
+        console.log("makeUserBetTransactions not successful");
+        // TODO: Show error dialog
       }
-    `
-  );
-
-  const { makeUserBetTransactions } = data || {};
-  const { success } = makeUserBetTransactions || {};
-
-  React.useEffect(() => {
-    (async () => {
-      runMutation();
+      setLoading(false);
     })();
-  }, [navigation, runMutation]);
+  }, [navigation]);
 
   React.useEffect(() => {
     (async () => {
-      if (success && user) {
-        const difference = Date.now() - state;
+      if (!loading && user) {
+        const difference = Date.now() - started.current;
         devConfig.delaySplashScreen && difference < 2000
           ? await delay(2000 - difference)
           : null;
         navigation.navigate("app");
       }
     })();
-  }, [success, state, navigation, user]);
+  }, [navigation, user, loading]);
 
   return (
     <Screen>

@@ -119,7 +119,6 @@ export const joinBet = async ({
         };
         cache.writeQuery({ query, data: newData });
       },
-      errorPolicy: "all",
       variables: {
         betId,
         support,

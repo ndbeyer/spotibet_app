@@ -6,6 +6,7 @@
     "android": "react-native run-android",
     "ios": "react-native run-ios --simulator='iPhone 11 Pro'",
     "start": "react-native start",
+    "simulator:ios": "open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/",
     "test": "jest",
     "lint": "eslint .",
     "podinstall": "cd ios && pod install"
