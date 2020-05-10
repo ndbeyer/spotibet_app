@@ -11,6 +11,8 @@ import Loading from "../components/Loading";
 import EmptyCard from "../components/EmptyCard";
 import TransactionCard from "../components/TransactionCard";
 
+import { TransactionInfoFragment } from "../state/bet";
+
 const TransactionsScreen = () => {
   const { loading, data, error, refetch } = useQuery(
     gql`
@@ -18,14 +20,11 @@ const TransactionsScreen = () => {
         currentUser {
           id
           transactions {
-            id
-            type
-            amount
-            betId
-            datetime
+            ...TransactionInfoFragment
           }
         }
       }
+      ${TransactionInfoFragment}
     `
   );
 
@@ -38,7 +37,7 @@ const TransactionsScreen = () => {
         <Loading />
       ) : (
         <Scroll onRefresh={refetch}>
-          {transactions.length ? (
+          {transactions?.length ? (
             transactions.map((transaction) => {
               return <TransactionCard key={transaction.id} {...transaction} />;
             })

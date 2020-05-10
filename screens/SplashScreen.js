@@ -11,6 +11,7 @@ import { gql } from "apollo-boost";
 
 import delay from "../util/delay";
 import devConfig from "../dev.config";
+import { useUser } from "../state/user";
 
 const Image = styled.Image`
   resize-mode: contain;
@@ -22,6 +23,10 @@ const SplashScreen = () => {
   const navigation = useNavigation();
   const { width: SCREEN_WIDTH } = Dimensions.get("window");
   const [state] = React.useState(Date.now());
+
+  // load current user initially
+
+  const user = useUser();
 
   // mutation
   const [runMutation, { data, loading, error }] = useMutation(
@@ -45,7 +50,7 @@ const SplashScreen = () => {
 
   React.useEffect(() => {
     (async () => {
-      if (success) {
+      if (success && user) {
         const difference = Date.now() - state;
         devConfig.delaySplashScreen && difference < 2000
           ? await delay(2000 - difference)
@@ -53,7 +58,7 @@ const SplashScreen = () => {
         navigation.navigate("app");
       }
     })();
-  }, [success, state, navigation]);
+  }, [success, state, navigation, user]);
 
   return (
     <Screen>

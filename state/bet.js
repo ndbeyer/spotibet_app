@@ -26,7 +26,7 @@ export const BetInfoFragment = gql`
 `;
 
 export const TransactionInfoFragment = gql`
-  fragment TransactionInfoFragment on Bet {
+  fragment TransactionInfoFragment on Transaction {
     id
     amount
     betId
@@ -95,7 +95,7 @@ export const joinBet = async ({
         cache,
         {
           data: {
-            joinBet: { bet, transaction }, // TODO: merge transaction into currentUser.transactions, get amount of transaction and update user.money
+            joinBet: { bet, transaction }, // TODO: get amount of transaction and update user.money
           },
         }
       ) => {
@@ -106,21 +106,28 @@ export const joinBet = async ({
               bets {
                 ...BetInfoFragment
               }
+              transactions {
+                ...TransactionInfoFragment
+              }
             }
           }
           ${BetInfoFragment}
+          ${TransactionInfoFragment}
         `;
         const oldData = cache.readQuery({ query });
         const newData = {
           ...oldData,
           currentUser: {
             ...oldData.currentUser,
-            bets: [...oldData.currentUser.bets, bet],
+            ...(oldData.currentUser.bets.some(({ id }) => id === bet.id)
+              ? {}
+              : { bets: [...oldData.currentUser.bets, bet] }),
+            transactions: [...oldData.currentUser.transactions, transaction],
           },
         };
         cache.writeQuery({ query, data: newData });
       },
-      refetchQueries: ["header", "transaction"],
+      refetchQueries: ["header"],
       errorPolicy: "all",
       variables: {
         betId,
