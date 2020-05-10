@@ -2,7 +2,8 @@
 import React from "react";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import { TransactionInfoFragment, BetInfoFragment } from "./bet";
+import { BetInfoFragment } from "./bet";
+import { TransactionInfoFragment } from "./transaction";
 
 export const useUser = () => {
   const { data } = useQuery(

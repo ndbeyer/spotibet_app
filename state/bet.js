@@ -5,6 +5,7 @@ import { gql } from "apollo-boost";
 import client from "../util/client";
 
 import { ArtistInfoFragment } from "../state/artist";
+import { TransactionInfoFragment } from "../state/transaction";
 
 export const BetInfoFragment = gql`
   fragment BetInfoFragment on Bet {
@@ -22,17 +23,6 @@ export const BetInfoFragment = gql`
     artist {
       id
     }
-  }
-`;
-
-export const TransactionInfoFragment = gql`
-  fragment TransactionInfoFragment on Transaction {
-    id
-    amount
-    betId
-    userId
-    type
-    datetime
   }
 `;
 
@@ -95,7 +85,7 @@ export const joinBet = async ({
         cache,
         {
           data: {
-            joinBet: { bet, transaction }, // TODO: get amount of transaction and update user.money
+            joinBet: { bet, transaction },
           },
         }
       ) => {
