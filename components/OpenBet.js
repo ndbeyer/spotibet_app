@@ -9,7 +9,7 @@ import Row from "./Row";
 import Button from "./Button";
 import BetStatsRow from "./BetStatsRow";
 import Text from "./Text";
-import { useNavigation } from "react-navigation-hooks";
+import { useNavigation } from "@react-navigation/native";
 
 // const JoinableTime = ({ startDate }) => {
 //   const [clock, setClock] = React.useState(0);

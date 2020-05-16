@@ -6,7 +6,7 @@ import { Switch } from "react-native";
 import styled from "styled-native-components";
 import { useMutation } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import { useNavigation, useNavigationParam } from "react-navigation-hooks";
+import { useNavigation } from "@react-navigation/native";
 
 import Loading from "../components/Loading";
 import Screen from "../components/Screen";
@@ -21,12 +21,11 @@ import BetCard from "../components/BetCard";
 import { useBet, joinBet } from "../state/bet";
 import { useUser } from "../state/user";
 
-const JoinBetScreen = () => {
-  console.log("JoinBetScreen");
+const JoinBetScreen = ({ route }) => {
   const navigation = useNavigation();
-  const betId = useNavigationParam("betId");
+  const { betId } = route.params;
   const bet = useBet(betId);
-  const currentUser = useUser();
+  const { currentUser } = useUser();
 
   const [state, setState] = React.useState({
     amount: null,

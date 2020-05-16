@@ -1,14 +1,14 @@
 //@format
 //@flow
 
-import React from 'react';
-import {SafeAreaView} from 'react-native';
-import styled from 'styled-native-components';
-import {WebView} from 'react-native-webview';
-import {useNavigation} from 'react-navigation-hooks';
-import {setToken} from '../util/token';
+import React from "react";
+import { SafeAreaView } from "react-native";
+import styled from "styled-native-components";
+import { WebView } from "react-native-webview";
 
-import keys from "../config/keys"
+import { useUser } from "../state/user";
+import { setToken } from "../util/token";
+import keys from "../config/keys";
 
 const Wrapper = styled.View`
   width: 100%;
@@ -30,26 +30,25 @@ class MyWeb extends React.Component {
 }
 
 const LoginScreen = () => {
-  const navigation = useNavigation();
+  const { refetch } = useUser();
 
-  // called when oauth worked correctly
   const handleWebViewMessage = React.useCallback(
-    ({nativeEvent}) => {
-      const {type, payload} = JSON.parse(nativeEvent.data);
+    ({ nativeEvent }) => {
+      const { type, payload } = JSON.parse(nativeEvent.data);
       switch (type) {
-        case 'AUTHENTICATED': {
+        case "AUTHENTICATED": {
           setToken(payload.jwt);
-          navigation.navigate('Splash');
+          refetch();
           break;
         }
-        case 'AUTHENTICATION_FAILED':
-          navigation.navigate('failedLogin');
+        case "AUTHENTICATION_FAILED":
+          console.log("authentication failed"); // TODO: add dialog
           break;
         default:
           return;
       }
     },
-    [navigation],
+    [refetch]
   );
 
   return (

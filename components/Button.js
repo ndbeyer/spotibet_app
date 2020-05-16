@@ -1,8 +1,7 @@
-import React from 'react';
-import {TouchableOpacity} from 'react-native';
-import styled from 'styled-native-components';
+import React from "react";
+import styled from "styled-native-components";
 
-const Wrapper = styled(TouchableOpacity)`
+const Wrapper = styled.TouchableOpacity`
   min-width: 100px;
   height: 30px;
   justify-content: center;
@@ -10,12 +9,8 @@ const Wrapper = styled(TouchableOpacity)`
   border-radius: 1rem;
 `;
 
-// border-width: 1px; 
-//   border-style: solid;
-//   border-color: $main;
-
 const Label = styled.Text`
-  color: ${p => (p.disabled ? p.colorDisabled : p.color)};
+  color: ${(p) => (p.disabled ? p.colorDisabled : p.color)};
 `;
 
 const Button = ({
@@ -23,16 +18,17 @@ const Button = ({
   loading,
   disabled,
   onPress,
-  color = '$accent',
-  colorDisabled = '$second',
+  color = "$accent",
+  colorDisabled = "$second",
 }) => {
   return (
     <Wrapper onPress={onPress} disabled={disabled}>
       <Label
         color={color}
         colorDisabled={colorDisabled}
-        disabled={disabled || loading}>
-        {loading ? '...' : label}
+        disabled={disabled || loading}
+      >
+        {loading ? "..." : label}
       </Label>
     </Wrapper>
   );

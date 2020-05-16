@@ -2,6 +2,7 @@
 //@flow
 
 // external
+import "react-native-gesture-handler";
 import client from "./util/client";
 import React from "react";
 import { ThemeProvider } from "styled-native-components";
@@ -9,7 +10,6 @@ import { ApolloProvider } from "@apollo/react-hooks";
 
 // componennts
 import Navigator from "./screens/Navigator";
-import NavigationService from "./util/NavigationService";
 
 const theme = {
   rem: 4,
@@ -34,16 +34,10 @@ const theme = {
 };
 
 const App = () => {
-  const setRef = React.useCallback((navigatorRef) => {
-    NavigationService.setTopLevelNavigator(navigatorRef);
-  }, []);
-
-  const screenProps = React.useMemo(() => ({ theme }), []);
-
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
-        <Navigator ref={setRef} screenProps={screenProps} />
+        <Navigator />
       </ThemeProvider>
     </ApolloProvider>
   );

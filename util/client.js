@@ -9,7 +9,7 @@ import { ApolloLink } from "apollo-link";
 
 import { getToken } from "./token";
 import keys from "../config/keys";
-import NavigationService from "./NavigationService";
+// import NavigationService from "./NavigationService";
 
 const httpLink = createHttpLink({ uri: keys.apiEndpoint });
 const authLink = new ApolloLink((operation, forward) => {
@@ -22,7 +22,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     const errorCodes = graphQLErrors.map(({ extensions }) => extensions.code);
     if (errorCodes.includes("UNAUTHENTICATED")) {
       console.log("the request was unauthenticated");
-      NavigationService.navigate("loggedOut", { userName: "Lucy" });
+      // NavigationService.navigate("loggedOut", { userName: "Lucy" }); // TODO
     }
   }
   if (networkError) {

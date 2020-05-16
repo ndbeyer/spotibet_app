@@ -2,7 +2,7 @@
 //@flow
 
 import React from "react";
-import { useNavigation, useNavigationParam } from "react-navigation-hooks";
+import { useNavigation } from "@react-navigation/native";
 
 import Loading from "../components/Loading";
 import Screen from "../components/Screen";
@@ -17,10 +17,10 @@ import OpenBet from "../components/OpenBet";
 import { useArtist } from "../state/artist";
 import { createBet } from "../state/bet";
 
-const ArtistScreen = () => {
+const ArtistScreen = ({ route }) => {
   console.log("ArtistScreen");
   const navigation = useNavigation();
-  const artistId = useNavigationParam("artistId");
+  const { artistId } = route.params;
   const artist = useArtist(artistId);
 
   const [state, setState] = React.useState({

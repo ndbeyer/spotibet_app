@@ -8,7 +8,7 @@ import { TransactionInfoFragment } from "./transaction";
 import client from "../util/client";
 
 export const useUser = () => {
-  const { data } = useQuery(
+  const { data, refetch, loading } = useQuery(
     gql`
       query currentUser {
         currentUser {
@@ -28,7 +28,14 @@ export const useUser = () => {
     `
   );
 
-  return React.useMemo(() => data?.currentUser, [data]);
+  return React.useMemo(
+    () => ({
+      currentUser: data?.currentUser,
+      refetch,
+      loading,
+    }),
+    [data, loading, refetch]
+  );
 };
 
 export const makeUserBetTransactions = async () => {

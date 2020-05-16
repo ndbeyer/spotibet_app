@@ -5,7 +5,7 @@ import React from "react";
 import { SafeAreaView } from "react-native";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
-import { useNavigation } from "react-navigation-hooks";
+import { useNavigation } from "@react-navigation/native";
 
 import Loading from "../components/Loading";
 import Card from "../components/Card";
