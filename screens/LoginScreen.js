@@ -4,7 +4,8 @@
 import React from "react";
 import { SafeAreaView } from "react-native";
 import styled from "styled-native-components";
-import { WebView } from "react-native-webview";
+
+import WebViewer from "../components/WebViewer";
 
 import { useUser } from "../state/user";
 import { setToken } from "../util/token";
@@ -14,20 +15,6 @@ const Wrapper = styled.View`
   width: 100%;
   height: 100%;
 `;
-
-class MyWeb extends React.Component {
-  render() {
-    return (
-      <WebView
-        // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
-        source={{
-          uri: this.props.uri,
-        }}
-        onMessage={this.props.onWebViewMessage}
-      />
-    );
-  }
-}
 
 const LoginScreen = () => {
   const { refetch } = useUser();
@@ -54,7 +41,7 @@ const LoginScreen = () => {
   return (
     <SafeAreaView>
       <Wrapper>
-        <MyWeb
+        <WebViewer
           onWebViewMessage={handleWebViewMessage}
           uri={`${keys.apiEndpoint}/auth/spotify`}
         />

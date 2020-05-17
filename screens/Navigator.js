@@ -6,7 +6,6 @@ import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import styled from "styled-native-components";
 
 import SplashScreen from "./SplashScreen";
 import LoginScreen from "./LoginScreen";
@@ -16,26 +15,16 @@ import ArtistsOfPlaylistScreen from "./ArtistsOfPlaylistScreen";
 import ArtistScreen from "./ArtistScreen";
 import TransactionsScreen from "./TransactionsScreen";
 import JoinBetScreen from "./JoinBetScreen";
-import Button from "../components/Button";
-import FailedLogin from "./FailedLogin";
-import BuildScreen from "./BuildScreen";
+import SettingsScreen from "./SettingsScreen";
 
-import { logout, useAppState } from "../state/auth";
+import { useAppState } from "../state/auth";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const headerLeft = () => ({
-  headerLeft: () => <Button onPress={logout} label="Logout" />,
-});
-
 const CreateStack = () => (
   <Stack.Navigator initialRouteName="Playlists">
-    <Stack.Screen
-      name="Playlists"
-      component={PlaylistScreen}
-      options={headerLeft}
-    />
+    <Stack.Screen name="Playlists" component={PlaylistScreen} />
     <Stack.Screen name="Artists" component={ArtistsOfPlaylistScreen} />
     <Stack.Screen name="Artist" component={ArtistScreen} />
     <Stack.Screen name="JoinBet" component={JoinBetScreen} />
@@ -60,6 +49,7 @@ const Navigator = () => {
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
             <Tab.Screen name="Create" component={CreateStack} />
             <Tab.Screen name="Transactions" component={TransactionsScreen} />
+            <Tab.Screen name="Settings" component={SettingsScreen} />
           </Tab.Navigator>
         </>
       ) : appState === "LOADING" ? (
