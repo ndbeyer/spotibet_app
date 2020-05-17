@@ -2,52 +2,35 @@
 //@flow
 
 import React from "react";
-import { SafeAreaView } from "react-native";
 import styled from "styled-native-components";
 
-import WebViewer from "../components/WebViewer";
+import Button from "../components/Button";
 
-import { useUser } from "../state/user";
-import { setToken } from "../util/token";
-import keys from "../config/keys";
+import { authorize } from "react-native-app-auth";
+import { clientId, clientSecret } from "../config/keys";
 
-const Wrapper = styled.View`
-  width: 100%;
-  height: 100%;
-`;
+const config = {
+  clientId,
+  clientSecret,
+  redirectUrl: "com.spotibet:/oauthredirect",
+  scopes: ["user-read-email", "user-read-private"],
+  serviceConfiguration: {
+    authorizationEndpoint: "https://accounts.spotify.com/authorize",
+    tokenEndpoint: "https://accounts.spotify.com/api/token",
+  },
+};
 
 const LoginScreen = () => {
-  const { refetch } = useUser();
+  const handleLogin = React.useCallback(async () => {
+    try {
+      const result = await authorize(config);
+      console.log("result", result);
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
 
-  const handleWebViewMessage = React.useCallback(
-    ({ nativeEvent }) => {
-      const { type, payload } = JSON.parse(nativeEvent.data);
-      switch (type) {
-        case "AUTHENTICATED": {
-          setToken(payload.jwt);
-          refetch();
-          break;
-        }
-        case "AUTHENTICATION_FAILED":
-          console.log("authentication failed"); // TODO: add dialog
-          break;
-        default:
-          return;
-      }
-    },
-    [refetch]
-  );
-
-  return (
-    <SafeAreaView>
-      <Wrapper>
-        <WebViewer
-          onWebViewMessage={handleWebViewMessage}
-          uri={`${keys.apiEndpoint}/auth/spotify`}
-        />
-      </Wrapper>
-    </SafeAreaView>
-  );
+  return <Button onPress={handleLogin} label="Login" />;
 };
 
 export default LoginScreen;

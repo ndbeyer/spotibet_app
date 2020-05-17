@@ -21,7 +21,6 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
     console.log("---graphQLErrors", graphQLErrors);
     const errorCodes = graphQLErrors.map(({ extensions }) => extensions.code);
     if (errorCodes.includes("UNAUTHENTICATED")) {
-      console.log("the request was unauthenticated");
       // NavigationService.navigate("loggedOut", { userName: "Lucy" }); // TODO
     }
   }
@@ -39,6 +38,7 @@ const cache = new InMemoryCache({
     },
   },
 });
+
 const client = new ApolloClient({
   cache,
   link,
@@ -48,6 +48,12 @@ const client = new ApolloClient({
     mutation: { errorPolicy: "all", fetchPolicy: "cache-first" },
   },
   dataIdFromObject: (object) => object.id || null,
+});
+
+cache.writeData({
+  data: {
+    appState: "INITIALIZING",
+  },
 });
 
 export default client;
