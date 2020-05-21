@@ -58,6 +58,5 @@ buck-out/
 # CocoaPods
 /ios/Pods/
 
-consts.js
 dev.js
 dev.config.js
