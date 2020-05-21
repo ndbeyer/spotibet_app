@@ -23,7 +23,9 @@ const config = {
   scopes: ["user-read-email", "user-read-private"],
   serviceConfiguration: {
     authorizationEndpoint: "https://accounts.spotify.com/authorize",
-    tokenEndpoint: __DEV__ ? SPOTIBET_API_DEV : SPOTIBET_API_PROD,
+    tokenEndpoint: __DEV__
+      ? `${SPOTIBET_API_DEV}/auth`
+      : `${SPOTIBET_API_PROD}/auth`,
   },
 };
 
