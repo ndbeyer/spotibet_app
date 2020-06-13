@@ -18,7 +18,7 @@ const config = {
   scopes: ["user-read-email", "user-read-private"],
   serviceConfiguration: {
     authorizationEndpoint: "https://accounts.spotify.com/authorize",
-    tokenEndpoint: `${SPOTIBET_API_ENDPOINT}/auth?os=${Platform.OS}`,
+    tokenEndpoint: `${SPOTIBET_API_ENDPOINT}/get-jwt-for-auth-code?os=${Platform.OS}`,
   },
 };
 
@@ -26,7 +26,8 @@ const LoginScreen = () => {
   const handleLogin = React.useCallback(async () => {
     try {
       const result = await authorize(config);
-      console.log("result", result);
+      const jwt = result?.tokenAdditionalParameters?.jwt;
+      console.log({ jwt });
     } catch (e) {
       console.log(e);
     }
