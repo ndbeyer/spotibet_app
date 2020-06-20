@@ -6,10 +6,7 @@ import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useQuery } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
 
-import SplashScreen from "./SplashScreen";
 import InitializingScreen from "./InitializingScreen";
 import LoginScreen from "./LoginScreen";
 import DashboardScreen from "./DashboardScreen";
@@ -19,6 +16,8 @@ import ArtistScreen from "./ArtistScreen";
 import TransactionsScreen from "./TransactionsScreen";
 import JoinBetScreen from "./JoinBetScreen";
 import SettingsScreen from "./SettingsScreen";
+
+import { useUser } from "../state/user";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -32,16 +31,29 @@ const CreateStack = () => (
   </Stack.Navigator>
 );
 
+const delay = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, ms);
+  });
+
 const useAppState = () => {
-  const { data } = useQuery(
-    gql`
-      query appState {
-        appState
-      }
-    `,
-    { fetchPolicy: "cache-only" }
-  );
-  return React.useMemo(() => data?.appState, [data]);
+  const { currentUser, loading } = useUser();
+
+  const [triedRefresh, setTriedRefresh] = React.useState(false); // TODO: implement refresh
+
+  React.useEffect(() => {
+    (async () => {
+      await delay(2000);
+      // TODO
+      setTriedRefresh(true);
+    })();
+  }, []);
+
+  if (loading || (!loading && !triedRefresh)) return "LOADING";
+  if (currentUser) return "LOGGED_IN";
+  else return "LOGGED_OUT";
 };
 
 const Navigator = () => {
