@@ -7,27 +7,29 @@ import { BetInfoFragment } from "./bet";
 import { TransactionInfoFragment } from "./transaction";
 import client from "../util/client";
 
-export const useUser = () => {
-  const { data, refetch, loading } = useQuery(
-    gql`
-      query currentUser {
-        currentUser {
-          id
-          money
-          spotify_profile_id
-          bets {
-            ...BetInfoFragment
-          }
-          transactions {
-            ...TransactionInfoFragment
-          }
-        }
+const CURRENT_USER_QUERY = gql`
+  query currentUser {
+    currentUser {
+      id
+      money
+      spotify_profile_id
+      bets {
+        ...BetInfoFragment
       }
-      ${TransactionInfoFragment}
-      ${BetInfoFragment}
-    `
-  );
+      transactions {
+        ...TransactionInfoFragment
+      }
+    }
+  }
+  ${TransactionInfoFragment}
+  ${BetInfoFragment}
+`;
 
+export const useUser = () => {
+  const { data, refetch, loading } = useQuery(CURRENT_USER_QUERY, {
+    fetchPolicy: "cache-only",
+  });
+  console.log({ data, refetch, loading });
   return React.useMemo(
     () => ({
       currentUser: data?.currentUser,
@@ -36,6 +38,22 @@ export const useUser = () => {
     }),
     [data, loading, refetch]
   );
+};
+
+export const fetchUser = async () => {
+  try {
+    const { errors } = await client.query({
+      query: CURRENT_USER_QUERY,
+      fetchPolicy: "network-only",
+    });
+    if (errors) {
+      return { success: false, error: errors[0].message };
+    }
+    return { success: true };
+  } catch (e) {
+    if (e.networkError) return { success: false, error: "NETWORK_ERROR" };
+    else throw new Error(e);
+  }
 };
 
 export const makeUserBetTransactions = async () => {
