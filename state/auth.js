@@ -4,22 +4,14 @@ import { gql } from "apollo-boost";
 import { Platform } from "react-native";
 import { authorize } from "react-native-app-auth";
 import SecureStorage from "react-native-secure-storage";
+import RNRestart from "react-native-restart";
 
 import { SPOTIFY_CLIENT_ID, SPOTIBET_API_ENDPOINT } from "../consts";
 import { fetchUser } from "../state/user";
 
-export const logout = () => {
-  setToken(undefined);
-  client.writeQuery({
-    query: gql`
-      query currentUser {
-        currentUser {
-          id
-        }
-      }
-    `,
-    data: { currentUser: null },
-  });
+export const logout = async () => {
+  await SecureStorage.removeItem("refreshToken");
+  RNRestart.Restart();
 };
 
 const config = {

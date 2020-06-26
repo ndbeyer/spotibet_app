@@ -51,10 +51,4 @@ const client = new ApolloClient({
   dataIdFromObject: (object) => object.id || null,
 });
 
-cache.writeData({
-  data: {
-    appState: "INITIALIZING",
-  },
-});
-
 export default client;
