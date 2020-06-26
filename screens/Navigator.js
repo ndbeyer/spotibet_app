@@ -17,7 +17,8 @@ import TransactionsScreen from "./TransactionsScreen";
 import JoinBetScreen from "./JoinBetScreen";
 import SettingsScreen from "./SettingsScreen";
 
-import { useUser } from "../state/user";
+import { useUser, fetchUser } from "../state/user";
+import { refreshLogin } from "../state/auth";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,22 +32,17 @@ const CreateStack = () => (
   </Stack.Navigator>
 );
 
-const delay = (ms) =>
-  new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, ms);
-  });
-
 const useAppState = () => {
   const { currentUser, loading } = useUser();
 
-  const [triedRefresh, setTriedRefresh] = React.useState(false); // TODO: implement refresh
+  const [triedRefresh, setTriedRefresh] = React.useState(false);
 
   React.useEffect(() => {
     (async () => {
-      await delay(2000);
-      // TODO
+      const { success } = await refreshLogin();
+      if (success) {
+        await fetchUser();
+      }
       setTriedRefresh(true);
     })();
   }, []);

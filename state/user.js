@@ -29,7 +29,6 @@ export const useUser = () => {
   const { data, refetch, loading } = useQuery(CURRENT_USER_QUERY, {
     fetchPolicy: "cache-only",
   });
-  console.log({ data, refetch, loading });
   return React.useMemo(
     () => ({
       currentUser: data?.currentUser,
