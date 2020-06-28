@@ -5,7 +5,7 @@ import React from "react";
 import styled from "styled-native-components";
 import CardWrapper from "../components/CardWrapper";
 import ArtistRow from "../components/ArtistRow";
-import Text from "../components/Text";
+import { Paragraph } from "../components/Text";
 import BetStatsRow from "./BetStatsRow";
 
 const Wrapper = styled.View`
@@ -35,7 +35,7 @@ const currentUserWins = (
   }
 };
 
-const TextBox = styled.View`
+const Center = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -60,17 +60,17 @@ const BetResultRow = ({
 
   return (
     <Wrapper>
-      <TextBox>
-        <Text label={`Listeners at the end: ${listenersAtEndDate}`} />
-        <Text>
+      <Center>
+        <Paragraph>{`Listeners at the end: ${listenersAtEndDate}`}</Paragraph>
+        <Paragraph>
           You {currentUserSupports === true ? "supported" : "did not support"}{" "}
-          the bet{" "}
-        </Text>
-        <Text>
+          the bet
+        </Paragraph>
+        <Paragraph>
           You {userWins ? "Win" : "Lost"}{" "}
           {userWins ? `some bugs` : `${currentUserAmount} bugs`}
-        </Text>
-      </TextBox>
+        </Paragraph>
+      </Center>
     </Wrapper>
   );
 };

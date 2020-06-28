@@ -3,13 +3,9 @@
 
 import React from "react";
 import { SafeAreaView } from "react-native";
-import styled from "styled-native-components";
 import { useNavigation } from "@react-navigation/native";
 import Button from "../components/Button";
-
-const Text = styled.Text`
-  color: main;
-`;
+import { Paragraph } from "../components/Text";
 
 const FailedLogin = () => {
   const navigation = useNavigation();
@@ -20,7 +16,7 @@ const FailedLogin = () => {
 
   return (
     <SafeAreaView>
-      <Text>FailedLogin</Text>
+      <Paragraph>FailedLogin</Paragraph>
       <Button onPress={handleRetry} label="Retry" />
     </SafeAreaView>
   );
