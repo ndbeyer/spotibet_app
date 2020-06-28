@@ -8,6 +8,7 @@ import Button from "../components/Button";
 import Screen from "../components/Screen";
 import Scroll from "../components/Scroll";
 import { Label } from "../components/Text";
+import { logout } from "../state/auth";
 
 import { colorDefs } from "../App";
 
@@ -23,22 +24,14 @@ const PlaceHolder = styled.View`
 `;
 
 const SettingsScreen = () => {
-  const [loggingOut, setLoggingOut] = React.useState(false);
-
   const theme = useTheme();
-
   console.log({ theme });
-
   const colors = colorDefs({ accentColor: "#34eb46" });
-
-  React.useEffect(() => {
-    return setLoggingOut(false);
-  }, []);
 
   return (
     <Screen>
       <Scroll>
-        <Button onPress={() => setLoggingOut(true)} label="Logout" />
+        <Button onPress={logout} label="Logout" />
         {Object.entries(colors).map(([key, value]) => {
           return typeof value === "string" ? (
             <PlaceHolder key={key} color={value}>
