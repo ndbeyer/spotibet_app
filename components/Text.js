@@ -9,7 +9,7 @@ const StyledText = styled.Text`
   font-size: 3.5rem;
 `;
 
-const Text = ({ color = "$main", label, children }) => (
+const Text = ({ color = "$accentText0", label, children }) => (
   <StyledText color={color}>{label ? label : children}</StyledText>
 );
 

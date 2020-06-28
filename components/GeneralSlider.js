@@ -123,8 +123,8 @@ const GeneralSlider = ({
           value={sliderVal}
           step={step}
           onValueChange={handleSliderChange}
-          minimumTrackTintColor={theme.colors.accent}
-          maximumTrackTintColor={theme.colors.background1}
+          minimumTrackTintColor={theme.colors.neutral2}
+          maximumTrackTintColor={theme.colors.neutral5}
         />
       </Row>
       <Row>

@@ -10,7 +10,7 @@ const ScreenWrapper = styled.View`
   width: 100%;
   justify-content: center;
   align-items: center;
-  background-color: ${(p) => (p.background ? p.background : "$background")};
+  background-color: ${(p) => (p.background ? p.background : "$background0")};
 `;
 
 const Screen = ({ children, background }) => {

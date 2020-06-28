@@ -18,13 +18,13 @@ const Button = ({
   loading,
   disabled,
   onPress,
-  color = "$accent",
-  colorDisabled = "$second",
+  textColor = "$accentText0",
+  colorDisabled = "$neutral2",
 }) => {
   return (
     <Wrapper onPress={onPress} disabled={disabled}>
       <Label
-        color={color}
+        color={textColor}
         colorDisabled={colorDisabled}
         disabled={disabled || loading}
       >

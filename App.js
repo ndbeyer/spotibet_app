@@ -8,21 +8,14 @@ import React from "react";
 import { ThemeProvider } from "styled-native-components";
 import { ApolloProvider } from "@apollo/react-hooks";
 
+import { colorDefs } from "./util/colors";
+
 // componennts
 import Navigator from "./screens/Navigator";
 
 const theme = {
   rem: 4,
-  colors: {
-    main: "black",
-    main2: "blue",
-    main3: "green",
-    second: "grey",
-    neutral: "grey",
-    overlayText: "white",
-    background: "white",
-    accent: "#4169E1", // #4169E1
-  },
+  colors: colorDefs({ accentColor: "#34eb46" }),
   elevation: (value) => ({
     shadowColor: "black",
     shadowOffset: { width: 0, height: value },
