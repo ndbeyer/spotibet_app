@@ -16,7 +16,7 @@ const UNIT = 8;
 
 export const colorDefs = ({
   accentColor = "#34eb46",
-  gradientStrength = 0,
+  gradientStrength = 20,
 }: {
   accentColor: string,
   gradientStrength: number,
@@ -28,15 +28,15 @@ export const colorDefs = ({
     .set("lch.c", `+${10 + 1000 / accent.get("lch.c")}`);
   if (chroma.deltaE(error, accent) <= 10) error = accent;
 
-  const accentDark = accent.set("lch.l", 7); // a darkened accent color
+  const accentDark = accent.set("lch.l", 7);
 
   const neutrals = chroma
     .scale([accentDark, "white"])
     .correctLightness()
     .colors(6);
 
-  const background1 = accentDark.set("lch.l", 95); // a bright version of the accentColor
-  const background0 = chroma(neutrals[5]); // white in our case
+  const background1 = accentDark.set("lch.l", 95);
+  const background0 = chroma(neutrals[5]);
 
   const makeGradient = (color) => [
     color.set("lch.l", `-${gradientStrength}`).hex(),
