@@ -1,24 +1,12 @@
-import styled from 'styled-native-components';
-import React from 'react';
+import React from "react";
 
-import CardWrapper from './CardWrapper';
-import Text from './Text';
-import Row from './Row';
+import CardWrapper from "./CardWrapper";
+import { Paragraph } from "./Text";
 
-const TextBox = styled.View`
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-`;
-
-const EmptyCard = ({message}) => {
+const EmptyCard = ({ message }) => {
   return (
     <CardWrapper>
-      <Row>
-        <TextBox>
-          <Text>{message}</Text>
-        </TextBox>
-      </Row>
+      <Paragraph align="center">{message}</Paragraph>
     </CardWrapper>
   );
 };

@@ -12,7 +12,7 @@ import Scroll from "../components/Scroll";
 import Loading from "../components/Loading";
 import EmptyCard from "../components/EmptyCard";
 import BetCard from "../components/BetCard";
-import Text from "../components/Text";
+import { Paragraph } from "../components/Text";
 
 import { BetInfoFragment } from "../state/bet";
 import { ArtistInfoFragment } from "../state/artist";
@@ -21,8 +21,8 @@ const filterTypes = ["JOINABLE", "INVALID", "RUNNING", "ENDED"];
 
 const FilterWrapper = styled.View`
   width: 100%;
-  height: 12rem;
-  border-radius: 1rem;
+  height: 6rem;
+  border-radius: 0.5rem;
   flex-direction: row;
 `;
 
@@ -72,11 +72,10 @@ const DashboardScreen = () => {
             // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
             onPress={() => setSelected(label)}
           >
-            <Text label={label[0] + label.substr(1).toLowerCase()} />
+            <Paragraph>{label[0] + label.substr(1).toLowerCase()}</Paragraph>
           </FilterItem>
         ))}
       </FilterWrapper>
-      {/* <Border /> */}
       {loading ? (
         <Loading />
       ) : (

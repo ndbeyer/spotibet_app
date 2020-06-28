@@ -2,10 +2,8 @@
 //@flow
 
 import React from "react";
-import { Switch } from "react-native";
 import styled from "styled-native-components";
-import { useMutation } from "@apollo/react-hooks";
-import { gql } from "apollo-boost";
+import { Switch } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import Loading from "../components/Loading";
@@ -14,12 +12,18 @@ import Scroll from "../components/Scroll";
 import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
 import CardWrapper from "../components/CardWrapper";
-import Row from "../components/Row";
-import Text from "../components/Text";
+import { Label } from "../components/Text";
 import BetCard from "../components/BetCard";
 
 import { useBet, joinBet } from "../state/bet";
 import { useUser } from "../state/user";
+
+const Wrapper = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem;
+`;
 
 const JoinBetScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -74,7 +78,7 @@ const JoinBetScreen = ({ route }) => {
               onChange={handleChange}
               money={currentUser?.money}
             />
-            <Row margin="2rem 0rem 3rem 0rem">
+            <Wrapper margin="2rem 0rem 3rem 0rem">
               <Switch
                 value={state.support}
                 // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
@@ -82,22 +86,22 @@ const JoinBetScreen = ({ route }) => {
                   setState((b) => ({ ...b, support: !b.support }))
                 }
               />
-            </Row>
-            <Row margin="0rem 0rem 3rem 0rem">
+            </Wrapper>
+            <Wrapper margin="0rem 0rem 3rem 0rem">
               {state.support ? (
-                <Text>Support bet</Text>
+                <Label light>Support bet</Label>
               ) : (
-                <Text>Contradict bet</Text>
+                <Label light>Contradict bet</Label>
               )}
-            </Row>
-            <Row margin="0rem 0rem 2rem 0rem">
+            </Wrapper>
+            <Wrapper margin="0rem 0rem 2rem 0rem">
               <Button
                 loading={loading}
                 onPress={handleSubmit}
                 label="Sumbit"
                 disabled={state.amount === 0}
               />
-            </Row>
+            </Wrapper>
           </CardWrapper>
         </Scroll>
       )}

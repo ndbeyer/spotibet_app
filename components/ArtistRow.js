@@ -5,10 +5,16 @@ import React from "react";
 import styled from "styled-native-components";
 
 import Image from "../components/Image";
-import Row from "../components/Row";
-import Text from "../components/Text";
+import { Label, Paragraph } from "../components/Text";
 
-const TextBox = styled.View`
+const Wrapper = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem;
+`;
+
+const Center = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
@@ -23,15 +29,15 @@ const ArtistRow = ({
   monthlyListeners,
 }) => {
   return (
-    <Row>
+    <Wrapper>
       <Image source={image ? { uri: image } : { uri: undefined }} />
-      <TextBox>
-        <Text label={name} />
-        <Text label={`Popularity: ${popularity}`} />
-        <Text label={`Followers: ${followers}`} />
-        <Text label={`Monthly listeners:: ${monthlyListeners}`} />
-      </TextBox>
-    </Row>
+      <Center>
+        <Label>{name}</Label>
+        <Paragraph light>{`Popularity: ${popularity}`}</Paragraph>
+        <Paragraph light>{`Followers: ${followers}`}</Paragraph>
+        <Paragraph light>{`Monthly listeners:: ${monthlyListeners}`}</Paragraph>
+      </Center>
+    </Wrapper>
   );
 };
 

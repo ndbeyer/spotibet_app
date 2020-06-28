@@ -1,8 +1,8 @@
-import styled from 'styled-native-components';
+import styled from "styled-native-components";
 
 const Image = styled.Image`
-  width: 25rem;
-  height: 25rem;
+  width: 12.5rem;
+  height: 12.5rem;
 `;
 
-export default Image
+export default Image;

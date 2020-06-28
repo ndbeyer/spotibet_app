@@ -3,6 +3,7 @@
 
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
+import styled from "styled-native-components";
 
 import Loading from "../components/Loading";
 import Screen from "../components/Screen";
@@ -10,12 +11,18 @@ import Scroll from "../components/Scroll";
 import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
 import CardWrapper from "../components/CardWrapper";
-import Row from "../components/Row";
 import ArtistRow from "../components/ArtistRow";
 import OpenBet from "../components/OpenBet";
 
 import { useArtist } from "../state/artist";
 import { createBet } from "../state/bet";
+
+const Wrapper = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem;
+`;
 
 const ArtistScreen = ({ route }) => {
   console.log("ArtistScreen");
@@ -84,7 +91,7 @@ const ArtistScreen = ({ route }) => {
                 maxSliderVal={100}
                 onChange={handleChange}
               />
-              <Row>
+              <Wrapper>
                 <Button
                   loading={loading}
                   onPress={handleSubmit}
@@ -94,7 +101,7 @@ const ArtistScreen = ({ route }) => {
                     !state.endDate
                   }
                 />
-              </Row>
+              </Wrapper>
             </>
           </CardWrapper>
           {artist.joinableBets?.length

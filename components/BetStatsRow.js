@@ -4,13 +4,13 @@
 import React from "react";
 import styled from "styled-native-components";
 
-import Text from "./Text";
+import { Paragraph } from "./Text";
 import { format } from "date-fns";
 
-const TextBox = styled.View`
+const Center = styled.View`
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 0.5rem;
 `;
 
 const BetStatsRow = ({
@@ -22,24 +22,24 @@ const BetStatsRow = ({
   currentUserAmount,
 }) => {
   return (
-    <TextBox>
-      <Text
-        label={`Started ${format(new Date(startDate), "dd.MM.yyyy HH:mm:ss")}`}
-      />
-      <Text label={`Quote: ${quote}`} />
-      <Text
-        label={`That the artist: ${
-          type === "HIGHER" ? "exceeds" : "falls below"
-        }`}
-      />
-      <Text label={listeners} />
-      <Text
-        label={`Ending ${format(new Date(endDate), "dd.MM.yyyy HH:mm:ss")}`}
-      />
+    <Center>
+      <Paragraph>{`Started ${format(
+        new Date(startDate),
+        "dd.MM.yyyy HH:mm:ss"
+      )}`}</Paragraph>
+      <Paragraph>{`Quote: ${quote}`}</Paragraph>
+      <Paragraph>{`That the artist: ${
+        type === "HIGHER" ? "exceeds" : "falls below"
+      }`}</Paragraph>
+      <Paragraph>{listeners}</Paragraph>
+      <Paragraph>{`Ending ${format(
+        new Date(endDate),
+        "dd.MM.yyyy HH:mm:ss"
+      )}`}</Paragraph>
       {currentUserAmount ? (
-        <Text label={`You joined this bet with: ${currentUserAmount}`} />
+        <Paragraph>{`You joined this bet with: ${currentUserAmount}`}</Paragraph>
       ) : null}
-    </TextBox>
+    </Center>
   );
 };
 

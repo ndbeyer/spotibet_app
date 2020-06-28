@@ -5,15 +5,15 @@ import React from "react";
 import styled, { useTheme } from "styled-native-components";
 import Slider from "@react-native-community/slider";
 import { debounce } from "lodash";
+
 import { formatWeeks } from "../util/dateHelpers";
 import BetTimer from "../util/BetTimer";
-
-import Text from "./Text";
+import { Paragraph } from "./Text";
 
 const Row = styled.View`
   flex-direction: row;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
 `;
 
 const Column = styled.View`
@@ -23,8 +23,8 @@ const Column = styled.View`
 
 const Slide = styled(Slider)`
   flex: 1;
-  height: 10rem;
-  margin: 0rem 5rem;
+  height: 5rem;
+  margin: 0rem 2.5rem;
 `;
 
 const GeneralSlider = ({
@@ -79,33 +79,33 @@ const GeneralSlider = ({
       case "LISTENERS":
         return (
           <>
-            <Text>
+            <Paragraph>
               {sliderVal}%{" "}
               {sliderVal === 0 ? null : sliderVal > 0 ? "increase" : "decrease"}
-            </Text>
-            <Text>
+            </Paragraph>
+            <Paragraph>
               {sliderVal === 0 ? "=" : sliderVal > 0 ? ">" : "<"}
               {Math.floor(
                 monthlyListeners + (sliderVal / 100) * monthlyListeners
               )}{" "}
               Monthly Listeners
-            </Text>
+            </Paragraph>
           </>
         );
       case "DATE": {
         return (
           <>
-            <Text label={formatWeeks(sliderVal)} />
-            <Text label={new BetTimer(0, sliderVal).ends("format")} />
+            <Paragraph>{formatWeeks(sliderVal)}</Paragraph>
+            <Paragraph>{new BetTimer(0, sliderVal).ends("format")}</Paragraph>
           </>
         );
       }
       case "AMOUNT":
         return (
           <>
-            <Text>
+            <Paragraph>
               {sliderVal} Money ({money} available)
-            </Text>
+            </Paragraph>
           </>
         );
 

@@ -6,10 +6,10 @@ const PotentiallyTouchable = styled((props) =>
   props.onPress ? <TouchableOpacity {...props} /> : <View {...props} />
 )`
   align-self: stretch;
-  margin: 2rem;
-  border-radius: 2rem;
+  margin: 0.5rem 1rem;
+  border-radius: 1rem;
   background-color: $neutral4;
-  padding: 2rem;
+  padding: 1rem;
 `;
 
 const CardWrapper = (props) => {

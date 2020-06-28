@@ -7,7 +7,13 @@ import CardWrapper from "../components/CardWrapper";
 import ArtistRow from "../components/ArtistRow";
 import Text from "../components/Text";
 import BetStatsRow from "./BetStatsRow";
-import Row from "../components/Row";
+
+const Wrapper = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem;
+`;
 
 const currentUserWins = (
   listeners,
@@ -53,7 +59,7 @@ const BetResultRow = ({
   }, [listeners, listenersAtEndDate, type, currentUserSupports]);
 
   return (
-    <Row>
+    <Wrapper>
       <TextBox>
         <Text label={`Listeners at the end: ${listenersAtEndDate}`} />
         <Text>
@@ -65,7 +71,7 @@ const BetResultRow = ({
           {userWins ? `some bugs` : `${currentUserAmount} bugs`}
         </Text>
       </TextBox>
-    </Row>
+    </Wrapper>
   );
 };
 

@@ -5,11 +5,16 @@ import React from "react";
 import styled from "styled-native-components";
 
 import CardWrapper from "./CardWrapper";
-import Row from "./Row";
 import Button from "./Button";
 import BetStatsRow from "./BetStatsRow";
-import Text from "./Text";
 import { useNavigation } from "@react-navigation/native";
+
+const Wrapper = styled.View`
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  margin: 1rem;
+`;
 
 // const JoinableTime = ({ startDate }) => {
 //   const [clock, setClock] = React.useState(0);
@@ -44,9 +49,9 @@ const BetCard = ({ id, ...rest }) => {
     <>
       <CardWrapper key={id}>
         <BetStatsRow {...rest} />
-        <Row>
+        <Wrapper>
           <Button onPress={handlePress} label="Join" />
-        </Row>
+        </Wrapper>
       </CardWrapper>
     </>
   );

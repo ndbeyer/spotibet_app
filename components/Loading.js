@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-native-components";
-import Text from "./Text";
+import { Paragraph } from "./Text";
 
 const Wrapper = styled.View`
   flex: 1;
@@ -11,7 +11,7 @@ const Wrapper = styled.View`
 
 const Loading = () => (
   <Wrapper>
-    <Text label="Loading..." />
+    <Paragraph>Loading...</Paragraph>
   </Wrapper>
 );
 

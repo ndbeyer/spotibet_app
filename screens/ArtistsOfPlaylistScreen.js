@@ -3,12 +3,11 @@
 
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import styled from "styled-native-components";
 
 import Loading from "../components/Loading";
-import Card from "../components/Card";
 import Screen from "../components/Screen";
 import Scroll from "../components/Scroll";
+import { Card } from "../screens/PlaylistScreen";
 
 import { useArtistsOfPlaylist } from "../state/artist";
 
