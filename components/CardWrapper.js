@@ -8,7 +8,8 @@ const PotentiallyTouchable = styled((props) =>
   align-self: stretch;
   margin: 0.5rem 1rem;
   border-radius: 1rem;
-  background-color: $neutral4;
+  background-color: $background0;
+  elevation: 1;
   padding: 1rem;
 `;
 

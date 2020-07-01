@@ -9,16 +9,17 @@ import { useNavigation } from "@react-navigation/native";
 import Screen from "../components/Screen";
 import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
-import CardWrapper from "../components/CardWrapper";
 import { Label } from "../components/Text";
-import BetCard from "../components/BetCard";
+import BetStatsRow from "../components/BetStatsRow";
+import ArtistRow from "../components/ArtistRow";
+import Loading from "../components/Loading";
 
 import { useBet, joinBet } from "../state/bet";
 import { useUser } from "../state/user";
 
 const Wrapper = styled.View`
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   margin: 1rem;
 `;
@@ -59,44 +60,43 @@ const JoinBetScreen = ({ route }) => {
     }
   }, [state.amount, state.support, bet, navigation]);
 
-  return (
-    <Screen loading={!bet}>
-      <BetCard {...bet} />
-      <CardWrapper>
-        <GeneralSlider
-          type="AMOUNT"
-          initialValue={0}
-          step={1}
-          minSliderVal={0}
-          maxSliderVal={currentUser?.money}
-          onChange={handleChange}
-          money={currentUser?.money}
+  return !bet ? (
+    <Loading />
+  ) : (
+    <Screen>
+      <ArtistRow {...bet.artist} />
+      <BetStatsRow {...bet} />
+      <GeneralSlider
+        type="AMOUNT"
+        initialValue={0}
+        step={1}
+        minSliderVal={0}
+        maxSliderVal={currentUser?.money}
+        onChange={handleChange}
+        money={currentUser?.money}
+      />
+      <Wrapper margin="2rem 0rem 3rem 0rem">
+        <Switch
+          value={state.support}
+          // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
+          onValueChange={() => setState((b) => ({ ...b, support: !b.support }))}
         />
-        <Wrapper margin="2rem 0rem 3rem 0rem">
-          <Switch
-            value={state.support}
-            // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
-            onValueChange={() =>
-              setState((b) => ({ ...b, support: !b.support }))
-            }
-          />
-        </Wrapper>
-        <Wrapper margin="0rem 0rem 3rem 0rem">
-          {state.support ? (
-            <Label light>Support bet</Label>
-          ) : (
-            <Label light>Contradict bet</Label>
-          )}
-        </Wrapper>
-        <Wrapper margin="0rem 0rem 2rem 0rem">
-          <Button
-            loading={loading}
-            onPress={handleSubmit}
-            label="Sumbit"
-            disabled={state.amount === 0}
-          />
-        </Wrapper>
-      </CardWrapper>
+      </Wrapper>
+      <Wrapper margin="0rem 0rem 3rem 0rem">
+        {state.support ? (
+          <Label light>Support bet</Label>
+        ) : (
+          <Label light>Contradict bet</Label>
+        )}
+      </Wrapper>
+      <Wrapper margin="0rem 0rem 2rem 0rem">
+        <Button
+          loading={loading}
+          onPress={handleSubmit}
+          label="Sumbit"
+          disabled={state.amount === 0}
+        />
+      </Wrapper>
     </Screen>
   );
 };

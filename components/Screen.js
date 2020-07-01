@@ -14,7 +14,7 @@ import Loading from "./Loading";
 const Background = styled.View`
   width: 100%;
   height: 100vh;
-  background-color: $background1;
+  background-color: $background0;
   position: absolute;
 `;
 
@@ -51,12 +51,14 @@ const Wrapper = ({
   ) : null;
 
 const Screen = ({
+  renderHeaderContent,
   children,
   type = "SCROLL",
   loading,
   style,
 }: {
-  children?: ReactNode,
+  renderHeaderContent?: () => ReactNode,
+  children?: ReactNode | ReactNode[],
   type: "SCROLL" | "VIEW" | "KEYBOARDAVOIDING",
   loading: boolean,
   style: any,
@@ -65,9 +67,8 @@ const Screen = ({
 		width: 100%;
 		min-height: 100%;
 		align-items: center;
-		padding: 1rem 0rem;
+		padding: 2rem 0rem;
     background-color: transparent;
-  
     `);
 
   const styles = React.useMemo(
@@ -78,13 +79,13 @@ const Screen = ({
     [fallbackStyle, style]
   );
 
-  console.log({ styles });
-
   return (
     <>
       <StatusBar barStyle="light-content" />
       <SafeAreaView>
         <Background />
+        {renderHeaderContent ? renderHeaderContent() : null}
+
         <Wrapper type={type} style={styles}>
           {loading ? <Loading /> : children}
         </Wrapper>

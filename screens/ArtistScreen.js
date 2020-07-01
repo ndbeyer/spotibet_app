@@ -22,6 +22,10 @@ const Wrapper = styled.View`
   margin: 1rem;
 `;
 
+const StyledScreen = styled(Screen)`
+  padding: 1rem;
+`;
+
 const ArtistScreen = ({ route }) => {
   console.log("ArtistScreen");
   const navigation = useNavigation();
@@ -64,42 +68,41 @@ const ArtistScreen = ({ route }) => {
   }, [state.listeners, state.endDate, artist, navigation]);
 
   return (
-    <Screen loading={!artist}>
-      <CardWrapper key={artist?.id}>
-        <ArtistRow {...artist} />
+    <StyledScreen loading={!artist}>
+      <ArtistRow {...artist} />
 
-        <GeneralSlider
-          type="LISTENERS"
-          initialValue={0}
-          step={1}
-          minSliderVal={-100}
-          maxSliderVal={100}
-          onChange={handleChange}
-          monthlyListeners={artist?.monthlyListeners}
+      <GeneralSlider
+        type="LISTENERS"
+        initialValue={0}
+        step={1}
+        minSliderVal={-100}
+        maxSliderVal={100}
+        onChange={handleChange}
+        monthlyListeners={artist?.monthlyListeners}
+      />
+      <GeneralSlider
+        type="DATE"
+        initialValue={0}
+        step={1}
+        minSliderVal={0}
+        maxSliderVal={100}
+        onChange={handleChange}
+      />
+      <Wrapper>
+        <Button
+          loading={loading}
+          onPress={handleSubmit}
+          label="Sumbit"
+          disabled={
+            state.listeners === artist?.monthlyListeners || !state.endDate
+          }
         />
-        <GeneralSlider
-          type="DATE"
-          initialValue={0}
-          step={1}
-          minSliderVal={0}
-          maxSliderVal={100}
-          onChange={handleChange}
-        />
-        <Wrapper>
-          <Button
-            loading={loading}
-            onPress={handleSubmit}
-            label="Sumbit"
-            disabled={
-              state.listeners === artist?.monthlyListeners || !state.endDate
-            }
-          />
-        </Wrapper>
-      </CardWrapper>
+      </Wrapper>
+
       {artist?.joinableBets?.map((bet) => (
         <OpenBet key={bet.id} {...bet} />
       ))}
-    </Screen>
+    </StyledScreen>
   );
 };
 
