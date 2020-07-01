@@ -17,10 +17,12 @@ const UNIT = 8;
 export const colorDefs = ({
   accentColor = "#34eb46",
   gradientStrength = 20,
+  chromaticity = 0,
 }: {
   accentColor: string,
   gradientStrength: number,
-}) => {
+  chromaticity: number,
+} = {}) => {
   const accent = chroma(accentColor);
   let error = accent
     .set("lch.l", Math.max(Math.min(accent.get("lch.l"), 60), 35))
@@ -28,7 +30,7 @@ export const colorDefs = ({
     .set("lch.c", `+${10 + 1000 / accent.get("lch.c")}`);
   if (chroma.deltaE(error, accent) <= 10) error = accent;
 
-  const accentDark = accent.set("lch.l", 7);
+  const accentDark = accent.set("lch.c", chromaticity).set("lch.l", 7);
 
   const neutrals = chroma
     .scale([accentDark, "white"])
@@ -119,7 +121,7 @@ setStaticVariables(createVariables({}));
 
 const theme = {
   rem: UNIT,
-  colors: colorDefs({ accentColor: "#34eb46" }),
+  colors: colorDefs({ accentColor: "#34eb46", chromaticity: 50 }),
   elevation: (value) => ({
     shadowColor: "black",
     shadowOffset: { width: 0, height: value },
