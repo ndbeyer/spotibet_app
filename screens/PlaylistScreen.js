@@ -7,9 +7,7 @@ import { gql } from "apollo-boost";
 import { useNavigation } from "@react-navigation/native";
 import styled from "styled-native-components";
 
-import Loading from "../components/Loading";
 import Screen from "../components/Screen";
-import Scroll from "../components/Scroll";
 import Image from "../components/Image";
 import CardWrapper from "../components/CardWrapper";
 import { Paragraph } from "../components/Text";
@@ -42,7 +40,7 @@ export const Card = ({ id, name, image, onPress }) => {
 const PlaylistScreen = () => {
   const navigation = useNavigation();
 
-  const { loading, error, data } = useQuery(
+  const { data } = useQuery(
     gql`
       query playlists {
         playlists {
@@ -62,24 +60,16 @@ const PlaylistScreen = () => {
   );
 
   return (
-    <Screen>
-      {loading ? (
-        <Loading />
-      ) : (
-        <Scroll>
-          {data && data.playlists
-            ? data.playlists.map(({ id, name, image }) => (
-                <Card
-                  key={id}
-                  id={id}
-                  name={name}
-                  image={image}
-                  onPress={() => handlePress(id)}
-                />
-              ))
-            : null}
-        </Scroll>
-      )}
+    <Screen loading={!data}>
+      {data?.playlists?.map(({ id, name, image }) => (
+        <Card
+          key={id}
+          id={id}
+          name={name}
+          image={image}
+          onPress={() => handlePress(id)}
+        />
+      ))}
     </Screen>
   );
 };

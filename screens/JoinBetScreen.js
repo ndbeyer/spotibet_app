@@ -6,9 +6,7 @@ import styled from "styled-native-components";
 import { Switch } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-import Loading from "../components/Loading";
 import Screen from "../components/Screen";
-import Scroll from "../components/Scroll";
 import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
 import CardWrapper from "../components/CardWrapper";
@@ -62,49 +60,43 @@ const JoinBetScreen = ({ route }) => {
   }, [state.amount, state.support, bet, navigation]);
 
   return (
-    <Screen>
-      {!bet ? (
-        <Loading />
-      ) : (
-        <Scroll>
-          <BetCard {...bet} />
-          <CardWrapper>
-            <GeneralSlider
-              type="AMOUNT"
-              initialValue={0}
-              step={1}
-              minSliderVal={0}
-              maxSliderVal={currentUser?.money}
-              onChange={handleChange}
-              money={currentUser?.money}
-            />
-            <Wrapper margin="2rem 0rem 3rem 0rem">
-              <Switch
-                value={state.support}
-                // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
-                onValueChange={() =>
-                  setState((b) => ({ ...b, support: !b.support }))
-                }
-              />
-            </Wrapper>
-            <Wrapper margin="0rem 0rem 3rem 0rem">
-              {state.support ? (
-                <Label light>Support bet</Label>
-              ) : (
-                <Label light>Contradict bet</Label>
-              )}
-            </Wrapper>
-            <Wrapper margin="0rem 0rem 2rem 0rem">
-              <Button
-                loading={loading}
-                onPress={handleSubmit}
-                label="Sumbit"
-                disabled={state.amount === 0}
-              />
-            </Wrapper>
-          </CardWrapper>
-        </Scroll>
-      )}
+    <Screen loading={!bet}>
+      <BetCard {...bet} />
+      <CardWrapper>
+        <GeneralSlider
+          type="AMOUNT"
+          initialValue={0}
+          step={1}
+          minSliderVal={0}
+          maxSliderVal={currentUser?.money}
+          onChange={handleChange}
+          money={currentUser?.money}
+        />
+        <Wrapper margin="2rem 0rem 3rem 0rem">
+          <Switch
+            value={state.support}
+            // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
+            onValueChange={() =>
+              setState((b) => ({ ...b, support: !b.support }))
+            }
+          />
+        </Wrapper>
+        <Wrapper margin="0rem 0rem 3rem 0rem">
+          {state.support ? (
+            <Label light>Support bet</Label>
+          ) : (
+            <Label light>Contradict bet</Label>
+          )}
+        </Wrapper>
+        <Wrapper margin="0rem 0rem 2rem 0rem">
+          <Button
+            loading={loading}
+            onPress={handleSubmit}
+            label="Sumbit"
+            disabled={state.amount === 0}
+          />
+        </Wrapper>
+      </CardWrapper>
     </Screen>
   );
 };

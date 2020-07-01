@@ -8,8 +8,6 @@ import { gql } from "apollo-boost";
 import styled from "styled-native-components";
 
 import Screen from "../components/Screen";
-import Scroll from "../components/Scroll";
-import Loading from "../components/Loading";
 import EmptyCard from "../components/EmptyCard";
 import BetCard from "../components/BetCard";
 import { Paragraph } from "../components/Text";
@@ -34,7 +32,7 @@ const FilterItem = styled(TouchableOpacity)`
 `;
 
 const DashboardScreen = () => {
-  const { loading, error, data, refetch } = useQuery(
+  const { data } = useQuery(
     gql`
       query dashboard {
         currentUser {
@@ -56,14 +54,12 @@ const DashboardScreen = () => {
 
   const [selected, setSelected] = React.useState(filterTypes[0]);
 
-  const filteredBets =
-    data &&
-    data.currentUser &&
-    data.currentUser.bets &&
-    data.currentUser.bets.filter(({ status }) => status === selected);
+  const filteredBets = data?.currentUser?.bets?.filter(
+    ({ status }) => status === selected
+  );
 
   return (
-    <Screen>
+    <Screen loading={!filteredBets}>
       <FilterWrapper>
         {filterTypes.map((label) => (
           <FilterItem
@@ -76,18 +72,12 @@ const DashboardScreen = () => {
           </FilterItem>
         ))}
       </FilterWrapper>
-      {loading ? (
-        <Loading />
+      {filteredBets?.length ? (
+        filteredBets.map((bet) => {
+          return <BetCard key={bet.id} {...bet} />;
+        })
       ) : (
-        <Scroll loading={loading} onRefresh={refetch}>
-          {filteredBets.length ? (
-            filteredBets.map((bet) => {
-              return <BetCard key={bet.id} {...bet} />;
-            })
-          ) : (
-            <EmptyCard message="No bets were found" />
-          )}
-        </Scroll>
+        <EmptyCard message="No bets were found" />
       )}
     </Screen>
   );

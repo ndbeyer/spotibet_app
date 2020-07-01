@@ -6,7 +6,6 @@ import styled from "styled-native-components";
 
 import Button from "../components/Button";
 import Screen from "../components/Screen";
-import Scroll from "../components/Scroll";
 import { Label } from "../components/Text";
 import Gradient from "../components/Gradient";
 import { logout } from "../state/auth";
@@ -35,24 +34,22 @@ const SettingsScreen = () => {
   const colors = colorDefs({ accentColor: "#34eb46" });
   return (
     <Screen>
-      <Scroll>
-        <Button onPress={logout} label="Logout" />
-        <GradientBox>
-          <Gradient reverse />
-        </GradientBox>
-        {colors.accentGradient0.map((color, index) => (
-          <PlaceHolder key={color} color={color}>
-            <Label size="m">Gradient index: {index}</Label>
+      <Button onPress={logout} label="Logout" />
+      <GradientBox>
+        <Gradient reverse />
+      </GradientBox>
+      {colors.accentGradient0.map((color, index) => (
+        <PlaceHolder key={color} color={color}>
+          <Label size="m">Gradient index: {index}</Label>
+        </PlaceHolder>
+      ))}
+      {Object.entries(colors).map(([key, value]) => {
+        return typeof value === "string" ? (
+          <PlaceHolder key={key} color={value}>
+            <Label size="m">{typeof key === "string" ? key : ""}</Label>
           </PlaceHolder>
-        ))}
-        {Object.entries(colors).map(([key, value]) => {
-          return typeof value === "string" ? (
-            <PlaceHolder key={key} color={value}>
-              <Label size="m">{typeof key === "string" ? key : ""}</Label>
-            </PlaceHolder>
-          ) : null;
-        })}
-      </Scroll>
+        ) : null;
+      })}
     </Screen>
   );
 };

@@ -6,8 +6,6 @@ import styled from "styled-native-components";
 import { format } from "date-fns";
 
 import Screen from "../components/Screen";
-import Scroll from "../components/Scroll";
-import Loading from "../components/Loading";
 import EmptyCard from "../components/EmptyCard";
 import CardWrapper from "../components/CardWrapper";
 import { Paragraph } from "../components/Text";
@@ -39,19 +37,13 @@ const TransactionsScreen = () => {
   const transactions = useTransactions();
 
   return (
-    <Screen>
-      {!transactions ? (
-        <Loading />
+    <Screen loading={!transactions}>
+      {transactions?.length ? (
+        transactions.map((transaction) => {
+          return <TransactionCard key={transaction.id} {...transaction} />;
+        })
       ) : (
-        <Scroll>
-          {transactions.length ? (
-            transactions.map((transaction) => {
-              return <TransactionCard key={transaction.id} {...transaction} />;
-            })
-          ) : (
-            <EmptyCard message="No transactions were found" />
-          )}
-        </Scroll>
+        <EmptyCard message="No transactions were found" />
       )}
     </Screen>
   );

@@ -5,9 +5,7 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import styled from "styled-native-components";
 
-import Loading from "../components/Loading";
 import Screen from "../components/Screen";
-import Scroll from "../components/Scroll";
 import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
 import CardWrapper from "../components/CardWrapper";
@@ -66,51 +64,41 @@ const ArtistScreen = ({ route }) => {
   }, [state.listeners, state.endDate, artist, navigation]);
 
   return (
-    <Screen>
-      {!artist ? (
-        <Loading />
-      ) : (
-        <Scroll>
-          <CardWrapper key={artist.id}>
-            <ArtistRow {...artist} />
-            <>
-              <GeneralSlider
-                type="LISTENERS"
-                initialValue={0}
-                step={1}
-                minSliderVal={-100}
-                maxSliderVal={100}
-                onChange={handleChange}
-                monthlyListeners={artist.monthlyListeners}
-              />
-              <GeneralSlider
-                type="DATE"
-                initialValue={0}
-                step={1}
-                minSliderVal={0}
-                maxSliderVal={100}
-                onChange={handleChange}
-              />
-              <Wrapper>
-                <Button
-                  loading={loading}
-                  onPress={handleSubmit}
-                  label="Sumbit"
-                  disabled={
-                    state.listeners === artist.monthlyListeners ||
-                    !state.endDate
-                  }
-                />
-              </Wrapper>
-            </>
-          </CardWrapper>
-          {artist.joinableBets?.length
-            ? artist.joinableBets.map((bet) => (
-                <OpenBet key={bet.id} {...bet} />
-              ))
-            : null}
-        </Scroll>
-      )}
+    <Screen loading={!artist}>
+      <CardWrapper key={artist?.id}>
+        <ArtistRow {...artist} />
+
+        <GeneralSlider
+          type="LISTENERS"
+          initialValue={0}
+          step={1}
+          minSliderVal={-100}
+          maxSliderVal={100}
+          onChange={handleChange}
+          monthlyListeners={artist?.monthlyListeners}
+        />
+        <GeneralSlider
+          type="DATE"
+          initialValue={0}
+          step={1}
+          minSliderVal={0}
+          maxSliderVal={100}
+          onChange={handleChange}
+        />
+        <Wrapper>
+          <Button
+            loading={loading}
+            onPress={handleSubmit}
+            label="Sumbit"
+            disabled={
+              state.listeners === artist?.monthlyListeners || !state.endDate
+            }
+          />
+        </Wrapper>
+      </CardWrapper>
+      {artist?.joinableBets?.map((bet) => (
+        <OpenBet key={bet.id} {...bet} />
+      ))}
     </Screen>
   );
 };
