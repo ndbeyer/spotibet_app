@@ -59,11 +59,23 @@ export const Paragraph = styled.Text`
   ${(p) => (p.flex ? "flex: 1" : "")};
 `;
 
-Paragraph.Input = styled.TextInput`
-  font-size: ${(p) =>
-    p.theme.variables[p.size === "l" ? "fontSize4" : "fontSize2"]}rem;
-  ${Platform.OS === "ios" ? "" : "line-height: 3rem"};
+export const Heading = styled.Text`
   color: ${(p) => p.color || "$neutral0"};
-  text-align: ${(p) => p.align || "left"};
+  margin: ${(p) => p.margin || "0"};
+  font: ${(p) =>
+    ({
+      xs: "$heading0",
+      s: "$heading1",
+      m: "$heading2",
+      l: "$heading3",
+      xl: "$heading4",
+    }[p.size || "m"])};
   ${(p) => (p.flex ? "flex: 1" : "")};
+  text-align: ${(p) => p.align || "left"};
+  text-align-vertical: center;
+  ${Platform.OS === "android" ? "include-font-padding: false" : ""};
+  text-decoration: ${(p) =>
+    p.textDecoration
+      ? `${p.textDecoration} ${p.color || "$neutral0"}`
+      : "none"};
 `;
