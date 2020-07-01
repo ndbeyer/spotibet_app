@@ -5,7 +5,7 @@ import React from "react";
 import styled from "styled-native-components";
 
 import Image from "../components/Image";
-import { Label, Paragraph } from "../components/Text";
+import { Heading, Paragraph } from "../components/Text";
 
 const Wrapper = styled.View`
   flex-direction: row;
@@ -32,7 +32,9 @@ const ArtistRow = ({
     <Wrapper>
       <Image source={image ? { uri: image } : { uri: undefined }} />
       <Center>
-        <Label>{name}</Label>
+        <Heading margin="1rem" size="m">
+          {name}
+        </Heading>
         <Paragraph light>{`Popularity: ${popularity}`}</Paragraph>
         <Paragraph light>{`Followers: ${followers}`}</Paragraph>
         <Paragraph light>{`Monthly listeners:: ${monthlyListeners}`}</Paragraph>

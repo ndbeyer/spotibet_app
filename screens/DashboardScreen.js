@@ -107,7 +107,7 @@ const FilterWrapper = styled.View`
 `;
 
 const FilterItem = styled(TouchableOpacity)`
-  background-color: ${(p) => (p.selected ? `$accent0` : `$background0`)};
+  background-color: ${(p) => (p.selected ? `$background1` : `$background0`)};
   flex: 1;
   justify-content: center;
   align-items: center;

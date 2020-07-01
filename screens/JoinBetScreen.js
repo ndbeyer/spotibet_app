@@ -2,7 +2,7 @@
 //@flow
 
 import React from "react";
-import styled from "styled-native-components";
+import styled, { useTheme } from "styled-native-components";
 import { Switch } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
@@ -26,6 +26,7 @@ const Wrapper = styled.View`
 
 const JoinBetScreen = ({ route }) => {
   const navigation = useNavigation();
+  const theme = useTheme();
   const { betId } = route.params;
   const bet = useBet(betId);
   const { currentUser } = useUser();
@@ -77,6 +78,11 @@ const JoinBetScreen = ({ route }) => {
       />
       <Wrapper margin="2rem 0rem 3rem 0rem">
         <Switch
+          // ios_backgroundColor={theme.colors.background1}
+          trackColor={{
+            false: theme.colors.background1,
+            true: theme.colors.background1,
+          }}
           value={state.support}
           // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
           onValueChange={() => setState((b) => ({ ...b, support: !b.support }))}

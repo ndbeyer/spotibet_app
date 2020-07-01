@@ -2,15 +2,13 @@
 //@flow
 
 import React from "react";
-import styled from "styled-native-components";
+import styled, { useTheme } from "styled-native-components";
 
 import Button from "../components/Button";
 import Screen from "../components/Screen";
 import { Label } from "../components/Text";
 import Gradient from "../components/Gradient";
 import { logout } from "../state/auth";
-
-import { colorDefs } from "../App";
 
 const PlaceHolder = styled.View`
   max-width: 100%;
@@ -31,7 +29,9 @@ const GradientBox = styled.View`
 `;
 
 const SettingsScreen = () => {
-  const colors = colorDefs({ accentColor: "#34eb46" });
+  const theme = useTheme();
+  const { colors } = theme;
+
   return (
     <Screen>
       <Button onPress={logout} label="Logout" />
