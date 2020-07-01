@@ -1,15 +1,23 @@
 import React from "react";
 import styled from "styled-native-components";
+import { ActivityIndicator } from "react-native";
 
-import Loading from "../components/Loading";
-import { Label } from "../components/Text";
+import { Label } from "./Text";
+
+const LoadingWrapper = styled.View`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Wrapper = styled.TouchableOpacity`
-  min-width: 10rem;
-  background-color: ${(p) => p.color};
+  min-width: 15rem;
+  background-color: ${(p) => p.backgroundColor};
   border-width: ${(p) => (p.outline ? 1 : 0)}px;
   border-style: solid;
-  border-color: ${(p) => p.color};
+  border-color: ${(p) => p.backgroundColor};
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -23,9 +31,9 @@ const Button = ({
   loading,
   disabled,
   onPress,
-  textColor = "$accentText0",
-  colorDisabled = "$neutral3",
-  color = "$background1",
+  textColor = "$neutral0",
+  textColorDisabled = "$neutral2",
+  backgroundColor = "$background1",
   light = true,
   margin = "1rem",
 }) => {
@@ -34,19 +42,26 @@ const Button = ({
       onPress={onPress}
       disabled={disabled}
       outline={outline}
-      color={color}
+      backgroundColor={backgroundColor}
       margin={margin}
     >
-      <Label
-        light={light}
-        color={disabled ? colorDisabled : textColor}
-        colorDisabled={colorDisabled}
-        disabled={disabled || loading}
-        margin="1rem"
-      >
-        {loading ? <Loading /> : null}
-        {label}
-      </Label>
+      <>
+        {loading ? (
+          <LoadingWrapper>
+            <ActivityIndicator />
+          </LoadingWrapper>
+        ) : null}
+        <Label
+          light={light}
+          color={
+            disabled ? textColorDisabled : loading ? "transparent" : textColor
+          }
+          disabled={disabled || loading}
+          margin="1rem"
+        >
+          {label}
+        </Label>
+      </>
     </Wrapper>
   );
 };
