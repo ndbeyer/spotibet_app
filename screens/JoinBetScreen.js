@@ -11,8 +11,9 @@ import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
 import { Label } from "../components/Text";
 import BetStatsRow from "../components/BetStatsRow";
-import ArtistRow from "../components/ArtistRow";
+import StatsRow from "../components/StatsRow";
 import Loading from "../components/Loading";
+import ArtistImage from "../components/ArtistImage";
 
 import { useBet, joinBet } from "../state/bet";
 import { useUser } from "../state/user";
@@ -61,11 +62,21 @@ const JoinBetScreen = ({ route }) => {
     }
   }, [state.amount, state.support, bet, navigation]);
 
+  const renderHeaderContent = React.useCallback(
+    () => <ArtistImage artist={bet.artist} heightFactor={0.3} />,
+    [bet.artist]
+  );
+
   return !bet ? (
     <Loading />
   ) : (
-    <Screen>
-      <ArtistRow {...bet.artist} />
+    <Screen renderHeaderContent={renderHeaderContent}>
+      {/* <ArtistImage artist={bet.artist} heightFactor={0.15} /> */}
+      <StatsRow
+        monthlyListeners={bet.artist.monthlyListeners}
+        followers={bet.artist.followers}
+        popularity={bet.artist.popularity}
+      />
       <BetStatsRow {...bet} />
       <GeneralSlider
         type="AMOUNT"

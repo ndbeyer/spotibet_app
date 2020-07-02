@@ -48,7 +48,11 @@ const CreateStack = () => {
         component={ArtistScreen}
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="JoinBet" component={JoinBetScreen} />
+      <Stack.Screen
+        name="JoinBet"
+        component={JoinBetScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

@@ -1,5 +1,7 @@
 import React, { ReactNode } from "react";
 import styled, { useStyle } from "styled-native-components";
+import { useHeaderHeight } from "@react-navigation/stack";
+
 import {
   SafeAreaView,
   StatusBar,
@@ -23,6 +25,15 @@ const StyledView = styled.View`
   align-items: center;
 `;
 
+const PositionWrapper = styled.View`
+  border: 1px solid blue;
+  top: ${(p) => p.top}px;
+  left: 0;
+  position: absolute;
+  width: 5rem;
+  height: 5rem;
+`;
+
 const Wrapper = ({
   type,
   style,
@@ -38,7 +49,7 @@ const Wrapper = ({
     align-items: center;
     min-height: 100%;
     width: 100%;
-    padding: 2rem 0;
+   
   `);
 
   const contentContainerStyle = React.useMemo(
@@ -85,15 +96,26 @@ const Screen = ({
   loading: boolean,
   style: any,
 }) => {
+  const headerHeight = useHeaderHeight();
+  console.log({ headerHeight });
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView
+        style={{
+          flex: 1,
+          // borderStyle: "solid",
+          // borderWidth: 5,
+          // borderColor: "red",
+        }}
+      >
         <Background />
         {renderHeaderContent ? renderHeaderContent() : null}
         <Wrapper type={type} style={style}>
           {loading ? <Loading /> : children}
         </Wrapper>
+        {/* <PositionWrapper top={headerHeight} /> */}
       </SafeAreaView>
     </>
   );
