@@ -30,7 +30,7 @@ const ArtistRow = ({
 }) => {
   return (
     <Wrapper>
-      <Image source={image ? { uri: image } : { uri: undefined }} />
+      <Image source={image} />
       <Center>
         <Heading margin="1rem" size="m">
           {name}

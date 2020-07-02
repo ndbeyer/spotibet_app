@@ -43,7 +43,11 @@ const CreateStack = () => {
     >
       <Stack.Screen name="Playlists" component={PlaylistScreen} />
       <Stack.Screen name="Artists" component={ArtistsOfPlaylistScreen} />
-      <Stack.Screen name="Artist" component={ArtistScreen} />
+      <Stack.Screen
+        name="Artist"
+        component={ArtistScreen}
+        options={{ headerShown: false }}
+      />
       <Stack.Screen name="JoinBet" component={JoinBetScreen} />
     </Stack.Navigator>
   );
@@ -125,7 +129,13 @@ const Navigator = () => {
         </>
       ) : (
         <Stack.Navigator>
-          <Stack.Screen name="Initializing" component={InitializingScreen} />
+          <Stack.Screen
+            name="Initializing"
+            component={InitializingScreen}
+            tabBarOptions={{
+              showLabel: false,
+            }}
+          />
         </Stack.Navigator>
       )}
     </NavigationContainer>

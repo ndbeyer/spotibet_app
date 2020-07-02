@@ -29,7 +29,7 @@ export const Card = ({ id, name, image, onPress }) => {
   return (
     <CardWrapper key={id} onPress={onPress}>
       <Row>
-        <Image source={image ? { uri: image } : { uri: undefined }} />
+        <Image source={image} />
         <Center>
           <Paragraph light>{name}</Paragraph>
         </Center>

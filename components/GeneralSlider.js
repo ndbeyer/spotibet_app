@@ -96,7 +96,7 @@ const GeneralSlider = ({
         return (
           <>
             <Paragraph>{formatWeeks(sliderVal)}</Paragraph>
-            <Paragraph>{new BetTimer(0, sliderVal).ends("format")}</Paragraph>
+            {/* <Paragraph>{new BetTimer(0, sliderVal).ends("format")}</Paragraph> */}
           </>
         );
       }
