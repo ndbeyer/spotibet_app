@@ -17,7 +17,7 @@ const Wrapper = styled.TouchableOpacity`
   background-color: ${(p) => p.backgroundColor};
   border-width: ${(p) => (p.outline ? 1 : 0)}px;
   border-style: solid;
-  border-color: ${(p) => p.backgroundColor};
+  border-color: $neutral4;
   flex-direction: row;
   justify-content: center;
   align-items: center;
