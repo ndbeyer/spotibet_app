@@ -9,6 +9,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Icon from "../components/Icon";
+import { Label } from "../components/Text";
 import InitializingScreen from "./InitializingScreen";
 import LoginScreen from "./LoginScreen";
 import DashboardScreen from "./DashboardScreen";
@@ -25,14 +26,28 @@ import { refreshLogin } from "../state/auth";
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const CreateStack = () => (
-  <Stack.Navigator initialRouteName="Playlists">
-    <Stack.Screen name="Playlists" component={PlaylistScreen} />
-    <Stack.Screen name="Artists" component={ArtistsOfPlaylistScreen} />
-    <Stack.Screen name="Artist" component={ArtistScreen} />
-    <Stack.Screen name="JoinBet" component={JoinBetScreen} />
-  </Stack.Navigator>
-);
+const CreateStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Playlists"
+      // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
+      screenOptions={{
+        headerTitle: (options) => {
+          return (
+            <Label light size="xl">
+              {options.children}
+            </Label>
+          );
+        },
+      }}
+    >
+      <Stack.Screen name="Playlists" component={PlaylistScreen} />
+      <Stack.Screen name="Artists" component={ArtistsOfPlaylistScreen} />
+      <Stack.Screen name="Artist" component={ArtistScreen} />
+      <Stack.Screen name="JoinBet" component={JoinBetScreen} />
+    </Stack.Navigator>
+  );
+};
 
 const useAppState = () => {
   const { currentUser, loading } = useUser();
