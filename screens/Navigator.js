@@ -2,11 +2,13 @@
 //@flow
 
 import React from "react";
+import { useTheme } from "styled-native-components";
 import "react-native-gesture-handler";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
+import Icon from "../components/Icon";
 import InitializingScreen from "./InitializingScreen";
 import LoginScreen from "./LoginScreen";
 import DashboardScreen from "./DashboardScreen";
@@ -52,11 +54,21 @@ const useAppState = () => {
   else return "LOGGED_OUT";
 };
 
+const routeIcons = {
+  Dashboard: "profile",
+  Create: "play",
+  Transactions: "graph",
+  Settings: "gear",
+};
+
 const Navigator = () => {
   const appState = useAppState();
+  const theme = useTheme();
   console.log("appState", appState);
 
   return (
+    // Navigator does not re-render too often, only if appState or theme changes
+    // if Navigator will re-render, caching the options objects in this case, will make the Screens to not re-render IF the Screens return a memoized UI
     <NavigationContainer>
       {appState === "LOGGED_OUT" ? (
         <>
@@ -64,13 +76,32 @@ const Navigator = () => {
             <Stack.Screen
               name="Login"
               component={LoginScreen}
+              // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
         </>
       ) : appState === "LOGGED_IN" ? (
         <>
-          <Tab.Navigator initialRouteName="Create">
+          <Tab.Navigator
+            initialRouteName="Create"
+            // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
+            tabBarOptions={{
+              showLabel: false,
+            }}
+            // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused }) => (
+                <Icon
+                  size="3rem"
+                  name={routeIcons[route.name]}
+                  color={
+                    focused ? theme.colors.neutral0 : theme.colors.neutral4
+                  }
+                />
+              ),
+            })}
+          >
             <Tab.Screen name="Dashboard" component={DashboardScreen} />
             <Tab.Screen name="Create" component={CreateStack} />
             <Tab.Screen name="Transactions" component={TransactionsScreen} />
