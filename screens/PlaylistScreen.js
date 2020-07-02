@@ -8,6 +8,7 @@ import { useNavigation } from "@react-navigation/native";
 import styled from "styled-native-components";
 
 import Screen from "../components/Screen";
+import Loading from "../components/Loading";
 import Image from "../components/Image";
 import CardWrapper from "../components/CardWrapper";
 import { Paragraph } from "../components/Text";
@@ -59,8 +60,10 @@ const PlaylistScreen = () => {
     [navigation]
   );
 
-  return (
-    <Screen loading={!data}>
+  return !data ? (
+    <Loading />
+  ) : (
+    <Screen>
       {data?.playlists?.map(({ id, name, image }) => (
         <Card
           key={id}

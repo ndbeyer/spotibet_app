@@ -2,11 +2,10 @@ import React, { ReactNode } from "react";
 import styled, { useStyle } from "styled-native-components";
 import {
   SafeAreaView,
-  ScrollView,
   StatusBar,
-  View,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from "react-native";
 
 import Loading from "./Loading";
@@ -18,6 +17,12 @@ const Background = styled.View`
   position: absolute;
 `;
 
+const StyledView = styled.View`
+  width: 100%;
+  height: 100%;
+  align-items: center;
+`;
+
 const Wrapper = ({
   type,
   style,
@@ -27,15 +32,31 @@ const Wrapper = ({
   type: "SCROLL" | "VIEW" | "KEYBOARDAVOIDING",
   style?: any,
   children: ReactNode,
-}) =>
-  type === "VIEW" ? (
-    <View style={style} {...rest}>
+}) => {
+  // this is a workaround because contentContainerStyle { padding: ... } is not supported by styled-native-components
+  const basicContentContainerStyle = useStyle(`
+    align-items: center;
+    min-height: 100%;
+    width: 100%;
+    padding: 2rem 0;
+  `);
+
+  const contentContainerStyle = React.useMemo(
+    () => ({
+      ...basicContentContainerStyle,
+      ...style,
+    }),
+    [basicContentContainerStyle, style]
+  );
+
+  return type === "VIEW" ? (
+    <StyledView style={style} {...rest}>
       {children}
-    </View>
+    </StyledView>
   ) : type === "SCROLL" ? (
     <ScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={style}
+      contentContainerStyle={contentContainerStyle}
       {...rest}
     >
       {children}
@@ -49,6 +70,7 @@ const Wrapper = ({
       {children}
     </KeyboardAvoidingView>
   ) : null;
+};
 
 const Screen = ({
   renderHeaderContent,
@@ -63,30 +85,13 @@ const Screen = ({
   loading: boolean,
   style: any,
 }) => {
-  const fallbackStyle = useStyle(`
-		width: 100%;
-		min-height: 100%;
-		align-items: center;
-		padding: 2rem 0rem;
-    background-color: transparent;
-    `);
-
-  const styles = React.useMemo(
-    () => ({
-      ...fallbackStyle,
-      ...style,
-    }),
-    [fallbackStyle, style]
-  );
-
   return (
     <>
-      <StatusBar barStyle="light-content" />
-      <SafeAreaView>
+      <StatusBar barStyle="dark-content" />
+      <SafeAreaView style={{ flex: 1 }}>
         <Background />
         {renderHeaderContent ? renderHeaderContent() : null}
-
-        <Wrapper type={type} style={styles}>
+        <Wrapper type={type} style={style}>
           {loading ? <Loading /> : children}
         </Wrapper>
       </SafeAreaView>

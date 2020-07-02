@@ -5,16 +5,18 @@ import React from "react";
 import styled from "styled-native-components";
 
 import Screen from "../components/Screen";
-import { Paragraph } from "../components/Text";
+import Loading from "../components/Loading";
 
-const StyledScreen = styled(Screen)`
+const StyledScreen = styled(Screen).attrs({
+  type: "VIEW",
+})`
   justify-content: center;
 `;
 
 const InitializingScreen = () => {
   return (
     <StyledScreen>
-      <Paragraph>InitializingScreen</Paragraph>
+      <Loading />
     </StyledScreen>
   );
 };

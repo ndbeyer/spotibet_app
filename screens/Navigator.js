@@ -61,7 +61,11 @@ const Navigator = () => {
       {appState === "LOGGED_OUT" ? (
         <>
           <Stack.Navigator>
-            <Stack.Screen name="loggedOut" component={LoginScreen} />
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         </>
       ) : appState === "LOGGED_IN" ? (
