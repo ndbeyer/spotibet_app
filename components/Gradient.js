@@ -71,8 +71,8 @@ const Gradient = ({
   const gradId = React.useRef(String(gradIdCounter++)).current;
 
   colors = !colors ? theme.colors.accentGradient0 : colors;
-  colors = reverse ? colors.reverse() : colors;
-  opacities = reverse ? opacities.reverse() : opacities;
+  colors = reverse && colors ? colors.reverse() : colors;
+  opacities = reverse && opacities ? opacities.reverse() : opacities;
 
   return (
     <Wrapper>

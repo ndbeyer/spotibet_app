@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import styled, { useStyle } from "styled-native-components";
-import { useHeaderHeight } from "@react-navigation/stack";
 
 import {
   SafeAreaView,
@@ -96,9 +95,6 @@ const Screen = ({
   loading: boolean,
   style: any,
 }) => {
-  const headerHeight = useHeaderHeight();
-  console.log({ headerHeight });
-
   return (
     <>
       <StatusBar barStyle="dark-content" />
