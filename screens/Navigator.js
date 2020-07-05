@@ -9,6 +9,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import Icon from "../components/Icon";
+import Loading from "../components/Loading";
 import { Label } from "../components/Text";
 import InitializingScreen from "./InitializingScreen";
 import LoginScreen from "./LoginScreen";
@@ -22,6 +23,7 @@ import SettingsScreen from "./SettingsScreen";
 
 import { useUser, fetchUser } from "../state/user";
 import { refreshLogin } from "../state/auth";
+import { makeUserBetTransactions } from "../state/user";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -84,6 +86,48 @@ const routeIcons = {
   Settings: "gear",
 };
 
+const LoggedInNavigator = () => {
+  const theme = useTheme();
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    (async () => {
+      const { success, error } = await makeUserBetTransactions();
+      console.log("makeUserBetTransactions", { success, error }); // TODO: remove
+      setLoading(false);
+    })();
+  }, []);
+
+  return loading ? (
+    <Loading />
+  ) : (
+    <>
+      <Tab.Navigator
+        initialRouteName="Create"
+        // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
+        tabBarOptions={{
+          showLabel: false,
+        }}
+        // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused }) => (
+            <Icon
+              size="3rem"
+              name={routeIcons[route.name]}
+              color={focused ? theme.colors.neutral0 : theme.colors.neutral4}
+            />
+          ),
+        })}
+      >
+        <Tab.Screen name="Dashboard" component={DashboardScreen} />
+        <Tab.Screen name="Create" component={CreateStack} />
+        <Tab.Screen name="Transactions" component={TransactionsScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+    </>
+  );
+};
+
 const Navigator = () => {
   const appState = useAppState();
   const theme = useTheme();
@@ -105,40 +149,14 @@ const Navigator = () => {
           </Stack.Navigator>
         </>
       ) : appState === "LOGGED_IN" ? (
-        <>
-          <Tab.Navigator
-            initialRouteName="Create"
-            // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
-            tabBarOptions={{
-              showLabel: false,
-            }}
-            // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused }) => (
-                <Icon
-                  size="3rem"
-                  name={routeIcons[route.name]}
-                  color={
-                    focused ? theme.colors.neutral0 : theme.colors.neutral4
-                  }
-                />
-              ),
-            })}
-          >
-            <Tab.Screen name="Dashboard" component={DashboardScreen} />
-            <Tab.Screen name="Create" component={CreateStack} />
-            <Tab.Screen name="Transactions" component={TransactionsScreen} />
-            <Tab.Screen name="Settings" component={SettingsScreen} />
-          </Tab.Navigator>
-        </>
+        <LoggedInNavigator />
       ) : (
         <Stack.Navigator>
           <Stack.Screen
             name="Initializing"
             component={InitializingScreen}
-            tabBarOptions={{
-              showLabel: false,
-            }}
+            // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
+            options={{ headerShown: false }}
           />
         </Stack.Navigator>
       )}
