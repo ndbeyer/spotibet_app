@@ -7,10 +7,10 @@ import styled from "styled-native-components";
 import { Paragraph } from "./Text";
 import { format } from "date-fns";
 
-const Center = styled.View`
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
+const Row = styled.View`
+  margin: 1rem 2rem;
+  max-width: 100%;
+  flex-direction: row;
 `;
 
 const BetStatsRow = ({
@@ -22,24 +22,32 @@ const BetStatsRow = ({
   currentUserAmount,
 }) => {
   return (
-    <Center>
-      <Paragraph>{`Started ${format(
-        new Date(startDate),
-        "dd.MM.yyyy HH:mm:ss"
-      )}`}</Paragraph>
-      <Paragraph>{`Quote: ${quote}`}</Paragraph>
-      <Paragraph>{`That the artist: ${
-        type === "HIGHER" ? "exceeds" : "falls below"
-      }`}</Paragraph>
-      <Paragraph>{listeners}</Paragraph>
-      <Paragraph>{`Ending ${format(
-        new Date(endDate),
-        "dd.MM.yyyy HH:mm:ss"
-      )}`}</Paragraph>
+    <>
+      <Row>
+        <Paragraph flex>Started</Paragraph>
+        <Paragraph flex>{format(new Date(startDate), "dd.MM.yyyy")}</Paragraph>
+      </Row>
+      <Row>
+        <Paragraph flex>Quote</Paragraph>
+        <Paragraph flex>{quote ? quote : "-"}</Paragraph>
+      </Row>
+      <Row>
+        <Paragraph flex>Listeners</Paragraph>
+        <Paragraph flex>
+          {type === "HIGHER" ? ">" : "<"} {listeners}
+        </Paragraph>
+      </Row>
+      <Row>
+        <Paragraph flex>Ending</Paragraph>
+        <Paragraph flex>{format(new Date(endDate), "dd.MM.yyyy")}</Paragraph>
+      </Row>
       {currentUserAmount ? (
-        <Paragraph>{`You joined this bet with: ${currentUserAmount}`}</Paragraph>
+        <Row>
+          <Paragraph flex>Joined</Paragraph>
+          <Paragraph flex>{currentUserAmount}</Paragraph>
+        </Row>
       ) : null}
-    </Center>
+    </>
   );
 };
 
