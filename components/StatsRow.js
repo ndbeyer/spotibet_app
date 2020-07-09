@@ -5,6 +5,11 @@ import React from "react";
 import styled from "styled-native-components";
 
 import { Label, Paragraph } from "../components/Text";
+import {
+  getSuffix,
+  getNumberWithSuffix,
+  correctNumberForSuffix,
+} from "../util/suffix";
 
 const Row = styled.View`
   flex-direction: row;
@@ -35,7 +40,7 @@ const StatsRow = ({ monthlyListeners, followers, popularity }) => {
       <Row>
         {[followers, monthlyListeners, popularity].map((label) => (
           <Paragraph margin="0rem 1rem" flex key={label}>
-            {label}
+            {getNumberWithSuffix(label)}
           </Paragraph>
         ))}
       </Row>

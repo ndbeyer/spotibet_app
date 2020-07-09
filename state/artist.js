@@ -16,6 +16,11 @@ export const ArtistInfoFragment = gql`
     joinableBets {
       id
     }
+    monthlyListenersHistory {
+      id
+      monthlyListeners
+      dateTime
+    }
   }
 `;
 

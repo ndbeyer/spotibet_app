@@ -12,6 +12,7 @@ import OpenBet from "../components/OpenBet";
 import Loading from "../components/Loading";
 import StatsRow from "../components/StatsRow";
 import ArtistImage from "../components/ArtistImage";
+import Graph from "../components/Graph";
 
 import { useArtist } from "../state/artist";
 import { createBet } from "../state/bet";
@@ -74,6 +75,7 @@ const ArtistScreen = ({ route }) => {
         followers={artist.followers}
         popularity={artist.popularity}
       />
+      <Graph data={artist.monthlyListenersHistory} />
       {artist.monthlyListeners ? (
         <>
           <GeneralSlider
