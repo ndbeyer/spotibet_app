@@ -71,7 +71,6 @@ const JoinBetScreen = ({ route }) => {
     <Loading />
   ) : (
     <Screen renderHeaderContent={renderHeaderContent}>
-      {/* <ArtistImage artist={bet.artist} heightFactor={0.15} /> */}
       <StatsRow
         monthlyListeners={bet.artist.monthlyListeners}
         followers={bet.artist.followers}

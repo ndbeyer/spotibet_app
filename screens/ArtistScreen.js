@@ -24,30 +24,75 @@ const Wrapper = styled.View`
   margin: 1rem;
 `;
 
+const Row = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
 const ArtistScreen = ({ route }) => {
   const navigation = useNavigation();
   const { artistId } = route.params;
   const artist = useArtist(artistId);
 
   const [state, setState] = React.useState({
-    listeners: null,
+    monthlyListeners: null,
     endDate: null,
+    monthlyListenersHistory: [],
   });
+
+  React.useEffect(() => {
+    if (artist?.monthlyListenersHistory) {
+      setState((b) => ({
+        ...b,
+        monthlyListenersHistory: artist.monthlyListenersHistory,
+      }));
+    }
+  }, [artist]);
 
   const [loading, setLoading] = React.useState(false);
 
-  const handleChange = React.useCallback((obj) => {
-    setState((before) => ({ ...before, ...obj }));
-  }, []);
+  const handleChange = React.useCallback(
+    (obj) => {
+      setState((before) => {
+        const placeHolderItem = before.monthlyListenersHistory.find(
+          ({ id }) => id === "placeholder"
+        );
+        return {
+          ...before,
+          ...obj,
+          monthlyListenersHistory:
+            before.monthlyListeners &&
+            before.endDate &&
+            artist?.monthlyListenersHistory
+              ? [
+                  ...artist.monthlyListenersHistory,
+                  placeHolderItem
+                    ? { ...placeHolderItem, ...obj }
+                    : {
+                        id: "placeholder",
+                        dateTime: before.endDate,
+                        monthlyListeners: before.monthlyListeners,
+                      },
+                ]
+              : before.monthlyListenersHistory,
+        };
+      });
+    },
+    [artist]
+  );
 
   const handleSubmit = React.useCallback(async () => {
-    if (state.listeners !== artist?.monthlyListeners && state.endDate) {
+    if (state.monthlyListeners !== artist?.monthlyListeners && state.endDate) {
       setLoading(true);
       const { success, id } = await createBet({
         artistId: artist?.id,
         artistName: artist?.name,
-        type: state.listeners > artist?.monthlyListeners ? "HIGHER" : "LOWER",
-        listeners: state.listeners,
+        type:
+          state.monthlyListeners > artist?.monthlyListeners
+            ? "HIGHER"
+            : "LOWER",
+        listeners: state.monthlyListeners,
         endDate: state.endDate,
         spotifyUrl: artist?.spotifyUrl,
       });
@@ -62,7 +107,7 @@ const ArtistScreen = ({ route }) => {
     } else {
       console.log("Error, inputs are missing"); // TODO: dialog
     }
-  }, [state.listeners, state.endDate, artist, navigation]);
+  }, [state.monthlyListeners, state.endDate, artist, navigation]);
 
   return !artist ? (
     <Loading />
@@ -75,7 +120,12 @@ const ArtistScreen = ({ route }) => {
         followers={artist.followers}
         popularity={artist.popularity}
       />
-      <Graph data={artist.monthlyListenersHistory} />
+      <Graph data={state.monthlyListenersHistory} />
+      {/* <Row>
+        <Button label="Bets" />
+        <Button label="Create bet" backgroundColor="$background0" />
+      </Row> */}
+
       {artist.monthlyListeners ? (
         <>
           <GeneralSlider
@@ -101,7 +151,8 @@ const ArtistScreen = ({ route }) => {
               onPress={handleSubmit}
               label="Sumbit"
               disabled={
-                state.listeners === artist?.monthlyListeners || !state.endDate
+                state.monthlyListeners === artist?.monthlyListeners ||
+                !state.endDate
               }
             />
           </Wrapper>

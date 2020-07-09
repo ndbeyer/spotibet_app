@@ -56,7 +56,7 @@ const GeneralSlider = ({
           return;
         }
         onChange({
-          listeners: Math.floor(
+          monthlyListeners: Math.floor(
             monthlyListeners + (sliderVal / 100) * monthlyListeners
           ),
         });
