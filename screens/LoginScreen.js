@@ -6,6 +6,7 @@ import styled from "styled-native-components";
 
 import Button from "../components/Button";
 import Screen from "../components/Screen";
+import Loading from "../components/Loading";
 import { Heading, Label, Paragraph } from "../components/Text";
 
 import { login } from "../state/auth";
@@ -18,6 +19,18 @@ const StyledScreen = styled(Screen).attrs({
 
 const LoginScreen = () => {
   const [clicked, setClicked] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+
+  const handleLogin = React.useCallback(async () => {
+    setLoading(true);
+    const { success, error } = await login();
+    if (!success) {
+      console.log("Login error:", error); // TODO: replace with handleError function that renders a Dialog
+      setLoading(false);
+    }
+  }, []);
+
+  React.useEffect(() => setLoading(false), []);
 
   return (
     <StyledScreen>
@@ -29,6 +42,8 @@ const LoginScreen = () => {
           </Label>
           <Button onPress={() => setClicked(true)} label="Start" />
         </>
+      ) : loading ? (
+        <Loading />
       ) : (
         <>
           <Heading size="xl">SpotiBet</Heading>
@@ -43,7 +58,7 @@ const LoginScreen = () => {
             next step.
           </Paragraph>
 
-          <Button onPress={login} label="Ok" />
+          <Button onPress={handleLogin} label="Ok" />
           <Button
             margin="0"
             backgroundColor="$background0"

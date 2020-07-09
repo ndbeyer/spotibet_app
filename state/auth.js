@@ -26,18 +26,25 @@ const config = {
   },
 };
 
-export const login = async () => {
+export const login = async ():
+  | { success: true, error: null }
+  | {
+      success: false,
+      error:
+        | "GET_JWT_FOR_AUTH_CODE_ERROR"
+        | "NO_JWT"
+        | "FETCH_USER_ERROR"
+        | "NETWORK_ERROR",
+    } => {
   try {
     const result = await authorize(config);
     const { error: getJwtForAuthCodeError } = result?.tokenAdditionalParameters;
     if (getJwtForAuthCodeError) {
-      console.log("getJwtForAuthCodeError error", getJwtForAuthCodeError); // TODO: show Dialog
-      return;
+      return { success: false, error: "GET_JWT_FOR_AUTH_CODE_ERROR" };
     }
     const { jwt } = result?.tokenAdditionalParameters;
     if (!jwt) {
-      console.log("no jwt", getJwtForAuthCodeError); // TODO: show Dialog
-      return;
+      return { success: false, error: "NO_JWT" };
     }
     setToken(jwt);
 
@@ -46,12 +53,12 @@ export const login = async () => {
 
     const { error: fetchUserError } = await fetchUser();
     if (fetchUserError) {
-      console.log("fetchUserError error", fetchUserError); // TODO: show Dialog
-      return;
+      return { success: false, error: "FETCH_USER_ERROR" };
     }
-    // else: currentUser will be in cache and the loggedIn appState will be shown
+    return { success: true, error: null };
   } catch (e) {
-    console.log("unexpected login error", e); // TODO: handle unexpected login errors
+    if (e.networkError) return { success: false, error: "NETWORK_ERROR" };
+    throw new Error(e);
   }
 };
 
