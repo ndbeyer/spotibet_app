@@ -33,13 +33,14 @@ const GeneralSlider = ({
   step = 1,
   minSliderVal = -100,
   maxSliderVal = 100,
-  delay = 100,
+  delay = 500,
   monthlyListeners,
   money = 0,
   onChange,
 }) => {
   const theme = useTheme();
   const [sliderVal, setSliderVal] = React.useState(initialValue);
+
   const handleSliderChange = debounce(
     React.useCallback((newSliderVal) => {
       setSliderVal(newSliderVal);
@@ -63,7 +64,7 @@ const GeneralSlider = ({
         break;
       case "DATE":
         onChange({
-          endDate: betTimer.ends("iso"),
+          dateTime: betTimer.ends("iso"),
         });
         break;
       case "AMOUNT":

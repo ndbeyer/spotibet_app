@@ -37,7 +37,7 @@ const ArtistScreen = ({ route }) => {
 
   const [state, setState] = React.useState({
     monthlyListeners: null,
-    endDate: null,
+    dateTime: null,
     monthlyListenersHistory: [],
   });
 
@@ -63,7 +63,7 @@ const ArtistScreen = ({ route }) => {
           ...obj,
           monthlyListenersHistory:
             before.monthlyListeners &&
-            before.endDate &&
+            before.dateTime &&
             artist?.monthlyListenersHistory
               ? [
                   ...artist.monthlyListenersHistory,
@@ -71,7 +71,7 @@ const ArtistScreen = ({ route }) => {
                     ? { ...placeHolderItem, ...obj }
                     : {
                         id: "placeholder",
-                        dateTime: before.endDate,
+                        dateTime: before.dateTime,
                         monthlyListeners: before.monthlyListeners,
                       },
                 ]
@@ -83,7 +83,7 @@ const ArtistScreen = ({ route }) => {
   );
 
   const handleSubmit = React.useCallback(async () => {
-    if (state.monthlyListeners !== artist?.monthlyListeners && state.endDate) {
+    if (state.monthlyListeners !== artist?.monthlyListeners && state.dateTime) {
       setLoading(true);
       const { success, id } = await createBet({
         artistId: artist?.id,
@@ -93,7 +93,7 @@ const ArtistScreen = ({ route }) => {
             ? "HIGHER"
             : "LOWER",
         listeners: state.monthlyListeners,
-        endDate: state.endDate,
+        dateTime: state.dateTime,
         spotifyUrl: artist?.spotifyUrl,
       });
       setLoading(false);
@@ -107,7 +107,7 @@ const ArtistScreen = ({ route }) => {
     } else {
       console.log("Error, inputs are missing"); // TODO: dialog
     }
-  }, [state.monthlyListeners, state.endDate, artist, navigation]);
+  }, [state.monthlyListeners, state.dateTime, artist, navigation]);
 
   return !artist ? (
     <Loading />
@@ -152,7 +152,7 @@ const ArtistScreen = ({ route }) => {
               label="Sumbit"
               disabled={
                 state.monthlyListeners === artist?.monthlyListeners ||
-                !state.endDate
+                !state.dateTime
               }
             />
           </Wrapper>

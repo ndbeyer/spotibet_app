@@ -8,8 +8,14 @@ import styled, {
   useLengthAttribute,
 } from "styled-native-components";
 import { Paragraph } from "../components/Text";
-import { differenceInCalendarWeeks } from "date-fns";
+import {
+  differenceInCalendarWeeks,
+  addWeeks,
+  parseISO,
+  format,
+} from "date-fns";
 import { LineChart } from "react-native-chart-kit";
+import { times } from "lodash";
 
 import { getSuffix, correctNumberForSuffix } from "../util/suffix";
 
@@ -23,6 +29,65 @@ const Wrapper = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+const interpolateData = (
+  data: { id: string, dateTime: string, monthlyListeners: number }[]
+) => {
+  if (!data.length) return [];
+
+  const addWeeksToDateString = (string, weeks) => {
+    return format(addWeeks(parseISO(string), weeks), "yyyy-MM-dd");
+  };
+  const formatYYYMMDD = (string) => format(parseISO(string), "yyyy-MM-dd");
+  const oldestDate = data[0].dateTime;
+  const newestDate = data[data.length - 1].dateTime;
+  const nWeeks = Math.abs(
+    differenceInCalendarWeeks(parseISO(oldestDate), parseISO(newestDate))
+  );
+  const intervalled = times(nWeeks + 1).map((week) => {
+    const startOfWeek = addWeeksToDateString(oldestDate, week);
+    return {
+      dateTime: startOfWeek,
+      monthlyListeners: data.find(
+        ({ dateTime }) => formatYYYMMDD(dateTime) === startOfWeek
+      )?.monthlyListeners,
+    };
+  });
+
+  let first = undefined;
+  let chunked = [];
+  let interpolated = [];
+
+  intervalled.map((interval) => {
+    if (interval.monthlyListeners && !first) {
+      first = interval;
+      interpolated.push(interval);
+    } else if (!interval.monthlyListeners) {
+      chunked.push(interval);
+    } else if (interval.monthlyListeners && first) {
+      const last = interval;
+      const firstLastDifference =
+        last.monthlyListeners - first.monthlyListeners;
+      chunked = chunked.map((interval2, indeX) => ({
+        ...interval2,
+        monthlyListeners: Number(
+          (
+            first.monthlyListeners +
+            ((indeX + 1) / chunked.length) * firstLastDifference
+          ).toFixed(0)
+        ),
+      }));
+      interpolated = [...interpolated, ...chunked, last];
+      first = interval;
+      chunked = [];
+    }
+  });
+  const selectedInterval = Math.floor(intervalled.length / 10);
+  const interPolatedSelected = interpolated.filter(
+    (_, index) => index % selectedInterval === 0
+  );
+  return interPolatedSelected;
+};
 
 const Graph = ({
   data = [],
@@ -47,6 +112,8 @@ const Graph = ({
 
   const today = new Date();
 
+  const interpolatedData = interpolateData(data);
+
   return data.length < 2 ? (
     <Wrapper margin={margin}>
       <Paragraph color="$neutral3">No history data available</Paragraph>
@@ -55,12 +122,12 @@ const Graph = ({
     <LineChart
       // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
       data={{
-        labels: data?.map(({ dateTime }) =>
-          differenceInCalendarWeeks(today, new Date(dateTime))
+        labels: interpolatedData?.map(({ dateTime }) =>
+          differenceInCalendarWeeks(new Date(dateTime), today)
         ),
         datasets: [
           {
-            data: data?.map(({ monthlyListeners }) =>
+            data: interpolatedData?.map(({ monthlyListeners }) =>
               correctNumberForSuffix(monthlyListeners, suffix)
             ),
           },
@@ -70,6 +137,7 @@ const Graph = ({
       height={pxHeight}
       withDots={false}
       yAxisSuffix={" " + suffix}
+      xAxisInteval={0}
       // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
       chartConfig={{
         backgroundGradientFrom: theme.colors.background0,
@@ -89,7 +157,6 @@ const Graph = ({
         marginTop: pxMarginTop,
         marginBottom: pxMarginBottom,
       }}
-      bezier
     />
   );
 };
