@@ -93,7 +93,7 @@ const ArtistScreen = ({ route }) => {
             ? "HIGHER"
             : "LOWER",
         listeners: state.monthlyListeners,
-        dateTime: state.dateTime,
+        endDate: state.dateTime,
         spotifyUrl: artist?.spotifyUrl,
       });
       setLoading(false);

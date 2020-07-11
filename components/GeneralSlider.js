@@ -6,7 +6,7 @@ import styled, { useTheme } from "styled-native-components";
 import Slider from "@react-native-community/slider";
 import { debounce } from "lodash";
 
-import { addWeeks, formatDistanceToNow } from "date-fns";
+import { addWeeks, formatDistanceStrict, format } from "date-fns";
 import BetTimer from "../util/BetTimer";
 import { Paragraph } from "./Text";
 
@@ -97,8 +97,16 @@ const GeneralSlider = ({
         return (
           <>
             <Paragraph>
-              {formatDistanceToNow(
-                addWeeks(new Date(betTimer.starts()), sliderVal)
+              {formatDistanceStrict(
+                new Date(),
+                addWeeks(new Date(betTimer.starts()), sliderVal),
+                { unit: "day", roundingMethod: "ceil" }
+              )}
+            </Paragraph>
+            <Paragraph>
+              {format(
+                addWeeks(new Date(betTimer.starts()), sliderVal),
+                "yyyy-MM-dd"
               )}
             </Paragraph>
           </>
@@ -116,7 +124,7 @@ const GeneralSlider = ({
       default:
         break;
     }
-  }, [monthlyListeners, sliderVal, type, money]);
+  }, [type, sliderVal, monthlyListeners, money, betTimer]);
 
   return (
     <>
