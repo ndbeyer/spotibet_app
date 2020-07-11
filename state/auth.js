@@ -34,10 +34,12 @@ export const login = async ():
         | "GET_JWT_FOR_AUTH_CODE_ERROR"
         | "NO_JWT"
         | "FETCH_USER_ERROR"
-        | "NETWORK_ERROR",
+        | "NETWORK_ERROR"
+        | "ACCESS_DENIED",
     } => {
   try {
     const result = await authorize(config);
+    console.log({ result });
     const { error: getJwtForAuthCodeError } = result?.tokenAdditionalParameters;
     if (getJwtForAuthCodeError) {
       return { success: false, error: "GET_JWT_FOR_AUTH_CODE_ERROR" };
@@ -57,8 +59,13 @@ export const login = async ():
     }
     return { success: true, error: null };
   } catch (e) {
-    if (e.networkError) return { success: false, error: "NETWORK_ERROR" };
-    throw new Error(e);
+    if (e.networkError) {
+      return { success: false, error: "NETWORK_ERROR" };
+    } else if (e.message.includes("access_denied")) {
+      return { success: false, error: "ACCESS_DENIED" };
+    } else {
+      throw new Error(e);
+    }
   }
 };
 
