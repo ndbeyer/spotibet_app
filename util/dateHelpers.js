@@ -1,14 +1,5 @@
 import { format } from "date-fns";
 
-export const formatWeeks = (nWeeks) => {
-  if (nWeeks === 0) return "As soon as possible";
-  if (nWeeks < 4) return `In ${nWeeks} weeks`;
-  if (nWeeks >= 4 && nWeeks % 4)
-    return `In ${Math.floor(nWeeks / 4)} months and ${nWeeks % 4} weeks`;
-  if (nWeeks >= 4 && !(nWeeks % 4))
-    return `In ${Math.floor(nWeeks / 4)} months`;
-};
-
 export class BetTimer {
   constructor(additionalJoinTimeWeeks = 0, additionalRunTimeWeeks = 0) {
     this.minimumJoinTimeWeeks = 2;

@@ -5,7 +5,7 @@ import React from "react";
 import styled from "styled-native-components";
 
 import { Paragraph } from "./Text";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 
 const Row = styled.View`
   margin: 1rem 2rem;
@@ -39,7 +39,7 @@ const BetStatsRow = ({
       </Row>
       <Row>
         <Paragraph flex>Ending</Paragraph>
-        <Paragraph flex>{format(new Date(endDate), "dd.MM.yyyy")}</Paragraph>
+        <Paragraph flex>{formatDistanceToNow(new Date(endDate))}</Paragraph>
       </Row>
       {currentUserAmount ? (
         <Row>

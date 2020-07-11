@@ -6,7 +6,7 @@ import styled, { useTheme } from "styled-native-components";
 import Slider from "@react-native-community/slider";
 import { debounce } from "lodash";
 
-import { formatWeeks } from "../util/dateHelpers";
+import { addWeeks, formatDistanceToNow } from "date-fns";
 import BetTimer from "../util/BetTimer";
 import { Paragraph } from "./Text";
 
@@ -96,8 +96,11 @@ const GeneralSlider = ({
       case "DATE": {
         return (
           <>
-            <Paragraph>{formatWeeks(sliderVal)}</Paragraph>
-            {/* <Paragraph>{new BetTimer(0, sliderVal).ends("format")}</Paragraph> */}
+            <Paragraph>
+              {formatDistanceToNow(
+                addWeeks(new Date(betTimer.starts()), sliderVal)
+              )}
+            </Paragraph>
           </>
         );
       }

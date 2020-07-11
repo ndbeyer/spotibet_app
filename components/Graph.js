@@ -82,10 +82,11 @@ const interpolateData = (
       chunked = [];
     }
   });
-  const selectedInterval = Math.floor(intervalled.length / 10);
-  const interPolatedSelected = interpolated.filter(
-    (_, index) => index % selectedInterval === 0
-  );
+  const selectedInterval = Math.ceil(intervalled.length / 10);
+  const interPolatedSelected = interpolated
+    .reverse()
+    .filter((_, index) => index % selectedInterval === 0)
+    .reverse();
   return interPolatedSelected;
 };
 
@@ -119,45 +120,48 @@ const Graph = ({
       <Paragraph color="$neutral3">No history data available</Paragraph>
     </Wrapper>
   ) : (
-    <LineChart
-      // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
-      data={{
-        labels: interpolatedData?.map(({ dateTime }) =>
-          differenceInCalendarWeeks(new Date(dateTime), today)
-        ),
-        datasets: [
-          {
-            data: interpolatedData?.map(({ monthlyListeners }) =>
-              correctNumberForSuffix(monthlyListeners, suffix)
-            ),
+    <>
+      <LineChart
+        // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
+        data={{
+          labels: interpolatedData?.map(({ dateTime }) =>
+            differenceInCalendarWeeks(new Date(dateTime), today)
+          ),
+          datasets: [
+            {
+              data: interpolatedData?.map(({ monthlyListeners }) =>
+                correctNumberForSuffix(monthlyListeners, suffix)
+              ),
+            },
+          ],
+        }}
+        width={pxChartWidth}
+        height={pxHeight}
+        withDots={false}
+        yAxisSuffix={suffix}
+        xAxisInteval={0}
+        // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
+        chartConfig={{
+          backgroundGradientFrom: theme.colors.background0,
+          backgroundGradientTo: theme.colors.background0,
+          decimalPlaces: 0,
+          color: (opacity = 1) => theme.colors.neutral1,
+          labelColor: (opacity = 1) => theme.colors.neutral1,
+          fillShadowGradient: theme.colors.accent0,
+          strokeWidth: 0.5,
+          propsForBackgroundLines: {
+            strokeWidth: "0",
           },
-        ],
-      }}
-      width={pxChartWidth}
-      height={pxHeight}
-      withDots={false}
-      yAxisSuffix={" " + suffix}
-      xAxisInteval={0}
-      // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
-      chartConfig={{
-        backgroundGradientFrom: theme.colors.background0,
-        backgroundGradientTo: theme.colors.background0,
-        decimalPlaces: 0,
-        color: (opacity = 1) => theme.colors.neutral1,
-        labelColor: (opacity = 1) => theme.colors.neutral1,
-        fillShadowGradient: theme.colors.accent0,
-        strokeWidth: 0.5,
-        propsForBackgroundLines: {
-          strokeWidth: "0",
-        },
-        propsForLabels: {},
-      }}
-      // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
-      style={{
-        marginTop: pxMarginTop,
-        marginBottom: pxMarginBottom,
-      }}
-    />
+          propsForLabels: {},
+        }}
+        // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
+        style={{
+          marginTop: pxMarginTop,
+          marginBottom: pxMarginBottom,
+        }}
+      />
+      <Paragraph margin="-2rem 0 0 0">Weeks</Paragraph>
+    </>
   );
 };
 
