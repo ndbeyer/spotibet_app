@@ -38,49 +38,13 @@ const ArtistScreen = ({ route }) => {
   const [state, setState] = React.useState({
     monthlyListeners: null,
     dateTime: null,
-    monthlyListenersHistory: [],
   });
-
-  React.useEffect(() => {
-    if (artist?.monthlyListenersHistory) {
-      setState((b) => ({
-        ...b,
-        monthlyListenersHistory: artist.monthlyListenersHistory,
-      }));
-    }
-  }, [artist]);
 
   const [loading, setLoading] = React.useState(false);
 
-  const handleChange = React.useCallback(
-    (obj) => {
-      setState((before) => {
-        const placeHolderItem = before.monthlyListenersHistory.find(
-          ({ id }) => id === "placeholder"
-        );
-        return {
-          ...before,
-          ...obj,
-          monthlyListenersHistory:
-            before.monthlyListeners &&
-            before.dateTime &&
-            artist?.monthlyListenersHistory
-              ? [
-                  ...artist.monthlyListenersHistory,
-                  placeHolderItem
-                    ? { ...placeHolderItem, ...obj }
-                    : {
-                        id: "placeholder",
-                        dateTime: before.dateTime,
-                        monthlyListeners: before.monthlyListeners,
-                      },
-                ]
-              : before.monthlyListenersHistory,
-        };
-      });
-    },
-    [artist]
-  );
+  const handleChange = React.useCallback((obj) => {
+    setState((before) => ({ ...before, ...obj }));
+  }, []);
 
   const handleSubmit = React.useCallback(async () => {
     if (state.monthlyListeners !== artist?.monthlyListeners && state.dateTime) {
@@ -120,12 +84,7 @@ const ArtistScreen = ({ route }) => {
         followers={artist.followers}
         popularity={artist.popularity}
       />
-      <Graph data={state.monthlyListenersHistory} />
-      {/* <Row>
-        <Button label="Bets" />
-        <Button label="Create bet" backgroundColor="$background0" />
-      </Row> */}
-
+      <Graph data={artist.monthlyListenersHistory} />
       {artist.monthlyListeners ? (
         <>
           <GeneralSlider
