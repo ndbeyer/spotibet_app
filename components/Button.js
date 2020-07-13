@@ -13,7 +13,6 @@ const LoadingWrapper = styled.View`
 `;
 
 const Wrapper = styled.TouchableOpacity`
-  min-width: 15rem;
   background-color: ${(p) => p.backgroundColor};
   border-width: ${(p) => (p.outline ? 1 : 0)}px;
   border-style: solid;
@@ -57,7 +56,7 @@ const Button = ({
             disabled ? textColorDisabled : loading ? "transparent" : textColor
           }
           disabled={disabled || loading}
-          margin="1rem"
+          margin="1rem 2rem"
         >
           {label}
         </Label>

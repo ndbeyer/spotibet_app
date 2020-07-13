@@ -13,11 +13,9 @@ import Loading from "../components/Loading";
 import StatsRow from "../components/StatsRow";
 import ArtistImage from "../components/ArtistImage";
 import Graph from "../components/Graph";
-import Dialog from "../components/Dialog";
 
 import { useArtist } from "../state/artist";
 import { createBet } from "../state/bet";
-import { usePortal } from "../components/PortalProvider";
 
 const Wrapper = styled.View`
   flex-direction: row;
@@ -35,25 +33,6 @@ const ArtistScreen = ({ route }) => {
     monthlyListeners: null,
     dateTime: null,
   });
-
-  const { renderPortal, closePortal } = usePortal();
-
-  // TODO: test only
-  const handleOpenDialog = React.useCallback(() => {
-    renderPortal(
-      <Dialog
-        closePortal={closePortal}
-        tile="Error"
-        description="Error during login"
-        buttons={[
-          {
-            label: "ok",
-            onPress: () => console.log("Pressed"),
-          },
-        ]}
-      />
-    );
-  }, [closePortal, renderPortal]);
 
   const [loading, setLoading] = React.useState(false);
 
@@ -93,8 +72,6 @@ const ArtistScreen = ({ route }) => {
   ) : (
     <Screen>
       <ArtistImage artist={artist} />
-      {/* TODO: test only */}
-      <Button onPress={handleOpenDialog} label="Open Dialog" />
       <StatsRow
         monthlyListeners={artist.monthlyListeners}
         followers={artist.followers}
