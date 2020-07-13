@@ -11,6 +11,7 @@ import chroma from "chroma-js";
 
 import Navigator from "./screens/Navigator";
 import client from "./util/client";
+import PortalProvider from "./components/PortalProvider";
 
 const UNIT = 8;
 
@@ -120,7 +121,7 @@ const pathDefs = (): { [name: string]: string } => ({
       : "M15.7419641,2.96468312 L14.0804461,1.27238022 C13.9353499,1.12459559 13.697923,1.12241623 13.5501384,1.26751249 C13.5485551,1.26906697 13.5469857,1.27063547 13.5454302,1.27221781 L3.25841391,11.7371176 C3.11498483,11.8830268 3.11498483,12.1169732 3.25841391,12.2628824 L13.5454302,22.7277822 C13.6906162,22.8754787 13.9280443,22.8775139 14.0757408,22.732328 C14.0773232,22.7307725 14.0788917,22.7292031 14.0804461,22.7276198 L15.7419641,21.0353169 C15.8852181,20.8894086 15.885175,20.6556337 15.7418672,20.5097783 L7.38072917,12 L15.7418672,3.49022175 C15.885175,3.3443663 15.8852181,3.11059139 15.7419641,2.96468312 Z",
 });
 
-export const createVariables = ({ baseBorderRadius = 0.25 }) => {
+export const createVariables = ({ baseBorderRadius = 0.25 } = {}) => {
   return {
     ...Object.assign(
       ...times(5, (i) => ({
@@ -152,7 +153,9 @@ const App = () => {
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={theme}>
-        <Navigator />
+        <PortalProvider>
+          <Navigator />
+        </PortalProvider>
       </ThemeProvider>
     </ApolloProvider>
   );
