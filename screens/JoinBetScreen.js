@@ -10,8 +10,8 @@ import ScrollViewScreen from "../components/ScrollViewScreen";
 import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
 import { Label } from "../components/Text";
-import BetStatsRow from "../components/BetStatsRow";
-import StatsRow from "../components/StatsRow";
+import BetStats from "../components/BetStats";
+import ArtistStats from "../components/ArtistStats";
 import Loading from "../components/Loading";
 import ArtistImage from "../components/ArtistImage";
 
@@ -71,12 +71,12 @@ const JoinBetScreen = ({ route }) => {
     <Loading />
   ) : (
     <ScrollViewScreen renderHeaderContent={renderHeaderContent}>
-      <StatsRow
+      <ArtistStats
         monthlyListeners={bet.artist.monthlyListeners}
         followers={bet.artist.followers}
         popularity={bet.artist.popularity}
       />
-      <BetStatsRow {...bet} />
+      <BetStats {...bet} currentListeners={bet?.artist?.monthlyListeners} />
       <GeneralSlider
         type="AMOUNT"
         initialValue={0}

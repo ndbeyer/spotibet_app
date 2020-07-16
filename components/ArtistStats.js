@@ -5,11 +5,7 @@ import React from "react";
 import styled from "styled-native-components";
 
 import { Label, Paragraph } from "../components/Text";
-import {
-  getSuffix,
-  getNumberWithSuffix,
-  correctNumberForSuffix,
-} from "../util/suffix";
+import { getNumberWithSuffix } from "../util/suffix";
 
 const Row = styled.View`
   flex-direction: row;
@@ -21,7 +17,7 @@ const StatsWrapper = styled.View`
   margin: 0.5rem 1rem 2rem;
 `;
 
-const StatsRow = ({ monthlyListeners, followers, popularity }) => {
+const ArtistStats = ({ monthlyListeners, followers, popularity }) => {
   return (
     <StatsWrapper>
       <Row>
@@ -48,4 +44,4 @@ const StatsRow = ({ monthlyListeners, followers, popularity }) => {
   );
 };
 
-export default StatsRow;
+export default ArtistStats;

@@ -9,10 +9,10 @@ import styled from "styled-native-components";
 
 import ScrollViewScreen from "../components/ScrollViewScreen";
 import EmptyCard from "../components/EmptyCard";
-import { Paragraph } from "../components/Text";
+import { Paragraph, Label } from "../components/Text";
 import CardWrapper from "../components/CardWrapper";
-import ArtistRow from "../components/ArtistRow";
-import BetStatsRow from "../components/BetStatsRow";
+import BetStats from "../components/BetStats";
+import Image from "../components/Image";
 import Loading from "../components/Loading";
 
 import { BetInfoFragment } from "../state/bet";
@@ -44,6 +44,17 @@ const currentUserWins = (
     return !(listenersAtEndDate < listeners);
   }
 };
+
+const Row = styled.View`
+  align-self: stretch;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const Column = styled.View`
+  flex-direction: column;
+`;
 
 const Center = styled.View`
   flex: 1;
@@ -89,8 +100,16 @@ const BetCard = ({ id, artist, status, ...rest }) => {
   return (
     <>
       <CardWrapper key={id}>
-        <ArtistRow {...artist} />
-        <BetStatsRow {...rest} />
+        <Row>
+          <Column>
+            <Image source={artist?.image} />
+            <Label light size="s" margin="1rem" align="center">
+              {artist?.name}
+            </Label>
+          </Column>
+          <BetStats {...rest} currentListeners={artist?.monthlyListeners} />
+        </Row>
+
         {status === "ENDED" ? <BetResultRow {...rest} /> : null}
       </CardWrapper>
     </>

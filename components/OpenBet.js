@@ -6,7 +6,7 @@ import styled from "styled-native-components";
 
 import CardWrapper from "./CardWrapper";
 import Button from "./Button";
-import BetStatsRow from "./BetStatsRow";
+import BetStats from "./BetStats";
 import { useNavigation } from "@react-navigation/native";
 
 const Wrapper = styled.View`
@@ -48,7 +48,7 @@ const BetCard = ({ id, ...rest }) => {
   return (
     <>
       <CardWrapper key={id}>
-        <BetStatsRow {...rest} />
+        <BetStats {...rest} />
         <Wrapper>
           <Button onPress={handlePress} label="Join" />
         </Wrapper>

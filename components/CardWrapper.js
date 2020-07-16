@@ -11,6 +11,8 @@ const PotentiallyTouchable = styled((props) =>
   background-color: $background0;
   elevation: 1;
   padding: 1rem;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CardWrapper = (props) => {

@@ -8,11 +8,12 @@ import styled from "styled-native-components";
 import ScrollViewScreen from "../components/ScrollViewScreen";
 import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
-import OpenBet from "../components/OpenBet";
 import Loading from "../components/Loading";
-import StatsRow from "../components/StatsRow";
+import ArtistStats from "../components/ArtistStats";
 import ArtistImage from "../components/ArtistImage";
 import Graph from "../components/Graph";
+import CardWrapper from "../components/CardWrapper";
+import BetStats from "../components/BetStats";
 
 import { useArtist } from "../state/artist";
 import { createBet } from "../state/bet";
@@ -67,12 +68,19 @@ const ArtistScreen = ({ route }) => {
     }
   }, [state.monthlyListeners, state.dateTime, artist, navigation]);
 
+  const handleOpenBet = React.useCallback(
+    (betId) => {
+      navigation.navigate("JoinBet", { betId });
+    },
+    [navigation]
+  );
+
   return !artist ? (
     <Loading />
   ) : (
     <ScrollViewScreen>
       <ArtistImage artist={artist} />
-      <StatsRow
+      <ArtistStats
         monthlyListeners={artist.monthlyListeners}
         followers={artist.followers}
         popularity={artist.popularity}
@@ -112,7 +120,16 @@ const ArtistScreen = ({ route }) => {
       ) : null}
 
       {artist?.joinableBets?.map((bet) => (
-        <OpenBet key={bet.id} {...bet} />
+        <CardWrapper key={bet.id}>
+          <BetStats {...bet} currentListeners={artist?.monthlyListeners} />
+          <Wrapper>
+            <Button
+              backgroundColor="$background0"
+              onPress={() => handleOpenBet(bet.id)}
+              label="Join"
+            />
+          </Wrapper>
+        </CardWrapper>
       ))}
     </ScrollViewScreen>
   );
