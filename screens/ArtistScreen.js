@@ -12,31 +12,25 @@ import Loading from "../components/Loading";
 import ArtistStats from "../components/ArtistStats";
 import ArtistImage from "../components/ArtistImage";
 import Graph from "../components/Graph";
-import CardWrapper from "../components/CardWrapper";
-import BetStats from "../components/BetStats";
+import Dialog from "../components/Dialog";
 
 import { useArtist } from "../state/artist";
 import { createBet } from "../state/bet";
+import { usePortal } from "../components/PortalProvider";
 
-const Wrapper = styled.View`
+const Row = styled.View`
   flex-direction: row;
-  justify-content: space-around;
+  margin: 1rem 0rem;
+  justify-content: center;
   align-items: center;
-  margin: 1rem;
 `;
 
-const ArtistScreen = ({ route }) => {
-  const navigation = useNavigation();
-  const { artistId } = route.params;
-  const artist = useArtist(artistId);
-
+const BetPortal = ({ artist, navigation, closePortal }) => {
   const [state, setState] = React.useState({
     monthlyListeners: null,
     dateTime: null,
   });
-
   const [loading, setLoading] = React.useState(false);
-
   const handleChange = React.useCallback((obj) => {
     setState((before) => ({ ...before, ...obj }));
   }, []);
@@ -56,6 +50,7 @@ const ArtistScreen = ({ route }) => {
         spotifyUrl: artist?.spotifyUrl,
       });
       setLoading(false);
+      closePortal();
       if (success) {
         navigation.navigate("JoinBet", {
           betId: id,
@@ -66,14 +61,77 @@ const ArtistScreen = ({ route }) => {
     } else {
       console.log("Error, inputs are missing"); // TODO: dialog
     }
-  }, [state.monthlyListeners, state.dateTime, artist, navigation]);
+  }, [state.monthlyListeners, state.dateTime, artist, navigation, closePortal]);
 
-  const handleOpenBet = React.useCallback(
-    (betId) => {
-      navigation.navigate("JoinBet", { betId });
-    },
-    [navigation]
+  return (
+    <>
+      <GeneralSlider
+        type="LISTENERS"
+        initialValue={0}
+        step={1}
+        minSliderVal={-100}
+        maxSliderVal={100}
+        onChange={handleChange}
+        monthlyListeners={artist?.monthlyListeners}
+      />
+      <GeneralSlider
+        type="DATE"
+        initialValue={0}
+        step={1}
+        minSliderVal={0}
+        maxSliderVal={100}
+        onChange={handleChange}
+      />
+      <Row>
+        <Button
+          onPress={closePortal}
+          label="Cancel"
+          backgroundColor="$background0"
+        />
+        <Button
+          loading={loading}
+          onPress={handleSubmit}
+          label="Sumbit"
+          disabled={
+            state.monthlyListeners === artist?.monthlyListeners ||
+            !state.dateTime
+          }
+        />
+      </Row>
+    </>
   );
+};
+
+const ArtistScreen = ({ route }) => {
+  const navigation = useNavigation();
+  const { artistId } = route.params;
+  const artist = useArtist(artistId);
+  const { renderPortal, closePortal } = usePortal();
+
+  const handleCreateNewBet = React.useCallback(() => {
+    if (artist.monthlyListeners) {
+      renderPortal(
+        <Dialog closePortal={closePortal}>
+          <BetPortal
+            artist={artist}
+            navigation={navigation}
+            closePortal={closePortal}
+          />
+        </Dialog>
+      );
+    }
+  }, [artist, closePortal, navigation, renderPortal]);
+
+  const handleOpenArtistBets = React.useCallback(() => {
+    console.log("handleOpenArtistBets");
+  }, []);
+
+  // const handleOpenBet = React.useCallback(
+  //   (betId) => {
+  //     navigation.navigate("JoinBet", { betId });
+  //   },
+  //   [navigation]
+  // );
 
   return !artist ? (
     <Loading />
@@ -86,40 +144,12 @@ const ArtistScreen = ({ route }) => {
         popularity={artist.popularity}
       />
       <Graph data={artist.monthlyListenersHistory} />
-      {artist.monthlyListeners ? (
-        <>
-          <GeneralSlider
-            type="LISTENERS"
-            initialValue={0}
-            step={1}
-            minSliderVal={-100}
-            maxSliderVal={100}
-            onChange={handleChange}
-            monthlyListeners={artist?.monthlyListeners}
-          />
-          <GeneralSlider
-            type="DATE"
-            initialValue={0}
-            step={1}
-            minSliderVal={0}
-            maxSliderVal={100}
-            onChange={handleChange}
-          />
-          <Wrapper>
-            <Button
-              loading={loading}
-              onPress={handleSubmit}
-              label="Sumbit"
-              disabled={
-                state.monthlyListeners === artist?.monthlyListeners ||
-                !state.dateTime
-              }
-            />
-          </Wrapper>
-        </>
-      ) : null}
+      <Row>
+        <Button onPress={handleOpenArtistBets} label="Open bets" />
+        <Button onPress={handleCreateNewBet} label="Create new bet" />
+      </Row>
 
-      {artist?.joinableBets?.map((bet) => (
+      {/* {artist?.joinableBets?.map((bet) => (
         <CardWrapper key={bet.id}>
           <BetStats {...bet} currentListeners={artist?.monthlyListeners} />
           <Wrapper>
@@ -130,7 +160,7 @@ const ArtistScreen = ({ route }) => {
             />
           </Wrapper>
         </CardWrapper>
-      ))}
+      ))} */}
     </ScrollViewScreen>
   );
 };

@@ -39,6 +39,7 @@ const PositionWrapper = styled.TouchableOpacity`
 const Row = styled.View`
   flex-direction: row;
   justify-content: flex-end;
+  margin-top: 1rem;
 `;
 
 const Dialog = ({
@@ -52,40 +53,53 @@ const Dialog = ({
       onPress: closePortal,
     },
   ],
+  children,
 }: {
   closePortal: () => void,
   title?: string,
   description?: string,
   closeIcon?: boolean,
   buttons?: {
-    label: string,
-    onPress: () => void,
+    label?: string,
+    onPress?: () => void,
+    disabled?: boolean,
+    loading?: boolean,
   }[],
+  children?: React.Node | React.Node[],
 }) => {
   return (
     <BackgroundWrapper>
       <BackgroundOverlay onPress={closePortal} />
       <ContentWrapper>
-        <Label size="xl">{title}</Label>
-        <Paragraph margin="2rem 0rem">{description}</Paragraph>
-        <Row>
-          {buttons.map(({ label, onPress }, index) => (
-            <Button
-              margin="0 0 0 1rem"
-              key={`DialogButton${index}`}
-              label={label}
-              onPress={onPress}
-              backgroundColor={
-                buttons.length > 1 && index === 0
-                  ? "$background1"
-                  : "$background0"
-              }
-            />
-          ))}
-        </Row>
+        {children ? (
+          children
+        ) : (
+          <>
+            <Label size="xl">{title}</Label>
+            <Paragraph margin="2rem 0rem">{description}</Paragraph>
+            <Row>
+              {buttons.map(({ label, onPress, disabled, loading }, index) => (
+                <Button
+                  margin="0 0 0 1rem"
+                  key={`DialogButton${index}`}
+                  label={label}
+                  onPress={onPress}
+                  backgroundColor={
+                    buttons.length > 1 && index === 0
+                      ? "$background1"
+                      : "$background0"
+                  }
+                  disabled={disabled}
+                  loading={loading}
+                />
+              ))}
+            </Row>
+          </>
+        )}
+
         {closeIcon ? (
           <PositionWrapper onPress={closePortal}>
-            <Label size="xl">X</Label>
+            <Paragraph size="l">x</Paragraph>
           </PositionWrapper>
         ) : null}
       </ContentWrapper>
