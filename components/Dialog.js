@@ -23,7 +23,7 @@ const BackgroundOverlay = styled.TouchableOpacity`
 `;
 
 const ContentWrapper = styled.View`
-  min-width: 80%;
+  width: 80%;
   background-color: $background0;
   border-radius: 2rem;
   padding: 3rem;

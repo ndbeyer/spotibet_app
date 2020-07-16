@@ -35,7 +35,8 @@ export const login = async ():
         | "NO_JWT"
         | "FETCH_USER_ERROR"
         | "NETWORK_ERROR"
-        | "ACCESS_DENIED",
+        | "ACCESS_DENIED"
+        | "CANCELLED_APP_AUTH",
     } => {
   try {
     const result = await authorize(config);
@@ -59,10 +60,15 @@ export const login = async ():
     }
     return { success: true, error: null };
   } catch (e) {
+    console.log("run catchBlock", e);
     if (e.networkError) {
       return { success: false, error: "NETWORK_ERROR" };
     } else if (e.message.includes("access_denied")) {
+      // the user clicked cancel in the spotify ui
       return { success: false, error: "ACCESS_DENIED" };
+    } else if (e.message.includes("org.openid.appauth.general error -3")) {
+      // the user clicked cancel in the the app auth modal
+      return { success: false, error: "CANCELLED_APP_AUTH" };
     } else {
       throw new Error(e);
     }
