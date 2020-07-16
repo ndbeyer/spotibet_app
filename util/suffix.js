@@ -8,9 +8,13 @@ export const getNumberWithSuffix = (number): string => {
   return length <= 3
     ? String(number)
     : length <= 6
-    ? (number / 1000).toFixed(0) + "K"
+    ? (number / 1000).toFixed(
+        Math.max(3 - Math.round(number / 1000).toString().length, 0)
+      ) + "K"
     : length <= 9
-    ? (number / 1000000).toFixed(0) + "M"
+    ? (number / 1000000).toFixed(
+        Math.max(3 - Math.round(number / 1000000).toString().length, 0)
+      ) + "M"
     : "?";
 };
 
