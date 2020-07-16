@@ -6,7 +6,6 @@ import {
   StatusBar,
   KeyboardAvoidingView,
   Platform,
-  ScrollView,
 } from "react-native";
 
 import Loading from "./Loading";
@@ -24,13 +23,12 @@ const StyledView = styled.View`
   align-items: center;
 `;
 
-const PositionWrapper = styled.View`
-  border: 1px solid blue;
-  top: ${(p) => p.top}px;
-  left: 0;
-  position: absolute;
-  width: 5rem;
-  height: 5rem;
+const StyledScrollView = styled.ScrollView`
+  flex: 1;
+  contentContainer {
+    align-items: center;
+    width: 100%;
+  }
 `;
 
 const Wrapper = ({
@@ -43,34 +41,18 @@ const Wrapper = ({
   style?: any,
   children: ReactNode,
 }) => {
-  // this is a workaround because contentContainerStyle { padding: ... } is not supported by styled-native-components
-  const basicContentContainerStyle = useStyle(`
-    align-items: center;
-    min-height: 100%;
-    width: 100%;
-   
-  `);
-
-  const contentContainerStyle = React.useMemo(
-    () => ({
-      ...basicContentContainerStyle,
-      ...style,
-    }),
-    [basicContentContainerStyle, style]
-  );
-
   return type === "VIEW" ? (
     <StyledView style={style} {...rest}>
       {children}
     </StyledView>
   ) : type === "SCROLL" ? (
-    <ScrollView
+    <StyledScrollView
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={contentContainerStyle}
+      style={style}
       {...rest}
     >
       {children}
-    </ScrollView>
+    </StyledScrollView>
   ) : type === "KEYBOARDAVOIDING" ? (
     <KeyboardAvoidingView
       style={style}
@@ -103,7 +85,7 @@ const Screen = ({
           flex: 1,
           // borderStyle: "solid",
           // borderWidth: 5,
-          // borderColor: "red",
+          // borderColor: "blue",
         }}
       >
         <Background />
@@ -111,7 +93,6 @@ const Screen = ({
         <Wrapper type={type} style={style}>
           {loading ? <Loading /> : children}
         </Wrapper>
-        {/* <PositionWrapper top={headerHeight} /> */}
       </SafeAreaView>
     </>
   );
