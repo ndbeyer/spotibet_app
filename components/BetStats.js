@@ -15,13 +15,13 @@ const Wrapper = styled.View`
   align-items: center;
 `;
 
-const BetVisualizerWrapper = styled.View`
+const BetVisualizerWrapper = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 1rem;
 `;
 
-const BarRowWrapper = styled.View`
+const GraphSection = styled.View`
   flex-direction: row;
   justify-content: center;
   align-items: flex-end;
@@ -101,9 +101,11 @@ const BetVisualizer = ({
     [userPredictsOverShoot, predictedIsHigher]
   );
 
+  const [showDifference, setShowDifference] = React.useState(false);
+
   return (
-    <BetVisualizerWrapper>
-      <BarRowWrapper
+    <BetVisualizerWrapper onPress={() => setShowDifference((b) => !b)}>
+      <GraphSection
         topPadding={
           !predictedIsHigher || (predictedIsHigher && !userPredictsOverShoot)
         }
@@ -121,26 +123,29 @@ const BetVisualizer = ({
             <Paragraph>{getNumberWithSuffix(currentListeners)}</Paragraph>
           </Positioner>
         </Bar>
-        <DifferenceWrapper
-          height={nBarHeightMax + "rem"}
-          width={nBarWidth + "rem"}
-        >
-          <Paragraph size="s" color="$neutral3">
-            {userPredictsOverShoot ? ">" : "<"}
-          </Paragraph>
-          <Paragraph size="s" margin="0 0 0.5rem 0" color="$neutral3">
-            {predictedIsHigher ? "+" : null}
-            {getNumberWithSuffix(predictedListeners - currentListeners)}
-          </Paragraph>
-          <Paragraph size="s" color="$neutral3">
-            {predictedIsHigher ? "+" : null}
-            {(
-              ((predictedListeners - currentListeners) / currentListeners) *
-              100
-            ).toFixed()}
-            %
-          </Paragraph>
-        </DifferenceWrapper>
+        {showDifference ? (
+          <DifferenceWrapper
+            height={nBarHeightMax + "rem"}
+            width={nBarWidth + "rem"}
+          >
+            <Paragraph size="s" color="$neutral3">
+              {userPredictsOverShoot ? ">" : "<"}
+            </Paragraph>
+            <Paragraph size="s" margin="0 0 0.5rem 0" color="$neutral3">
+              {predictedIsHigher ? "+" : null}
+              {getNumberWithSuffix(predictedListeners - currentListeners)}
+            </Paragraph>
+            <Paragraph size="s" color="$neutral3">
+              {predictedIsHigher ? "+" : null}
+              {(
+                ((predictedListeners - currentListeners) / currentListeners) *
+                100
+              ).toFixed()}
+              %
+            </Paragraph>
+          </DifferenceWrapper>
+        ) : null}
+
         <BarWrapper>
           {userPredictsOverShoot ? (
             <TendencyPositioner
@@ -172,17 +177,20 @@ const BetVisualizer = ({
             ) : null}
           </Bar>
         </BarWrapper>
-      </BarRowWrapper>
+      </GraphSection>
       <XAxis />
-      <Paragraph margin="0.5rem" size="s" color="$neutral3">
-        {formatDistanceToNow(new Date(endDate))}
-      </Paragraph>
+      {endDate ? (
+        <Paragraph margin="0.5rem" size="s" color="$neutral3">
+          {formatDistanceToNow(new Date(endDate))}
+        </Paragraph>
+      ) : null}
     </BetVisualizerWrapper>
   );
 };
 
 const BetStats = ({
   listeners,
+  predictedListeners,
   currentListeners = 0,
   type,
   startDate,
@@ -191,12 +199,10 @@ const BetStats = ({
   quote, // TODO: this needs to be visualized
   currentUserAmount, // TODO: this needs to be visualized
 }) => {
-  console.log({ currentUserSupports });
-
   return (
     <Wrapper>
       <BetVisualizer
-        predictedListeners={listeners}
+        predictedListeners={listeners || predictedListeners}
         currentListeners={currentListeners}
         type={type}
         startDate={startDate}

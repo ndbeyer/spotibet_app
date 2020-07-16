@@ -13,6 +13,7 @@ import ArtistStats from "../components/ArtistStats";
 import ArtistImage from "../components/ArtistImage";
 import Graph from "../components/Graph";
 import Dialog from "../components/Dialog";
+import BetStats from "../components/BetStats";
 
 import { useArtist } from "../state/artist";
 import { createBet } from "../state/bet";
@@ -65,6 +66,14 @@ const BetPortal = ({ artist, navigation, closePortal }) => {
 
   return (
     <>
+      <BetStats
+        currentListeners={artist.monthlyListeners}
+        type={
+          state.monthlyListeners > artist.monthlyListeners ? "HIGHER" : "LOWER"
+        }
+        predictedListeners={state.monthlyListeners}
+        endDate={state.dateTime}
+      />
       <GeneralSlider
         type="LISTENERS"
         initialValue={0}
