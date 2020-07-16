@@ -4,7 +4,8 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 
-import Screen from "../components/Screen";
+import ScrollViewScreen from "../components/ScrollViewScreen";
+import Loading from "../components/Loading";
 import { Card } from "../screens/PlaylistScreen";
 
 import { useArtistsOfPlaylist } from "../state/artist";
@@ -21,8 +22,10 @@ const ArtistsOfPlaylistScreen = ({ route }) => {
     [navigation]
   );
 
-  return (
-    <Screen loading={!artistsOfPlaylist}>
+  return !artistsOfPlaylist ? (
+    <Loading />
+  ) : (
+    <ScrollViewScreen>
       {artistsOfPlaylist?.map(({ id, name, image }) => (
         <Card
           key={id}
@@ -32,7 +35,7 @@ const ArtistsOfPlaylistScreen = ({ route }) => {
           onPress={() => handlePress(id)}
         />
       ))}
-    </Screen>
+    </ScrollViewScreen>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react";
 import styled from "styled-native-components";
+
 import { SafeAreaView, StatusBar } from "react-native";
 
 import Loading from "./Loading";
@@ -11,13 +12,16 @@ const Background = styled.View`
   position: absolute;
 `;
 
-const StyledView = styled.View`
-  width: 100%;
-  height: 100%;
-  align-items: center;
+const StyledScrollView = styled.ScrollView`
+  flex: 1;
+  contentContainer {
+    align-items: center;
+    width: 100%;
+    padding: 1rem 0rem;
+  }
 `;
 
-const Screen = ({
+const ScrollView = ({
   renderHeaderContent,
   children,
   loading,
@@ -41,12 +45,12 @@ const Screen = ({
       >
         <Background />
         {renderHeaderContent ? renderHeaderContent() : null}
-        <StyledView style={style}>
+        <StyledScrollView showsVerticalScrollIndicator={false} style={style}>
           {loading ? <Loading /> : children}
-        </StyledView>
+        </StyledScrollView>
       </SafeAreaView>
     </>
   );
 };
 
-export default Screen;
+export default ScrollView;

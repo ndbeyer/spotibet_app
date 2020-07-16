@@ -5,7 +5,7 @@ import React from "react";
 import styled, { useTheme } from "styled-native-components";
 
 import Button from "../components/Button";
-import Screen from "../components/Screen";
+import ScrollViewScreen from "../components/ScrollViewScreen";
 import { Label } from "../components/Text";
 import Gradient from "../components/Gradient";
 import { logout } from "../state/auth";
@@ -33,7 +33,7 @@ const SettingsScreen = () => {
   const { colors } = theme;
 
   return (
-    <Screen>
+    <ScrollViewScreen>
       <Button onPress={logout} label="Logout" />
       <GradientBox>
         <Gradient reverse />
@@ -50,7 +50,7 @@ const SettingsScreen = () => {
           </PlaceHolder>
         ) : null;
       })}
-    </Screen>
+    </ScrollViewScreen>
   );
 };
 

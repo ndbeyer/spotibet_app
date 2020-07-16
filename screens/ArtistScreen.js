@@ -5,7 +5,7 @@ import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import styled from "styled-native-components";
 
-import Screen from "../components/Screen";
+import ScrollViewScreen from "../components/ScrollViewScreen";
 import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
 import OpenBet from "../components/OpenBet";
@@ -70,7 +70,7 @@ const ArtistScreen = ({ route }) => {
   return !artist ? (
     <Loading />
   ) : (
-    <Screen>
+    <ScrollViewScreen>
       <ArtistImage artist={artist} />
       <StatsRow
         monthlyListeners={artist.monthlyListeners}
@@ -114,7 +114,7 @@ const ArtistScreen = ({ route }) => {
       {artist?.joinableBets?.map((bet) => (
         <OpenBet key={bet.id} {...bet} />
       ))}
-    </Screen>
+    </ScrollViewScreen>
   );
 };
 

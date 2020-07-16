@@ -7,7 +7,7 @@ import { gql } from "apollo-boost";
 import { useNavigation } from "@react-navigation/native";
 import styled from "styled-native-components";
 
-import Screen from "../components/Screen";
+import ScrollViewScreen from "../components/ScrollViewScreen";
 import Loading from "../components/Loading";
 import Image from "../components/Image";
 import CardWrapper from "../components/CardWrapper";
@@ -63,7 +63,7 @@ const PlaylistScreen = () => {
   return !data ? (
     <Loading />
   ) : (
-    <Screen>
+    <ScrollViewScreen>
       {data?.playlists?.map(({ id, name, image }) => (
         <Card
           key={id}
@@ -73,7 +73,7 @@ const PlaylistScreen = () => {
           onPress={() => handlePress(id)}
         />
       ))}
-    </Screen>
+    </ScrollViewScreen>
   );
 };
 

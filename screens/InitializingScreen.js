@@ -7,9 +7,7 @@ import styled from "styled-native-components";
 import Screen from "../components/Screen";
 import Loading from "../components/Loading";
 
-const StyledScreen = styled(Screen).attrs({
-  type: "VIEW",
-})`
+const StyledScreen = styled(Screen)`
   justify-content: center;
 `;
 

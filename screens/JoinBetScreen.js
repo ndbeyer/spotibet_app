@@ -6,7 +6,7 @@ import styled, { useTheme } from "styled-native-components";
 import { Switch } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-import Screen from "../components/Screen";
+import ScrollViewScreen from "../components/ScrollViewScreen";
 import Button from "../components/Button";
 import GeneralSlider from "../components/GeneralSlider";
 import { Label } from "../components/Text";
@@ -70,7 +70,7 @@ const JoinBetScreen = ({ route }) => {
   return !bet ? (
     <Loading />
   ) : (
-    <Screen renderHeaderContent={renderHeaderContent}>
+    <ScrollViewScreen renderHeaderContent={renderHeaderContent}>
       <StatsRow
         monthlyListeners={bet.artist.monthlyListeners}
         followers={bet.artist.followers}
@@ -113,7 +113,7 @@ const JoinBetScreen = ({ route }) => {
           disabled={state.amount === 0}
         />
       </Wrapper>
-    </Screen>
+    </ScrollViewScreen>
   );
 };
 

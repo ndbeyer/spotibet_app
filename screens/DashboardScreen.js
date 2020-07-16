@@ -7,7 +7,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import styled from "styled-native-components";
 
-import Screen from "../components/Screen";
+import ScrollViewScreen from "../components/ScrollViewScreen";
 import EmptyCard from "../components/EmptyCard";
 import { Paragraph } from "../components/Text";
 import CardWrapper from "../components/CardWrapper";
@@ -160,7 +160,7 @@ const DashboardScreen = () => {
   return !filteredBets ? (
     <Loading />
   ) : (
-    <Screen renderHeaderContent={renderHeaderContent}>
+    <ScrollViewScreen renderHeaderContent={renderHeaderContent}>
       {filteredBets?.length ? (
         filteredBets.map((bet) => {
           return <BetCard key={bet.id} {...bet} />;
@@ -168,7 +168,7 @@ const DashboardScreen = () => {
       ) : (
         <EmptyCard message="No bets were found" />
       )}
-    </Screen>
+    </ScrollViewScreen>
   );
 };
 

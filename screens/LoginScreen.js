@@ -13,9 +13,7 @@ import Dialog from "../components/Dialog";
 import { login } from "../state/auth";
 import { usePortal } from "../components/PortalProvider";
 
-const StyledScreen = styled(Screen).attrs({
-  type: "VIEW",
-})`
+const StyledScreen = styled(Screen)`
   justify-content: center;
 `;
 
