@@ -76,7 +76,11 @@ const JoinBetScreen = ({ route }) => {
         followers={bet.artist.followers}
         popularity={bet.artist.popularity}
       />
-      <BetStats {...bet} currentListeners={bet?.artist?.monthlyListeners} />
+      <BetStats
+        {...bet}
+        currentListeners={bet?.artist?.monthlyListeners}
+        currentUserSupports={state.support}
+      />
       <GeneralSlider
         type="AMOUNT"
         initialValue={0}
