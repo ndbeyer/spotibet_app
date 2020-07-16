@@ -45,7 +45,6 @@ const Positioner = styled.View`
 `;
 
 const TendencyPositioner = styled.View`
-  flex: 1;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -69,7 +68,9 @@ const BarWrapper = styled.View`
 `;
 
 const StyledGradient = styled(Gradient).attrs((p) => ({
-  colors: [p.theme.colors.neutral4, p.theme.colors.background0],
+  colors: p.currentUserWins
+    ? [p.theme.colors.accent0, p.theme.colors.background0]
+    : [p.theme.colors.neutral4, p.theme.colors.background0],
 }))``;
 
 const BetVisualizer = ({
@@ -79,17 +80,32 @@ const BetVisualizer = ({
   nBarWidth = 7,
   type,
   endDate,
+  currentUserSupports,
 }) => {
   const predictedIsHigher = React.useMemo(
     () => predictedListeners > currentListeners,
     [currentListeners, predictedListeners]
   );
 
+  const userPredictsOverShoot = React.useMemo(
+    () =>
+      (type === "HIGHER" && currentUserSupports) ||
+      (type === "LOWER" && !currentUserSupports),
+    [currentUserSupports, type]
+  );
+
+  const currentUserWins = React.useMemo(
+    () =>
+      (!predictedIsHigher && userPredictsOverShoot) ||
+      (predictedIsHigher && !userPredictsOverShoot),
+    [userPredictsOverShoot, predictedIsHigher]
+  );
+
   return (
     <BetVisualizerWrapper>
       <BarRowWrapper
         topPadding={
-          !predictedIsHigher || (predictedIsHigher && type === "LOWER")
+          !predictedIsHigher || (predictedIsHigher && !userPredictsOverShoot)
         }
       >
         <Bar
@@ -100,7 +116,7 @@ const BetVisualizer = ({
           }
           width={nBarWidth + "rem"}
         >
-          <StyledGradient />
+          <StyledGradient currentUserWins={currentUserWins} />
           <Positioner textAboveBar>
             <Paragraph>{getNumberWithSuffix(currentListeners)}</Paragraph>
           </Positioner>
@@ -109,6 +125,9 @@ const BetVisualizer = ({
           height={nBarHeightMax + "rem"}
           width={nBarWidth + "rem"}
         >
+          <Paragraph size="s" color="$neutral3">
+            {userPredictsOverShoot ? ">" : "<"}
+          </Paragraph>
           <Paragraph size="s" margin="0 0 0.5rem 0" color="$neutral3">
             {predictedIsHigher ? "+" : null}
             {getNumberWithSuffix(predictedListeners - currentListeners)}
@@ -123,7 +142,7 @@ const BetVisualizer = ({
           </Paragraph>
         </DifferenceWrapper>
         <BarWrapper>
-          {type === "HIGHER" ? (
+          {userPredictsOverShoot ? (
             <TendencyPositioner
               height={nBarHeightMax / 2 + "rem"}
               width={nBarWidth + "rem"}
@@ -140,10 +159,10 @@ const BetVisualizer = ({
             width={nBarWidth + "rem"}
           >
             <StyledGradient />
-            <Positioner textAboveBar={type === "LOWER"}>
+            <Positioner textAboveBar={!userPredictsOverShoot}>
               <Paragraph>{getNumberWithSuffix(predictedListeners)}</Paragraph>
             </Positioner>
-            {type === "LOWER" ? (
+            {!userPredictsOverShoot ? (
               <TendencyPositioner
                 height={nBarHeightMax / 2 + "rem"}
                 width={nBarWidth + "rem"}
@@ -168,9 +187,12 @@ const BetStats = ({
   type,
   startDate,
   endDate,
+  currentUserSupports,
   quote, // TODO: this needs to be visualized
   currentUserAmount, // TODO: this needs to be visualized
 }) => {
+  console.log({ currentUserSupports });
+
   return (
     <Wrapper>
       <BetVisualizer
@@ -179,6 +201,7 @@ const BetStats = ({
         type={type}
         startDate={startDate}
         endDate={endDate}
+        currentUserSupports={currentUserSupports}
       />
       {/* <Row>
         <Paragraph flex>Quote</Paragraph>
