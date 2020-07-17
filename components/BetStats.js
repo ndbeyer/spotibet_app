@@ -126,90 +126,96 @@ const BetStats = ({
 
   return (
     <Wrapper>
-      <BetVisualizerWrapper onPress={() => setShowDifference((b) => !b)}>
-        <GraphSection
-          topPadding={
-            !predictedIsHigher || (predictedIsHigher && !userPredictsOverShoot)
-          }
-        >
-          <Bar
-            height={
-              predictedIsHigher
-                ? nBarHeightMax / 2 + "rem"
-                : nBarHeightMax + "rem"
+      {!currentListeners || !predictedListeners || !endDate ? null : (
+        <BetVisualizerWrapper onPress={() => setShowDifference((b) => !b)}>
+          <GraphSection
+            topPadding={
+              !predictedIsHigher ||
+              (predictedIsHigher && !userPredictsOverShoot)
             }
-            width={nBarWidth + "rem"}
           >
-            <StyledGradient
-              presentationType={presentationType}
-              currentUserWins={currentUserWins}
-            />
-            <Positioner textAboveBar>
-              <Paragraph>{getNumberWithSuffix(currentListeners)}</Paragraph>
-            </Positioner>
-          </Bar>
-          {showDifference || presentationType === "CREATE" ? (
-            <DifferenceWrapper
-              height={nBarHeightMax + "rem"}
-              width={nBarWidth + "rem"}
-            >
-              <Paragraph size="s" color="$neutral3">
-                {userPredictsOverShoot ? ">" : "<"}
-              </Paragraph>
-              <Paragraph size="s" margin="0.5rem 0" color="$neutral3">
-                {predictedIsHigher ? "+" : null}
-                {getNumberWithSuffix(predictedListeners - currentListeners)}
-              </Paragraph>
-              <Paragraph size="s" color="$neutral3">
-                {predictedIsHigher ? "+" : null}
-                {(
-                  ((predictedListeners - currentListeners) / currentListeners) *
-                  100
-                ).toFixed()}
-                %
-              </Paragraph>
-            </DifferenceWrapper>
-          ) : null}
-
-          <BarWrapper>
-            {userPredictsOverShoot ? (
-              <TendencyPositioner
-                height={nBarHeightMax / 2 + "rem"}
-                width={nBarWidth + "rem"}
-              >
-                <Paragraph>↑</Paragraph>
-              </TendencyPositioner>
-            ) : null}
             <Bar
               height={
                 predictedIsHigher
-                  ? nBarHeightMax + "rem"
-                  : nBarHeightMax / 2 + "rem"
+                  ? nBarHeightMax / 2 + "rem"
+                  : nBarHeightMax + "rem"
               }
               width={nBarWidth + "rem"}
             >
-              <StyledGradient />
-              <Positioner textAboveBar={!userPredictsOverShoot}>
-                <Paragraph>{getNumberWithSuffix(predictedListeners)}</Paragraph>
+              <StyledGradient
+                presentationType={presentationType}
+                currentUserWins={currentUserWins}
+              />
+              <Positioner textAboveBar>
+                <Paragraph>{getNumberWithSuffix(currentListeners)}</Paragraph>
               </Positioner>
-              {!userPredictsOverShoot ? (
+            </Bar>
+            {showDifference || presentationType === "CREATE" ? (
+              <DifferenceWrapper
+                height={nBarHeightMax + "rem"}
+                width={nBarWidth + "rem"}
+              >
+                <Paragraph size="s" color="$neutral3">
+                  {userPredictsOverShoot ? ">" : "<"}
+                </Paragraph>
+                <Paragraph size="s" margin="0.5rem 0" color="$neutral3">
+                  {predictedIsHigher ? "+" : null}
+                  {getNumberWithSuffix(predictedListeners - currentListeners)}
+                </Paragraph>
+                <Paragraph size="s" color="$neutral3">
+                  {predictedIsHigher ? "+" : null}
+                  {(
+                    ((predictedListeners - currentListeners) /
+                      currentListeners) *
+                    100
+                  ).toFixed()}
+                  %
+                </Paragraph>
+              </DifferenceWrapper>
+            ) : null}
+
+            <BarWrapper>
+              {userPredictsOverShoot ? (
                 <TendencyPositioner
                   height={nBarHeightMax / 2 + "rem"}
                   width={nBarWidth + "rem"}
                 >
-                  <Paragraph>↓</Paragraph>
+                  <Paragraph>↑</Paragraph>
                 </TendencyPositioner>
               ) : null}
-            </Bar>
-          </BarWrapper>
-        </GraphSection>
-        <XAxis />
-        {endDate ? (
-          <Paragraph margin="0.5rem" size="s" color="$neutral3">
-            {formatDistanceToNow(new Date(endDate))}
-          </Paragraph>
-        ) : null}
-      </BetVisualizerWrapper>
+              <Bar
+                height={
+                  predictedIsHigher
+                    ? nBarHeightMax + "rem"
+                    : nBarHeightMax / 2 + "rem"
+                }
+                width={nBarWidth + "rem"}
+              >
+                <StyledGradient />
+                <Positioner textAboveBar={!userPredictsOverShoot}>
+                  <Paragraph>
+                    {getNumberWithSuffix(predictedListeners)}
+                  </Paragraph>
+                </Positioner>
+                {!userPredictsOverShoot ? (
+                  <TendencyPositioner
+                    height={nBarHeightMax / 2 + "rem"}
+                    width={nBarWidth + "rem"}
+                  >
+                    <Paragraph>↓</Paragraph>
+                  </TendencyPositioner>
+                ) : null}
+              </Bar>
+            </BarWrapper>
+          </GraphSection>
+          <XAxis />
+          {endDate ? (
+            <Paragraph margin="0.5rem" size="s" color="$neutral3">
+              {formatDistanceToNow(new Date(endDate))}
+            </Paragraph>
+          ) : null}
+        </BetVisualizerWrapper>
+      )}
 
       {/* <Row>
         <Paragraph flex>Quote</Paragraph>
