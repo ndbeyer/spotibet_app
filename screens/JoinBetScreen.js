@@ -80,6 +80,7 @@ const JoinBetScreen = ({ route }) => {
         {...bet}
         currentListeners={bet?.artist?.monthlyListeners}
         currentUserSupports={state.support}
+        presentationType="CREATE"
       />
       <GeneralSlider
         type="AMOUNT"

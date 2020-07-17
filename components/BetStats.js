@@ -155,9 +155,6 @@ const BetStats = ({
                 height={nBarHeightMax + "rem"}
                 width={nBarWidth + "rem"}
               >
-                <Paragraph size="s" color="$neutral3">
-                  {userPredictsOverShoot ? ">" : "<"}
-                </Paragraph>
                 <Paragraph size="s" margin="0.5rem 0" color="$neutral3">
                   {predictedIsHigher ? "+" : null}
                   {getNumberWithSuffix(predictedListeners - currentListeners)}
@@ -194,6 +191,7 @@ const BetStats = ({
                 <StyledGradient />
                 <Positioner textAboveBar={!userPredictsOverShoot}>
                   <Paragraph>
+                    {userPredictsOverShoot ? "> " : "< "}
                     {getNumberWithSuffix(predictedListeners)}
                   </Paragraph>
                 </Positioner>

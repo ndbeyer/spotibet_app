@@ -107,7 +107,11 @@ const BetCard = ({ id, artist, status, ...rest }) => {
               {artist?.name}
             </Label>
           </Column>
-          <BetStats {...rest} currentListeners={artist?.monthlyListeners} />
+          <BetStats
+            {...rest}
+            currentListeners={artist?.monthlyListeners}
+            presentationType="REPORT"
+          />
         </Row>
 
         {status === "ENDED" ? <BetResultRow {...rest} /> : null}
