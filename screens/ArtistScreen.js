@@ -12,12 +12,9 @@ import ArtistStats from "../components/ArtistStats";
 import ArtistImage from "../components/ArtistImage";
 import Graph from "../components/Graph";
 import Dialog from "../components/Dialog";
-import BetStats from "../components/BetStats";
-import DateSlider from "../components/DateSlider";
-import ListenersSlider from "../components/ListenersSlider";
+import CreateBet from "../components/CreateBet";
 
 import { useArtist } from "../state/artist";
-import { createBet } from "../state/bet";
 import { usePortal } from "../components/PortalProvider";
 
 const Row = styled.View`
@@ -27,88 +24,6 @@ const Row = styled.View`
   align-items: center;
 `;
 
-const BetPortal = ({ artist, navigation, closePortal }) => {
-  const [state, setState] = React.useState({
-    monthlyListeners: null,
-    dateTime: null,
-  });
-  const [loading, setLoading] = React.useState(false);
-  const handleChange = React.useCallback((obj) => {
-    setState((before) => ({ ...before, ...obj }));
-  }, []);
-
-  const handleSubmit = React.useCallback(async () => {
-    if (state.monthlyListeners !== artist?.monthlyListeners && state.dateTime) {
-      setLoading(true);
-      const { success, id } = await createBet({
-        artistId: artist?.id,
-        artistName: artist?.name,
-        type:
-          state.monthlyListeners > artist?.monthlyListeners
-            ? "HIGHER"
-            : "LOWER",
-        listeners: state.monthlyListeners,
-        endDate: state.dateTime,
-        spotifyUrl: artist?.spotifyUrl,
-      });
-      setLoading(false);
-      closePortal();
-      if (success) {
-        navigation.navigate("JoinBet", {
-          betId: id,
-        });
-      } else {
-        console.log("createBet error"); // TODO: dialog
-      }
-    } else {
-      console.log("Error, inputs are missing"); // TODO: dialog
-    }
-  }, [state.monthlyListeners, state.dateTime, artist, navigation, closePortal]);
-
-  return (
-    <>
-      {artist.monthlyListeners === state.monthlyListeners ? null : (
-        <BetStats
-          currentListeners={artist.monthlyListeners}
-          type={
-            state.monthlyListeners > artist.monthlyListeners
-              ? "HIGHER"
-              : "LOWER"
-          }
-          predictedListeners={state.monthlyListeners}
-          endDate={state.dateTime}
-          presentationType="CREATE"
-          nBarHeightMax={10}
-          nBarWidth={10}
-        />
-      )}
-
-      <ListenersSlider
-        onChange={handleChange}
-        monthlyListeners={artist?.monthlyListeners}
-      />
-      <DateSlider initialValue={0} onChange={handleChange} />
-
-      <Row>
-        <Button
-          onPress={closePortal}
-          label="Cancel"
-          backgroundColor="$background0"
-        />
-        <Button
-          loading={loading}
-          onPress={handleSubmit}
-          label="Sumbit"
-          disabled={
-            state.monthlyListeners === artist?.monthlyListeners ||
-            !state.dateTime
-          }
-        />
-      </Row>
-    </>
-  );
-};
-
 const ArtistScreen = ({ route }) => {
   const navigation = useNavigation();
   const { artistId } = route.params;
@@ -116,17 +31,15 @@ const ArtistScreen = ({ route }) => {
   const { renderPortal, closePortal } = usePortal();
 
   const handleCreateNewBet = React.useCallback(() => {
-    if (artist.monthlyListeners) {
-      renderPortal(
-        <Dialog closePortal={closePortal}>
-          <BetPortal
-            artist={artist}
-            navigation={navigation}
-            closePortal={closePortal}
-          />
-        </Dialog>
-      );
-    }
+    renderPortal(
+      <Dialog closePortal={closePortal}>
+        <CreateBet
+          artist={artist}
+          navigation={navigation}
+          closePortal={closePortal}
+        />
+      </Dialog>
+    );
   }, [artist, closePortal, navigation, renderPortal]);
 
   const handleOpenArtistBets = React.useCallback(() => {
@@ -152,7 +65,9 @@ const ArtistScreen = ({ route }) => {
       />
       <Graph data={artist.monthlyListenersHistory} />
       <Row>
-        <Button onPress={handleOpenArtistBets} label="Open bets" />
+        {artist.monthlyListeners ? (
+          <Button onPress={handleOpenArtistBets} label="Open bets" />
+        ) : null}
         <Button onPress={handleCreateNewBet} label="Create new bet" />
       </Row>
 
