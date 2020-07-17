@@ -26,7 +26,7 @@ const ContentWrapper = styled.View`
   width: 80%;
   background-color: $background0;
   border-radius: 2rem;
-  padding: 3rem;
+  padding: 1.5rem;
 `;
 
 const PositionWrapper = styled.TouchableOpacity`

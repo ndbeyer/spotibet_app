@@ -78,6 +78,8 @@ const BetPortal = ({ artist, navigation, closePortal }) => {
           predictedListeners={state.monthlyListeners}
           endDate={state.dateTime}
           presentationType="CREATE"
+          nBarHeightMax={10}
+          nBarWidth={10}
         />
       )}
 

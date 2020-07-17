@@ -6,9 +6,10 @@ import styled, { useTheme } from "styled-native-components";
 import Slider from "@react-native-community/slider";
 import { debounce } from "lodash";
 
-import { format, formatDistanceToNow } from "date-fns";
+import { format } from "date-fns";
 import BetTimer from "../util/BetTimer";
 import { Paragraph } from "./Text";
+import Button from "./Button";
 
 const Row = styled.View`
   flex-direction: row;
@@ -24,7 +25,6 @@ const Column = styled.View`
 const Slide = styled(Slider)`
   flex: 1;
   height: 5rem;
-  margin: 0rem 2.5rem;
 `;
 
 const DateSlider = ({
@@ -53,9 +53,25 @@ const DateSlider = ({
     });
   }, [sliderVal, onChange, betTimer]);
 
+  const handleIncrement = React.useCallback(() => {
+    setSliderVal((b) => b + 1);
+  }, []);
+
+  const handleDecrement = React.useCallback(() => {
+    setSliderVal((b) => b - 1);
+  }, []);
+
   return (
     <>
       <Row>
+        <Button
+          backgroundColor="$background0"
+          label="-"
+          onPress={handleDecrement}
+          outline
+          margin="0 0.5rem 0 0"
+          textColor="$neutral3"
+        />
         <Slide
           minimumValue={minSliderVal}
           maximumValue={maxSliderVal}
@@ -65,13 +81,22 @@ const DateSlider = ({
           minimumTrackTintColor={theme.colors.background1}
           maximumTrackTintColor={theme.colors.neutral5}
         />
+        <Button
+          backgroundColor="$background0"
+          label="+"
+          onPress={handleIncrement}
+          outline
+          margin="0 0 0 0.5rem"
+          textColor="$neutral3"
+        />
       </Row>
+
       <Row>
         <Column>
           {/* <Paragraph>
             {formatDistanceToNow(new Date(betTimer.ends()))}
           </Paragraph> */}
-          <Paragraph>
+          <Paragraph color="$neutral3" margin="0" size="s">
             {format(new Date(betTimer.ends()), "yyyy-MM-dd")}
           </Paragraph>
         </Column>

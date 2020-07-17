@@ -7,10 +7,12 @@ import Slider from "@react-native-community/slider";
 import { debounce } from "lodash";
 
 import { Paragraph } from "./Text";
+import Button from "./Button";
 
 const Row = styled.View`
   flex-direction: row;
   justify-content: center;
+  align-items: center;
   padding: 1rem;
 `;
 
@@ -22,15 +24,14 @@ const Column = styled.View`
 const Slide = styled(Slider)`
   flex: 1;
   height: 5rem;
-  margin: 0rem 2.5rem;
 `;
 
 const ListenersSlider = ({
   type,
-  initialValue = 0,
+  initialValue = 1,
   step = 1,
   minSliderVal = -100,
-  maxSliderVal = 100,
+  maxSliderVal = 200,
   delay = 500,
   monthlyListeners,
   onChange,
@@ -45,6 +46,14 @@ const ListenersSlider = ({
     delay
   );
 
+  const handleIncrement = React.useCallback(() => {
+    setSliderVal((b) => b + 1);
+  }, []);
+
+  const handleDecrement = React.useCallback(() => {
+    setSliderVal((b) => b - 1);
+  }, []);
+
   React.useEffect(() => {
     if (!monthlyListeners) return;
     onChange({
@@ -57,6 +66,14 @@ const ListenersSlider = ({
   return (
     <>
       <Row>
+        <Button
+          backgroundColor="$background0"
+          label="-"
+          onPress={handleDecrement}
+          outline
+          margin="0 0.5rem 0 0"
+          textColor="$neutral3"
+        />
         <Slide
           minimumValue={minSliderVal}
           maximumValue={maxSliderVal}
@@ -66,15 +83,19 @@ const ListenersSlider = ({
           minimumTrackTintColor={theme.colors.background1}
           maximumTrackTintColor={theme.colors.neutral5}
         />
+        <Button
+          backgroundColor="$background0"
+          label="+"
+          onPress={handleIncrement}
+          outline
+          margin="0 0 0 0.5rem"
+          textColor="$neutral3"
+        />
       </Row>
       <Row>
         <Column>
-          <Paragraph>
-            {sliderVal}%{" "}
-            {sliderVal === 0 ? null : sliderVal > 0 ? "increase" : "decrease"}
-          </Paragraph>
-          <Paragraph>
-            {sliderVal === 0 ? "=" : sliderVal > 0 ? ">" : "<"}
+          <Paragraph color="$neutral3" margin="0" size="s">
+            {sliderVal === 0 ? "= " : sliderVal > 0 ? "> " : "< "}
             {Math.floor(
               monthlyListeners + (sliderVal / 100) * monthlyListeners
             )}{" "}

@@ -156,7 +156,7 @@ const BetStats = ({
               <Paragraph size="s" color="$neutral3">
                 {userPredictsOverShoot ? ">" : "<"}
               </Paragraph>
-              <Paragraph size="s" margin="0 0 0.5rem 0" color="$neutral3">
+              <Paragraph size="s" margin="0.5rem 0" color="$neutral3">
                 {predictedIsHigher ? "+" : null}
                 {getNumberWithSuffix(predictedListeners - currentListeners)}
               </Paragraph>
