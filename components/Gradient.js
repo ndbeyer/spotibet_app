@@ -17,14 +17,13 @@ const orientations = {
   DIAGDOWN: { x1: "1", y1: "1", x2: "0", y2: "0" },
 };
 
-const Wrapper = styled.View`
+const StyledWrapper = styled.View`
   position: absolute;
-  width: 100%;
-  height: 100%;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: transparent;
 `;
 
 const GradientDefinition = ({
@@ -74,24 +73,48 @@ const Gradient = ({
   colors = reverse && colors ? colors.reverse() : colors;
   opacities = reverse && opacities ? opacities.reverse() : opacities;
 
+  const [layout, setLayout] = React.useState();
+  const handleLayout = React.useCallback(({ nativeEvent }) => {
+    setLayout(nativeEvent.layout);
+  }, []);
+
+  console.log({ width: layout?.width, height: layout?.height });
+
+  const style = useStyle(`
+    position: absolute;
+    width: ${layout ? layout.width + "px" : "100%"};
+		height: ${layout ? layout.height + "px" : "100%"};
+    background-color: transparent;
+  `);
+
+  const memodBackgroundElement = React.useMemo(
+    () => (
+      <View style={style}>
+        <Svg width="100%" height="100%">
+          <GradientDefinition
+            id={gradId}
+            colors={colors}
+            orientation={orientation}
+            opacities={opacities}
+          />
+          <Rect
+            x="0"
+            y="0"
+            width="100%"
+            height="100%"
+            fill={`url(#grad${gradId})`}
+          />
+        </Svg>
+      </View>
+    ),
+
+    [colors, gradId, opacities, orientation, style]
+  );
+
   return (
-    <Wrapper>
-      <Svg width="100%" height="100%">
-        <GradientDefinition
-          id={gradId}
-          colors={colors}
-          orientation={orientation}
-          opacities={opacities}
-        />
-        <Rect
-          x="0"
-          y="0"
-          width="100%"
-          height="100%"
-          fill={`url(#grad${gradId})`}
-        />
-      </Svg>
-    </Wrapper>
+    <StyledWrapper onLayout={handleLayout}>
+      {memodBackgroundElement}
+    </StyledWrapper>
   );
 };
 
