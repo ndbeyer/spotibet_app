@@ -7,13 +7,14 @@ import styled from "styled-native-components";
 
 import ScrollViewScreen from "../components/ScrollViewScreen";
 import Button from "../components/Button";
-import GeneralSlider from "../components/GeneralSlider";
 import Loading from "../components/Loading";
 import ArtistStats from "../components/ArtistStats";
 import ArtistImage from "../components/ArtistImage";
 import Graph from "../components/Graph";
 import Dialog from "../components/Dialog";
 import BetStats from "../components/BetStats";
+import DateSlider from "../components/DateSlider";
+import ListenersSlider from "../components/ListenersSlider";
 
 import { useArtist } from "../state/artist";
 import { createBet } from "../state/bet";
@@ -66,31 +67,26 @@ const BetPortal = ({ artist, navigation, closePortal }) => {
 
   return (
     <>
-      <BetStats
-        currentListeners={artist.monthlyListeners}
-        type={
-          state.monthlyListeners > artist.monthlyListeners ? "HIGHER" : "LOWER"
-        }
-        predictedListeners={state.monthlyListeners}
-        endDate={state.dateTime}
-      />
-      <GeneralSlider
-        type="LISTENERS"
-        initialValue={0}
-        step={1}
-        minSliderVal={-100}
-        maxSliderVal={100}
+      {artist.monthlyListeners === state.monthlyListeners ? null : (
+        <BetStats
+          currentListeners={artist.monthlyListeners}
+          type={
+            state.monthlyListeners > artist.monthlyListeners
+              ? "HIGHER"
+              : "LOWER"
+          }
+          predictedListeners={state.monthlyListeners}
+          endDate={state.dateTime}
+          presentationType="CREATE"
+        />
+      )}
+
+      <ListenersSlider
         onChange={handleChange}
         monthlyListeners={artist?.monthlyListeners}
       />
-      <GeneralSlider
-        type="DATE"
-        initialValue={0}
-        step={1}
-        minSliderVal={0}
-        maxSliderVal={100}
-        onChange={handleChange}
-      />
+      <DateSlider initialValue={0} onChange={handleChange} />
+
       <Row>
         <Button
           onPress={closePortal}

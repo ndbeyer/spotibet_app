@@ -6,7 +6,12 @@ import styled, { useTheme } from "styled-native-components";
 import Slider from "@react-native-community/slider";
 import { debounce } from "lodash";
 
-import { addWeeks, formatDistanceStrict, format } from "date-fns";
+import {
+  addWeeks,
+  formatDistanceStrict,
+  format,
+  formatDistanceToNow,
+} from "date-fns";
 import BetTimer from "../util/BetTimer";
 import { Paragraph } from "./Text";
 
@@ -48,8 +53,6 @@ const GeneralSlider = ({
     delay
   );
 
-  const betTimer = React.useMemo(() => new BetTimer(0, sliderVal), [sliderVal]);
-
   React.useEffect(() => {
     switch (type) {
       case "LISTENERS":
@@ -62,18 +65,14 @@ const GeneralSlider = ({
           ),
         });
         break;
-      case "DATE":
-        onChange({
-          dateTime: betTimer.ends("iso"),
-        });
-        break;
+
       case "AMOUNT":
         onChange({ amount: sliderVal });
         break;
       default:
         break;
     }
-  }, [monthlyListeners, sliderVal, onChange, type, betTimer]);
+  }, [monthlyListeners, sliderVal, onChange, type]);
 
   const renderText = React.useCallback(() => {
     switch (type) {
@@ -93,25 +92,6 @@ const GeneralSlider = ({
             </Paragraph>
           </>
         );
-      case "DATE": {
-        return (
-          <>
-            <Paragraph>
-              {formatDistanceStrict(
-                new Date(),
-                addWeeks(new Date(betTimer.starts()), sliderVal),
-                { unit: "day", roundingMethod: "ceil" }
-              )}
-            </Paragraph>
-            <Paragraph>
-              {format(
-                addWeeks(new Date(betTimer.starts()), sliderVal),
-                "yyyy-MM-dd"
-              )}
-            </Paragraph>
-          </>
-        );
-      }
       case "AMOUNT":
         return (
           <>
@@ -124,7 +104,7 @@ const GeneralSlider = ({
       default:
         break;
     }
-  }, [type, sliderVal, monthlyListeners, money, betTimer]);
+  }, [type, sliderVal, monthlyListeners, money]);
 
   return (
     <>
