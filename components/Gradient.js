@@ -78,8 +78,6 @@ const Gradient = ({
     setLayout(nativeEvent.layout);
   }, []);
 
-  console.log({ width: layout?.width, height: layout?.height });
-
   const style = useStyle(`
     position: absolute;
     width: ${layout ? layout.width + "px" : "100%"};

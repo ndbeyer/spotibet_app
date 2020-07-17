@@ -16,6 +16,8 @@ export const BetInfoFragment = gql`
     startDate
     endDate
     quote
+    supportersAmount
+    contradictorsAmount
     currentUserAmount
     currentUserSupports
     status

@@ -38,10 +38,11 @@ const Bar = styled.View`
 const Positioner = styled.View`
   position: absolute;
   left: 0;
-  top: ${(p) => (p.textAboveBar ? "-2.75rem" : "0")};
+  top: ${(p) => p.top || "0"};
   width: 100%;
   flex-direction: row;
   justify-content: center;
+  /* border: 1px solid red; */
 `;
 
 const TendencyPositioner = styled.View`
@@ -57,10 +58,11 @@ const DifferenceWrapper = styled.View`
   align-items: center;
 `;
 
-const XAxis = styled.View`
+const XBorder = styled.View`
   height: 1px;
   background-color: $neutral4;
   align-self: stretch;
+  margin: ${(p) => p.margin || "0"};
 `;
 
 const BarWrapper = styled.View`
@@ -73,6 +75,14 @@ const StyledGradient = styled(Gradient).attrs((p) => ({
       ? [p.theme.colors.accent0, p.theme.colors.background0]
       : [p.theme.colors.neutral4, p.theme.colors.background0],
 }))``;
+
+const QuoteBar = styled.View`
+  width: ${(p) => p.width};
+  height: ${(p) => p.height};
+  justify-content: space-between;
+  align-items: center;
+  /* border: 1px solid red; */
+`;
 
 const BetStats = ({
   listeners,
@@ -87,6 +97,8 @@ const BetStats = ({
   startDate, // TODO: do we need this?
   quote, // TODO: this needs to be visualized
   currentUserAmount, // TODO: this needs to be visualized
+  supportersAmount,
+  contradictorsAmount,
 }: {
   listeners?: number,
   predictedListeners?: number,
@@ -100,7 +112,11 @@ const BetStats = ({
   startDate?: string, // TODO: do we need this?
   quote?: number, // TODO: this needs to be visualized
   currentUserAmount?: number, // TODO: this needs to be visualized
+  supportersAmount?: number,
+  contradictorsAmount?: number,
 }) => {
+  console.log({ supportersAmount, contradictorsAmount, type, quote });
+
   predictedListeners = listeners || predictedListeners;
 
   const predictedIsHigher = React.useMemo(
@@ -108,18 +124,20 @@ const BetStats = ({
     [currentListeners, predictedListeners]
   );
 
-  const userPredictsOverShoot = React.useMemo(
+  const userType = React.useMemo(
     () =>
       (type === "HIGHER" && currentUserSupports) ||
-      (type === "LOWER" && !currentUserSupports),
+      (type === "LOWER" && !currentUserSupports)
+        ? "HIGHER"
+        : "LOWER",
     [currentUserSupports, type]
   );
 
   const currentUserWins = React.useMemo(
     () =>
-      (!predictedIsHigher && userPredictsOverShoot) ||
-      (predictedIsHigher && !userPredictsOverShoot),
-    [userPredictsOverShoot, predictedIsHigher]
+      (!predictedIsHigher && userType === "HIGHER") ||
+      (predictedIsHigher && userType === "LOWER"),
+    [predictedIsHigher, userType]
   );
 
   const [showDifference, setShowDifference] = React.useState(false);
@@ -130,8 +148,7 @@ const BetStats = ({
         <BetVisualizerWrapper onPress={() => setShowDifference((b) => !b)}>
           <GraphSection
             topPadding={
-              !predictedIsHigher ||
-              (predictedIsHigher && !userPredictsOverShoot)
+              !predictedIsHigher || (predictedIsHigher && userType === "LOWER")
             }
           >
             <Bar
@@ -146,7 +163,7 @@ const BetStats = ({
                 presentationType={presentationType}
                 currentUserWins={currentUserWins}
               />
-              <Positioner textAboveBar>
+              <Positioner top="-3rem">
                 <Paragraph>{getNumberWithSuffix(currentListeners)}</Paragraph>
               </Positioner>
             </Bar>
@@ -172,7 +189,7 @@ const BetStats = ({
             ) : null}
 
             <BarWrapper>
-              {userPredictsOverShoot ? (
+              {userType === "HIGHER" ? (
                 <TendencyPositioner
                   height={nBarHeightMax / 2 + "rem"}
                   width={nBarWidth + "rem"}
@@ -189,13 +206,13 @@ const BetStats = ({
                 width={nBarWidth + "rem"}
               >
                 <StyledGradient />
-                <Positioner textAboveBar={!userPredictsOverShoot}>
+                <Positioner top={userType === "LOWER" ? "-3rem" : "0"}>
                   <Paragraph>
-                    {userPredictsOverShoot ? "> " : "< "}
+                    {userType === "HIGHER" ? "> " : "< "}
                     {getNumberWithSuffix(predictedListeners)}
                   </Paragraph>
                 </Positioner>
-                {!userPredictsOverShoot ? (
+                {userType === "LOWER" ? (
                   <TendencyPositioner
                     height={nBarHeightMax / 2 + "rem"}
                     width={nBarWidth + "rem"}
@@ -205,8 +222,47 @@ const BetStats = ({
                 ) : null}
               </Bar>
             </BarWrapper>
+            {showDifference && presentationType !== "CREATE" ? (
+              <QuoteBar
+                width={nBarWidth + "rem"}
+                height={
+                  predictedIsHigher
+                    ? nBarHeightMax + "rem"
+                    : nBarHeightMax / 2 + "rem"
+                }
+              >
+                <XBorder margin="0 1rem" />
+                <Positioner top="-2rem">
+                  <Paragraph size="s" color="$neutral3">
+                    {type === "HIGHER"
+                      ? getNumberWithSuffix(supportersAmount)
+                      : getNumberWithSuffix(contradictorsAmount)}
+                  </Paragraph>
+                </Positioner>
+                <Positioner>
+                  <Paragraph size="s" color="$neutral3">
+                    {type === "HIGHER"
+                      ? getNumberWithSuffix(contradictorsAmount)
+                      : getNumberWithSuffix(supportersAmount)}
+                  </Paragraph>
+                </Positioner>
+                {type !== userType ? (
+                  <Paragraph size="s" color="$neutral3">
+                    {(contradictorsAmount /
+                      (contradictorsAmount + supportersAmount)) *
+                      100}
+                  </Paragraph>
+                ) : (
+                  <Paragraph size="s" color="$neutral3">
+                    {(supportersAmount /
+                      (contradictorsAmount + supportersAmount)) *
+                      100}
+                  </Paragraph>
+                )}
+              </QuoteBar>
+            ) : null}
           </GraphSection>
-          <XAxis />
+          <XBorder />
           {endDate ? (
             <Paragraph margin="0.5rem" size="s" color="$neutral3">
               {formatDistanceToNow(new Date(endDate))}
@@ -214,7 +270,6 @@ const BetStats = ({
           ) : null}
         </BetVisualizerWrapper>
       )}
-
       {/* <Row>
         <Paragraph flex>Quote</Paragraph>
         <Paragraph flex>{quote ? quote : "-"}</Paragraph>
