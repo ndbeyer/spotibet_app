@@ -246,14 +246,13 @@ const BetStats = ({
             </TextPositioner>
             {type !== userType ? (
               <Paragraph size="s" color="$neutral3">
-                {(contradictorsAmount /
-                  (contradictorsAmount + supportersAmount)) *
-                  100}
+                Q:
+                {contradictorsAmount / (contradictorsAmount + supportersAmount)}
               </Paragraph>
             ) : (
               <Paragraph size="s" color="$neutral3">
-                {(supportersAmount / (contradictorsAmount + supportersAmount)) *
-                  100}
+                Q:
+                {supportersAmount / (contradictorsAmount + supportersAmount)}
               </Paragraph>
             )}
           </QuoteContent>
