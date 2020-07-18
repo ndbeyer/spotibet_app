@@ -10,12 +10,7 @@ import Gradient from "./Gradient";
 
 import { getNumberWithSuffix } from "../util/suffix";
 
-const Wrapper = styled.View`
-  justify-content: center;
-  align-items: center;
-`;
-
-const BetVisualizerWrapper = styled.TouchableOpacity`
+const Wrapper = styled.TouchableOpacity`
   justify-content: center;
   align-items: center;
   padding: 1rem;
@@ -27,6 +22,7 @@ const GraphSection = styled.View`
   align-items: flex-end;
   align-self: center;
   padding: ${(p) => (p.topPadding ? "3rem" : "0rem")} 0rem 0.5rem;
+  /* border: 1px solid red; */
 `;
 
 const Bar = styled.View`
@@ -35,7 +31,7 @@ const Bar = styled.View`
   width: ${(p) => p.width};
 `;
 
-const Positioner = styled.View`
+const TextPositioner = styled.View`
   position: absolute;
   left: 0;
   top: ${(p) => p.top || "0"};
@@ -45,13 +41,7 @@ const Positioner = styled.View`
   /* border: 1px solid red; */
 `;
 
-const TendencyPositioner = styled.View`
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
-
-const DifferenceWrapper = styled.View`
+const DifferenceContent = styled.View`
   height: ${(p) => p.height};
   width: ${(p) => p.width};
   justify-content: center;
@@ -65,7 +55,7 @@ const XBorder = styled.View`
   margin: ${(p) => p.margin || "0"};
 `;
 
-const BarWrapper = styled.View`
+const Column = styled.View`
   flex-direction: column;
 `;
 
@@ -76,12 +66,26 @@ const StyledGradient = styled(Gradient).attrs((p) => ({
       : [p.theme.colors.neutral4, p.theme.colors.background0],
 }))``;
 
-const QuoteBar = styled.View`
+const QuoteContent = styled.View`
   width: ${(p) => p.width};
   height: ${(p) => p.height};
   justify-content: space-between;
   align-items: center;
   /* border: 1px solid red; */
+`;
+
+const BarContent = styled.View`
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid blue; */
+`;
+
+const BarSection = styled.View`
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+  /* border: 1px solid pink; */
 `;
 
 const BetStats = ({
@@ -142,15 +146,15 @@ const BetStats = ({
 
   const [showDifference, setShowDifference] = React.useState(false);
 
-  return (
-    <Wrapper>
-      {!currentListeners || !predictedListeners || !endDate ? null : (
-        <BetVisualizerWrapper onPress={() => setShowDifference((b) => !b)}>
-          <GraphSection
-            topPadding={
-              !predictedIsHigher || (predictedIsHigher && userType === "LOWER")
-            }
-          >
+  return !currentListeners || !predictedListeners || !endDate ? null : (
+    <Wrapper onPress={() => setShowDifference((b) => !b)}>
+      <GraphSection
+        topPadding={
+          !predictedIsHigher || (predictedIsHigher && userType === "LOWER")
+        }
+      >
+        <BarContent>
+          <BarSection>
             <Bar
               height={
                 predictedIsHigher
@@ -163,12 +167,12 @@ const BetStats = ({
                 presentationType={presentationType}
                 currentUserWins={currentUserWins}
               />
-              <Positioner top="-3rem">
+              <TextPositioner top="-3rem">
                 <Paragraph>{getNumberWithSuffix(currentListeners)}</Paragraph>
-              </Positioner>
+              </TextPositioner>
             </Bar>
             {showDifference || presentationType === "CREATE" ? (
-              <DifferenceWrapper
+              <DifferenceContent
                 height={nBarHeightMax + "rem"}
                 width={nBarWidth + "rem"}
               >
@@ -185,17 +189,12 @@ const BetStats = ({
                   ).toFixed()}
                   %
                 </Paragraph>
-              </DifferenceWrapper>
+              </DifferenceContent>
             ) : null}
 
-            <BarWrapper>
+            <Column>
               {userType === "HIGHER" ? (
-                <TendencyPositioner
-                  height={nBarHeightMax / 2 + "rem"}
-                  width={nBarWidth + "rem"}
-                >
-                  <Paragraph>↑</Paragraph>
-                </TendencyPositioner>
+                <Paragraph align="center">↑</Paragraph>
               ) : null}
               <Bar
                 height={
@@ -206,80 +205,66 @@ const BetStats = ({
                 width={nBarWidth + "rem"}
               >
                 <StyledGradient />
-                <Positioner top={userType === "LOWER" ? "-3rem" : "0"}>
+                <TextPositioner top={userType === "LOWER" ? "-3rem" : "0"}>
                   <Paragraph>
                     {userType === "HIGHER" ? "> " : "< "}
                     {getNumberWithSuffix(predictedListeners)}
                   </Paragraph>
-                </Positioner>
+                </TextPositioner>
                 {userType === "LOWER" ? (
-                  <TendencyPositioner
-                    height={nBarHeightMax / 2 + "rem"}
-                    width={nBarWidth + "rem"}
-                  >
-                    <Paragraph>↓</Paragraph>
-                  </TendencyPositioner>
+                  <Paragraph align="center">↓</Paragraph>
                 ) : null}
               </Bar>
-            </BarWrapper>
-            {showDifference && presentationType !== "CREATE" ? (
-              <QuoteBar
-                width={nBarWidth + "rem"}
-                height={
-                  predictedIsHigher
-                    ? nBarHeightMax + "rem"
-                    : nBarHeightMax / 2 + "rem"
-                }
-              >
-                <XBorder margin="0 1rem" />
-                <Positioner top="-2rem">
-                  <Paragraph size="s" color="$neutral3">
-                    {type === "HIGHER"
-                      ? getNumberWithSuffix(supportersAmount)
-                      : getNumberWithSuffix(contradictorsAmount)}
-                  </Paragraph>
-                </Positioner>
-                <Positioner>
-                  <Paragraph size="s" color="$neutral3">
-                    {type === "HIGHER"
-                      ? getNumberWithSuffix(contradictorsAmount)
-                      : getNumberWithSuffix(supportersAmount)}
-                  </Paragraph>
-                </Positioner>
-                {type !== userType ? (
-                  <Paragraph size="s" color="$neutral3">
-                    {(contradictorsAmount /
-                      (contradictorsAmount + supportersAmount)) *
-                      100}
-                  </Paragraph>
-                ) : (
-                  <Paragraph size="s" color="$neutral3">
-                    {(supportersAmount /
-                      (contradictorsAmount + supportersAmount)) *
-                      100}
-                  </Paragraph>
-                )}
-              </QuoteBar>
-            ) : null}
-          </GraphSection>
-          <XBorder />
-          {endDate ? (
-            <Paragraph margin="0.5rem" size="s" color="$neutral3">
-              {formatDistanceToNow(new Date(endDate))}
-            </Paragraph>
-          ) : null}
-        </BetVisualizerWrapper>
-      )}
-      {/* <Row>
-        <Paragraph flex>Quote</Paragraph>
-        <Paragraph flex>{quote ? quote : "-"}</Paragraph>
-      </Row>
-      {currentUserAmount ? (
-        <Row>
-          <Paragraph flex>Joined</Paragraph>
-          <Paragraph flex>{currentUserAmount}</Paragraph>
-        </Row>
-      ) : null} */}
+            </Column>
+          </BarSection>
+          <XBorder margin="0" />
+        </BarContent>
+
+        {showDifference && presentationType !== "CREATE" ? (
+          <QuoteContent
+            width={nBarWidth + "rem"}
+            height={
+              predictedIsHigher
+                ? nBarHeightMax + "rem"
+                : nBarHeightMax / 2 + "rem"
+            }
+          >
+            <TextPositioner top="-2rem">
+              <Paragraph size="s" color="$neutral3">
+                {type === "HIGHER"
+                  ? getNumberWithSuffix(supportersAmount)
+                  : getNumberWithSuffix(contradictorsAmount)}
+              </Paragraph>
+            </TextPositioner>
+            <XBorder margin="0 1rem" />
+            <TextPositioner>
+              <Paragraph size="s" color="$neutral3">
+                {type === "HIGHER"
+                  ? getNumberWithSuffix(contradictorsAmount)
+                  : getNumberWithSuffix(supportersAmount)}
+              </Paragraph>
+            </TextPositioner>
+            {type !== userType ? (
+              <Paragraph size="s" color="$neutral3">
+                {(contradictorsAmount /
+                  (contradictorsAmount + supportersAmount)) *
+                  100}
+              </Paragraph>
+            ) : (
+              <Paragraph size="s" color="$neutral3">
+                {(supportersAmount / (contradictorsAmount + supportersAmount)) *
+                  100}
+              </Paragraph>
+            )}
+          </QuoteContent>
+        ) : null}
+      </GraphSection>
+
+      {endDate ? (
+        <Paragraph margin="0.5rem" size="s" color="$neutral3">
+          {formatDistanceToNow(new Date(endDate))}
+        </Paragraph>
+      ) : null}
     </Wrapper>
   );
 };
