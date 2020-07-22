@@ -27,7 +27,7 @@ const ContentWrapper = styled.View`
   width: 80%;
   background-color: $background0;
   border-radius: 2rem;
-  padding: 1.5rem;
+  padding: ${(p) => p.padding};
 `;
 
 const Row = styled.View`
@@ -58,21 +58,16 @@ const PortalProvider = ({ children }) => {
     setContents((b) => [...b.slice(0, b.length - 1)]);
   }, []);
 
-  contents.map((c) => console.log(typeof c, c));
-
   return (
     <>
       <PortalContext.Provider value={value}>{children}</PortalContext.Provider>
       {contents.length
         ? contents.map((content, index) => {
             const isComponent = Boolean(content?.["$$typeof"]);
-            console.log("isComponent", isComponent);
-            console.log("content", content);
-
             return (
               <BackgroundWrapper key={`Portal${index}`}>
                 <BackgroundOverlay onPress={handleClosePortal} />
-                <ContentWrapper>
+                <ContentWrapper padding={isComponent ? "1.5rem" : "2.5rem"}>
                   {isComponent ? (
                     content
                   ) : (
