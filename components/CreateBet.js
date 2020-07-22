@@ -17,7 +17,7 @@ const Row = styled.View`
   align-items: center;
 `;
 
-const CreateBet = ({ artist, navigation, closePortal }) => {
+const CreateBet = ({ artist, navigation, closePortal, renderPortal }) => {
   const [state, setState] = React.useState({
     monthlyListeners: null,
     dateTime: null,
@@ -48,12 +48,25 @@ const CreateBet = ({ artist, navigation, closePortal }) => {
           betId: id,
         });
       } else {
-        console.log("createBet error"); // TODO: dialog
+        renderPortal({
+          title: "Error",
+          description: "An unexpected Error occured. Please try again",
+        });
       }
     } else {
-      console.log("Error, inputs are missing"); // TODO: dialog
+      renderPortal({
+        title: "Error",
+        description: "You need to specify your bet",
+      });
     }
-  }, [state.monthlyListeners, state.dateTime, artist, navigation, closePortal]);
+  }, [
+    state.monthlyListeners,
+    state.dateTime,
+    artist,
+    closePortal,
+    navigation,
+    renderPortal,
+  ]);
 
   return (
     <>
@@ -89,10 +102,11 @@ const CreateBet = ({ artist, navigation, closePortal }) => {
           loading={loading}
           onPress={handleSubmit}
           label="Sumbit"
-          disabled={
-            state.monthlyListeners === artist?.monthlyListeners ||
-            !state.dateTime
-          }
+          // TODO remove after testing portals is done
+          // disabled={
+          //   state.monthlyListeners === artist?.monthlyListeners ||
+          //   !state.dateTime
+          // }
         />
       </Row>
     </>

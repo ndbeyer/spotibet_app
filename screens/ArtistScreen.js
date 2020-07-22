@@ -11,7 +11,6 @@ import Loading from "../components/Loading";
 import ArtistStats from "../components/ArtistStats";
 import ArtistImage from "../components/ArtistImage";
 import Graph from "../components/Graph";
-import Dialog from "../components/Dialog";
 import CreateBet from "../components/CreateBet";
 
 import { useArtist } from "../state/artist";
@@ -32,13 +31,12 @@ const ArtistScreen = ({ route }) => {
 
   const handleCreateNewBet = React.useCallback(() => {
     renderPortal(
-      <Dialog closePortal={closePortal}>
-        <CreateBet
-          artist={artist}
-          navigation={navigation}
-          closePortal={closePortal}
-        />
-      </Dialog>
+      <CreateBet
+        artist={artist}
+        navigation={navigation}
+        closePortal={closePortal}
+        renderPortal={renderPortal}
+      />
     );
   }, [artist, closePortal, navigation, renderPortal]);
 

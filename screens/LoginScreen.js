@@ -8,7 +8,6 @@ import Button from "../components/Button";
 import Screen from "../components/Screen";
 import Loading from "../components/Loading";
 import { Heading, Label, Paragraph } from "../components/Text";
-import Dialog from "../components/Dialog";
 
 import { login } from "../state/auth";
 import { usePortal } from "../components/PortalProvider";
@@ -31,19 +30,16 @@ const LoginScreen = () => {
   const [clicked, setClicked] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
-  const { renderPortal, closePortal } = usePortal();
+  const { renderPortal } = usePortal();
 
   const handleError = React.useCallback(
     (errorCode) => {
-      renderPortal(
-        <Dialog
-          closePortal={closePortal}
-          title="Error"
-          description={loginErrorDescriptions[errorCode]}
-        />
-      );
+      renderPortal({
+        title: "Error",
+        description: loginErrorDescriptions[errorCode],
+      });
     },
-    [closePortal, renderPortal]
+    [renderPortal]
   );
 
   const handleLogin = React.useCallback(async () => {
