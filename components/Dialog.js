@@ -68,42 +68,39 @@ const Dialog = ({
   children?: React.Node | React.Node[],
 }) => {
   return (
-    <BackgroundWrapper>
-      <BackgroundOverlay onPress={closePortal} />
-      <ContentWrapper>
-        {children ? (
-          children
-        ) : (
-          <>
-            <Label size="xl">{title}</Label>
-            <Paragraph margin="2rem 0rem">{description}</Paragraph>
-            <Row>
-              {buttons.map(({ label, onPress, disabled, loading }, index) => (
-                <Button
-                  margin="0 0 0 1rem"
-                  key={`DialogButton${index}`}
-                  label={label}
-                  onPress={onPress}
-                  backgroundColor={
-                    buttons.length > 1 && index === 0
-                      ? "$background1"
-                      : "$background0"
-                  }
-                  disabled={disabled}
-                  loading={loading}
-                />
-              ))}
-            </Row>
-          </>
-        )}
+    <>
+      {children ? (
+        children
+      ) : (
+        <>
+          <Label size="xl">{title}</Label>
+          <Paragraph margin="2rem 0rem">{description}</Paragraph>
+          <Row>
+            {buttons.map(({ label, onPress, disabled, loading }, index) => (
+              <Button
+                margin="0 0 0 1rem"
+                key={`DialogButton${index}`}
+                label={label}
+                onPress={onPress}
+                backgroundColor={
+                  buttons.length > 1 && index === 0
+                    ? "$background1"
+                    : "$background0"
+                }
+                disabled={disabled}
+                loading={loading}
+              />
+            ))}
+          </Row>
+        </>
+      )}
 
-        {closeIcon ? (
-          <PositionWrapper onPress={closePortal}>
-            <Paragraph size="l">x</Paragraph>
-          </PositionWrapper>
-        ) : null}
-      </ContentWrapper>
-    </BackgroundWrapper>
+      {closeIcon ? (
+        <PositionWrapper onPress={closePortal}>
+          <Paragraph size="l">x</Paragraph>
+        </PositionWrapper>
+      ) : null}
+    </>
   );
 };
 
