@@ -41,12 +41,11 @@ const ArtistBetsScreen = ({ route }) => {
     <ScrollViewScreen renderHeaderContent={renderHeaderContent}>
       {artist.joinableBets?.map((bet) => (
         <CardWrapper key={bet.id}>
-          <BetStats {...bet} currentListeners={artist?.monthlyListeners} />
-
-          <Button
-            backgroundColor="$background0"
-            onPress={() => handleOpenBet(bet.id)}
-            label="Join"
+          <BetStats
+            {...bet}
+            currentListeners={artist?.monthlyListeners}
+            defaultShowDifference={true}
+            onPress={() => handleOpenBet(bet.id)} // TODO: handle press e.g. type should be details in this case
           />
         </CardWrapper>
       ))}

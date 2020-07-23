@@ -35,6 +35,8 @@ const expectedErrors = {
   NOT_ENOUGH_MONEY: "You don't have enough money.",
 };
 
+// TOOD: don't allow antagonistic join for same bet
+
 const JoinBet = ({
   betId,
   closePortal,

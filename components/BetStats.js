@@ -98,11 +98,11 @@ const BetStats = ({
   currentUserSupports = true,
   nBarHeightMax = 10,
   nBarWidth = 7,
-  startDate, // TODO: do we need this?
-  quote, // TODO: this needs to be visualized
-  currentUserAmount, // TODO: this needs to be visualized
+  startDate,
+  currentUserAmount,
   supportersAmount,
   contradictorsAmount,
+  defaultShowDifference,
 }: {
   listeners?: number,
   predictedListeners?: number,
@@ -113,11 +113,11 @@ const BetStats = ({
   currentUserSupports?: boolean,
   nBarHeightMax?: number,
   nBarWidth?: number,
-  startDate?: string, // TODO: do we need this?
-  quote?: number, // TODO: this needs to be visualized
-  currentUserAmount?: number, // TODO: this needs to be visualized
+  startDate?: string,
+  currentUserAmount?: number,
   supportersAmount?: number,
   contradictorsAmount?: number,
+  defaultShowDifference?: Boolean,
 }) => {
   predictedListeners = listeners || predictedListeners;
 
@@ -142,7 +142,9 @@ const BetStats = ({
     [predictedIsHigher, userType]
   );
 
-  const [showDifference, setShowDifference] = React.useState(false);
+  const [showDifference, setShowDifference] = React.useState(
+    defaultShowDifference
+  );
 
   return !currentListeners || !predictedListeners || !endDate ? null : (
     <Wrapper onPress={() => setShowDifference((b) => !b)}>
@@ -235,6 +237,10 @@ const BetStats = ({
                 {type === "HIGHER"
                   ? getNumberWithSuffix(supportersAmount)
                   : getNumberWithSuffix(contradictorsAmount)}
+                {(type === "HIGHER" && userType === type) ||
+                (type === "LOWER" && userType !== type && currentUserAmount)
+                  ? ` (${currentUserAmount})`
+                  : null}
               </Paragraph>
             </TextPositioner>
             <XBorder margin="0 1rem" />
@@ -243,9 +249,16 @@ const BetStats = ({
                 {type === "HIGHER"
                   ? getNumberWithSuffix(contradictorsAmount)
                   : getNumberWithSuffix(supportersAmount)}
+                {(type === "LOWER" && userType === type) ||
+                (type === "HIGHER" && userType !== type && currentUserAmount)
+                  ? ` (${currentUserAmount})`
+                  : null}
               </Paragraph>
             </TextPositioner>
-            {type !== userType ? (
+            {isNaN(
+              supportersAmount / (contradictorsAmount + supportersAmount)
+            ) ? null : type !== userType && currentUserAmount ? (
+              // user contradicts
               <Paragraph size="s" color="$neutral3">
                 Q:
                 {contradictorsAmount / (contradictorsAmount + supportersAmount)}
@@ -266,7 +279,7 @@ const BetStats = ({
         </Paragraph>
       ) : null}
       {startDate ? (
-        <Paragraph margin="0 0 0.5rem" size="s" color="$neutral3">
+        <Paragraph margin="0rem 0 0.5rem" size="s" color="$neutral3">
           closes in {formatDistanceToNow(new Date(startDate))}
         </Paragraph>
       ) : null}

@@ -35,7 +35,7 @@ const SettingsScreen = () => {
   return (
     <ScrollViewScreen>
       <Button onPress={logout} label="Logout" />
-      <GradientBox>
+      {/* <GradientBox>
         <Gradient reverse />
       </GradientBox>
       {colors.accentGradient0.map((color, index) => (
@@ -49,7 +49,7 @@ const SettingsScreen = () => {
             <Label size="m">{typeof key === "string" ? key : ""}</Label>
           </PlaceHolder>
         ) : null;
-      })}
+      })} */}
     </ScrollViewScreen>
   );
 };
