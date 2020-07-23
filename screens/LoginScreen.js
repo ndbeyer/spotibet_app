@@ -36,7 +36,8 @@ const LoginScreen = () => {
     (errorCode) => {
       renderPortal({
         title: "Error",
-        description: loginErrorDescriptions[errorCode],
+        description:
+          loginErrorDescriptions[errorCode] || "Unexpected Server Error",
       });
     },
     [renderPortal]

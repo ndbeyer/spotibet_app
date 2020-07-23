@@ -46,7 +46,7 @@ const client = new ApolloClient({
   defaultOptions: {
     watchQuery: { errorPolicy: "all", fetchPolicy: "cache-first" },
     query: { errorPolicy: "all", fetchPolicy: "cache-first" },
-    mutation: { errorPolicy: "all", fetchPolicy: "cache-first" },
+    mutate: { errorPolicy: "all" },
   },
   dataIdFromObject: (object) => object.id || null,
 });

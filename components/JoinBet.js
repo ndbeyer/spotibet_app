@@ -28,6 +28,12 @@ const SuccessWrapper = styled.View`
   align-items: center;
 `;
 
+const expectedErrors = {
+  NETWORK_ERROR: "Network error. You seem to be offline.",
+  BET_NOT_JOINABLE: "You can no longer join this bet.",
+  NOT_ENOUGH_MONEY: "You don't have enough money.",
+};
+
 const JoinBet = ({
   betId,
   closePortal,
@@ -54,10 +60,20 @@ const JoinBet = ({
 
   const [joinedBet, setJoinedBet] = React.useState(false);
 
+  const handleError = React.useCallback(
+    (errorCode) => {
+      renderPortal({
+        title: "Error",
+        description: expectedErrors[errorCode] || "Unexpected Error",
+      });
+    },
+    [renderPortal]
+  );
+
   const handleSubmit = React.useCallback(async () => {
     setLoading(true);
     // TODO: handle api errors
-    const { success } = await joinBet({
+    const { success, error } = await joinBet({
       betId: bet?.id,
       support: state.support,
       amount: state.amount,
@@ -66,12 +82,9 @@ const JoinBet = ({
     if (success) {
       setJoinedBet(true);
     } else {
-      renderPortal({
-        title: "Error",
-        description: "An unexpected Error occured. Please try again",
-      });
+      handleError(error);
     }
-  }, [bet, state.support, state.amount, renderPortal]);
+  }, [bet, state.support, state.amount, handleError]);
 
   React.useEffect(() => {
     if (joinedBet) {
