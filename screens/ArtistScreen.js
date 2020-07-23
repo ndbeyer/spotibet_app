@@ -12,6 +12,7 @@ import ArtistStats from "../components/ArtistStats";
 import ArtistImage from "../components/ArtistImage";
 import Graph from "../components/Graph";
 import CreateBet from "../components/CreateBet";
+import JoinBet from "../components/JoinBet";
 
 import { useArtist } from "../state/artist";
 import { usePortal } from "../components/PortalProvider";
@@ -29,6 +30,19 @@ const ArtistScreen = ({ route }) => {
   const artist = useArtist(artistId);
   const { renderPortal, closePortal } = usePortal();
 
+  const handleJoinBet = React.useCallback(
+    (betId) => {
+      renderPortal(
+        <JoinBet
+          betId={betId}
+          closePortal={closePortal}
+          renderPortal={renderPortal}
+        />
+      );
+    },
+    [closePortal, renderPortal]
+  );
+
   const handleCreateNewBet = React.useCallback(() => {
     renderPortal(
       <CreateBet
@@ -36,9 +50,10 @@ const ArtistScreen = ({ route }) => {
         navigation={navigation}
         closePortal={closePortal}
         renderPortal={renderPortal}
+        onCreatedBet={handleJoinBet}
       />
     );
-  }, [artist, closePortal, navigation, renderPortal]);
+  }, [artist, closePortal, handleJoinBet, navigation, renderPortal]);
 
   const handleOpenArtistBets = React.useCallback(() => {
     console.log("handleOpenArtistBets");

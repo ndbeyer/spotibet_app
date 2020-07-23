@@ -8,7 +8,9 @@ import Button from "../components/Button";
 import BetStats from "../components/BetStats";
 import DateSlider from "../components/DateSlider";
 import ListenersSlider from "../components/ListenersSlider";
+import { Paragraph } from "../components/Text";
 import { createBet } from "../state/bet";
+import delay from "../util/delay";
 
 const Row = styled.View`
   flex-direction: row;
@@ -17,7 +19,15 @@ const Row = styled.View`
   align-items: center;
 `;
 
-const CreateBet = ({ artist, navigation, closePortal, renderPortal }) => {
+const SuccessWrapper = styled.View`
+  height: 5rem;
+  flex-direction: row;
+  align-self: stretch;
+  justify-content: center;
+  align-items: center;
+`;
+
+const CreateBet = ({ artist, onCreatedBet, closePortal, renderPortal }) => {
   const [state, setState] = React.useState({
     monthlyListeners: null,
     dateTime: null,
@@ -27,48 +37,42 @@ const CreateBet = ({ artist, navigation, closePortal, renderPortal }) => {
     setState((before) => ({ ...before, ...obj }));
   }, []);
 
+  const [betId, setBetId] = React.useState(null);
+
   const handleSubmit = React.useCallback(async () => {
-    if (state.monthlyListeners !== artist?.monthlyListeners && state.dateTime) {
-      setLoading(true);
-      const { success, id } = await createBet({
-        artistId: artist?.id,
-        artistName: artist?.name,
-        type:
-          state.monthlyListeners > artist?.monthlyListeners
-            ? "HIGHER"
-            : "LOWER",
-        listeners: state.monthlyListeners,
-        endDate: state.dateTime,
-        spotifyUrl: artist?.spotifyUrl,
-      });
-      setLoading(false);
-      closePortal();
-      if (success) {
-        navigation.navigate("JoinBet", {
-          betId: id,
-        });
-      } else {
-        renderPortal({
-          title: "Error",
-          description: "An unexpected Error occured. Please try again",
-        });
-      }
+    setLoading(true);
+    const { success, id } = await createBet({
+      artistId: artist?.id,
+      artistName: artist?.name,
+      type:
+        state.monthlyListeners > artist?.monthlyListeners ? "HIGHER" : "LOWER",
+      listeners: state.monthlyListeners,
+      endDate: state.dateTime,
+      spotifyUrl: artist?.spotifyUrl,
+    });
+    setLoading(false);
+
+    if (success) {
+      setBetId(id);
     } else {
       renderPortal({
         title: "Error",
-        description: "You need to specify your bet",
+        description: "An unexpected Error occured. Please try again",
       });
     }
-  }, [
-    state.monthlyListeners,
-    state.dateTime,
-    artist,
-    closePortal,
-    navigation,
-    renderPortal,
-  ]);
+  }, [state.monthlyListeners, state.dateTime, artist, renderPortal]);
 
-  return (
+  React.useEffect(() => {
+    if (betId) {
+      (async () => {
+        await delay(2000);
+        closePortal();
+        onCreatedBet(betId);
+      })();
+    }
+  }, [betId, closePortal, onCreatedBet]);
+
+  return !betId ? (
     <>
       {artist.monthlyListeners === state.monthlyListeners ? null : (
         <BetStats
@@ -101,15 +105,20 @@ const CreateBet = ({ artist, navigation, closePortal, renderPortal }) => {
         <Button
           loading={loading}
           onPress={handleSubmit}
-          label="Sumbit"
-          // TODO remove after testing portals is done
-          // disabled={
-          //   state.monthlyListeners === artist?.monthlyListeners ||
-          //   !state.dateTime
-          // }
+          label="Submit"
+          disabled={
+            state.monthlyListeners === artist?.monthlyListeners ||
+            !state.dateTime
+          }
         />
       </Row>
     </>
+  ) : (
+    <SuccessWrapper>
+      <Paragraph flex align="center">
+        Successfully created bet...
+      </Paragraph>
+    </SuccessWrapper>
   );
 };
 

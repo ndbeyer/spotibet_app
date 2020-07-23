@@ -83,7 +83,7 @@ const PortalProvider = ({ children }) => {
 
                       <Row>
                         {content?.buttons?.map(
-                          ({ label, onPress, disabled, loading }, index) => (
+                          ({ label, onPress, disabled, loading }) => (
                             <Button
                               margin="0 0 0 1rem"
                               key={`DialogButton${index}`}

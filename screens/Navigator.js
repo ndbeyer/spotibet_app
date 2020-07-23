@@ -18,7 +18,6 @@ import PlaylistScreen from "./PlaylistScreen";
 import ArtistsOfPlaylistScreen from "./ArtistsOfPlaylistScreen";
 import ArtistScreen from "./ArtistScreen";
 import TransactionsScreen from "./TransactionsScreen";
-import JoinBetScreen from "./JoinBetScreen";
 import SettingsScreen from "./SettingsScreen";
 
 import { useUser, fetchUser } from "../state/user";
@@ -48,11 +47,6 @@ const CreateStack = () => {
       <Stack.Screen
         name="Artist"
         component={ArtistScreen}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="JoinBet"
-        component={JoinBetScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

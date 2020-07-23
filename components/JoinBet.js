@@ -4,19 +4,14 @@
 import React from "react";
 import styled, { useTheme } from "styled-native-components";
 import { Switch } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 
-import ScrollViewScreen from "../components/ScrollViewScreen";
-import Button from "../components/Button";
-import GeneralSlider from "../components/GeneralSlider";
-import { Label } from "../components/Text";
-import BetStats from "../components/BetStats";
-import ArtistStats from "../components/ArtistStats";
-import Loading from "../components/Loading";
-import ArtistImage from "../components/ArtistImage";
-
+import Button from "./Button";
+import AmountSlider from "./AmountSlider";
+import { Label, Paragraph } from "./Text";
+import BetStats from "./BetStats";
 import { useBet, joinBet } from "../state/bet";
 import { useUser } from "../state/user";
+import delay from "../util/delay";
 
 const Wrapper = styled.View`
   flex-direction: row;
@@ -25,10 +20,24 @@ const Wrapper = styled.View`
   margin: 1rem;
 `;
 
-const JoinBetScreen = ({ route }) => {
-  const navigation = useNavigation();
+const SuccessWrapper = styled.View`
+  height: 5rem;
+  flex-direction: row;
+  align-self: stretch;
+  justify-content: center;
+  align-items: center;
+`;
+
+const JoinBet = ({
+  betId,
+  closePortal,
+  renderPortal,
+}: {
+  betId: string,
+  closePortal: () => any,
+  renderPortal: () => any, // TODO
+}) => {
   const theme = useTheme();
-  const { betId } = route.params;
   const bet = useBet(betId);
   const { currentUser } = useUser();
 
@@ -43,50 +52,45 @@ const JoinBetScreen = ({ route }) => {
     setState((before) => ({ ...before, ...obj }));
   }, []);
 
+  const [joinedBet, setJoinedBet] = React.useState(false);
+
   const handleSubmit = React.useCallback(async () => {
-    if (state.amount > 0) {
-      setLoading(true);
-      const { success, error } = await joinBet({
-        betId: bet?.id,
-        support: state.support,
-        amount: state.amount,
-      });
-      setLoading(false);
-      if (success) {
-        navigation.goBack();
-      } else {
-        console.log("error", error); // TODO: dialog
-      }
+    setLoading(true);
+    // TODO: handle api errors
+    const { success } = await joinBet({
+      betId: bet?.id,
+      support: state.support,
+      amount: state.amount,
+    });
+    setLoading(false);
+    if (success) {
+      setJoinedBet(true);
     } else {
-      console.log("not enough money"); // TODO: dialog
+      renderPortal({
+        title: "Error",
+        description: "An unexpected Error occured. Please try again",
+      });
     }
-  }, [state.amount, state.support, bet, navigation]);
+  }, [bet, state.support, state.amount, renderPortal]);
 
-  const renderHeaderContent = React.useCallback(
-    () => <ArtistImage artist={bet.artist} heightFactor={0.3} />,
-    [bet.artist]
-  );
+  React.useEffect(() => {
+    if (joinedBet) {
+      (async () => {
+        await delay(2000);
+        closePortal();
+      })();
+    }
+  }, [betId, closePortal, joinedBet]);
 
-  return !bet ? (
-    <Loading />
-  ) : (
-    <ScrollViewScreen renderHeaderContent={renderHeaderContent}>
-      <ArtistStats
-        monthlyListeners={bet.artist.monthlyListeners}
-        followers={bet.artist.followers}
-        popularity={bet.artist.popularity}
-      />
+  return !joinedBet ? (
+    <>
       <BetStats
         {...bet}
         currentListeners={bet?.artist?.monthlyListeners}
         currentUserSupports={state.support}
         presentationType="CREATE"
       />
-      <GeneralSlider
-        type="AMOUNT"
-        initialValue={0}
-        step={1}
-        minSliderVal={0}
+      <AmountSlider
         maxSliderVal={currentUser?.money}
         onChange={handleChange}
         money={currentUser?.money}
@@ -118,8 +122,14 @@ const JoinBetScreen = ({ route }) => {
           disabled={state.amount === 0}
         />
       </Wrapper>
-    </ScrollViewScreen>
+    </>
+  ) : (
+    <SuccessWrapper>
+      <Paragraph flex align="center">
+        Successfully joined bet...
+      </Paragraph>
+    </SuccessWrapper>
   );
 };
 
-export default JoinBetScreen;
+export default JoinBet;
