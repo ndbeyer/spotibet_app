@@ -96,30 +96,6 @@ const BetResultRow = ({
   );
 };
 
-const BetCard = ({ id, artist, status, ...rest }) => {
-  return (
-    <>
-      <CardWrapper key={id}>
-        <Row>
-          <Column>
-            <Image source={artist?.image} />
-            <Label light size="s" margin="1rem" align="center">
-              {artist?.name}
-            </Label>
-          </Column>
-          <BetStats
-            {...rest}
-            currentListeners={artist?.monthlyListeners}
-            presentationType="REPORT"
-          />
-        </Row>
-
-        {status === "ENDED" ? <BetResultRow {...rest} /> : null}
-      </CardWrapper>
-    </>
-  );
-};
-
 const filterTypes = ["JOINABLE", "INVALID", "RUNNING", "ENDED"];
 
 const FilterWrapper = styled.View`
@@ -187,7 +163,26 @@ const DashboardScreen = () => {
     <ScrollViewScreen renderHeaderContent={renderHeaderContent}>
       {filteredBets?.length ? (
         filteredBets.map((bet) => {
-          return <BetCard key={bet.id} {...bet} />;
+          return (
+            <CardWrapper key={bet.id}>
+              <Row>
+                <Column>
+                  <Image source={bet.artist.image} />
+                  <Label light size="s" margin="1rem" align="center">
+                    {bet.artist?.name}
+                  </Label>
+                </Column>
+                <BetStats
+                  {...bet}
+                  currentListeners={bet.artist.monthlyListeners}
+                  presentationType="REPORT"
+                  startDate={selected === "JOINABLE" ? bet.startDate : null}
+                />
+              </Row>
+
+              {bet.status === "ENDED" ? <BetResultRow {...bet} /> : null}
+            </CardWrapper>
+          );
         })
       ) : (
         <EmptyCard message="No bets were found" />

@@ -119,8 +119,6 @@ const BetStats = ({
   supportersAmount?: number,
   contradictorsAmount?: number,
 }) => {
-  console.log({ supportersAmount, contradictorsAmount, type, quote });
-
   predictedListeners = listeners || predictedListeners;
 
   const predictedIsHigher = React.useMemo(
@@ -176,6 +174,9 @@ const BetStats = ({
                 height={nBarHeightMax + "rem"}
                 width={nBarWidth + "rem"}
               >
+                <Paragraph size="s" color="$neutral3">
+                  Δ
+                </Paragraph>
                 <Paragraph size="s" margin="0.5rem 0" color="$neutral3">
                   {predictedIsHigher ? "+" : null}
                   {getNumberWithSuffix(predictedListeners - currentListeners)}
@@ -207,7 +208,7 @@ const BetStats = ({
                 <StyledGradient />
                 <TextPositioner top={userType === "LOWER" ? "-3rem" : "0"}>
                   <Paragraph>
-                    {userType === "HIGHER" ? "> " : "< "}
+                    {/* {userType === "HIGHER" ? "> " : "< "} */}
                     {getNumberWithSuffix(predictedListeners)}
                   </Paragraph>
                 </TextPositioner>
@@ -258,10 +259,15 @@ const BetStats = ({
           </QuoteContent>
         ) : null}
       </GraphSection>
-
       {endDate ? (
         <Paragraph margin="0.5rem" size="s" color="$neutral3">
+          {/* {startDate ? "ends in " : ""} */}
           {formatDistanceToNow(new Date(endDate))}
+        </Paragraph>
+      ) : null}
+      {startDate ? (
+        <Paragraph margin="0 0 0.5rem" size="s" color="$neutral3">
+          closes in {formatDistanceToNow(new Date(startDate))}
         </Paragraph>
       ) : null}
     </Wrapper>

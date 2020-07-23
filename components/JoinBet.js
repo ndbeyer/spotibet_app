@@ -7,6 +7,7 @@ import { Switch } from "react-native";
 
 import Button from "./Button";
 import AmountSlider from "./AmountSlider";
+import Loading from "./Loading";
 import { Label, Paragraph } from "./Text";
 import BetStats from "./BetStats";
 import { useBet, joinBet } from "../state/bet";
@@ -95,13 +96,16 @@ const JoinBet = ({
     }
   }, [betId, closePortal, joinedBet]);
 
-  return !joinedBet ? (
+  return !bet ? (
+    <Loading />
+  ) : !joinedBet ? (
     <>
       <BetStats
         {...bet}
         currentListeners={bet?.artist?.monthlyListeners}
         currentUserSupports={state.support}
         presentationType="CREATE"
+        startDate={bet.startDate}
       />
       <AmountSlider
         maxSliderVal={currentUser?.money}
