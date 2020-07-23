@@ -56,15 +56,8 @@ const ArtistScreen = ({ route }) => {
   }, [artist, closePortal, handleJoinBet, navigation, renderPortal]);
 
   const handleOpenArtistBets = React.useCallback(() => {
-    console.log("handleOpenArtistBets");
-  }, []);
-
-  // const handleOpenBet = React.useCallback(
-  //   (betId) => {
-  //     navigation.navigate("JoinBet", { betId });
-  //   },
-  //   [navigation]
-  // );
+    navigation.navigate("ArtistBetsScreen", { artistId: artist?.id });
+  }, [artist, navigation]);
 
   return !artist ? (
     <Loading />
@@ -83,19 +76,6 @@ const ArtistScreen = ({ route }) => {
         ) : null}
         <Button onPress={handleCreateNewBet} label="Create new bet" />
       </Row>
-
-      {/* {artist?.joinableBets?.map((bet) => (
-        <CardWrapper key={bet.id}>
-          <BetStats {...bet} currentListeners={artist?.monthlyListeners} />
-          <Wrapper>
-            <Button
-              backgroundColor="$background0"
-              onPress={() => handleOpenBet(bet.id)}
-              label="Join"
-            />
-          </Wrapper>
-        </CardWrapper>
-      ))} */}
     </ScrollViewScreen>
   );
 };
