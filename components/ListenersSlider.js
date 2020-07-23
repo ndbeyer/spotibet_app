@@ -47,12 +47,12 @@ const ListenersSlider = ({
   );
 
   const handleIncrement = React.useCallback(() => {
-    setSliderVal((b) => b + 1);
-  }, []);
+    setSliderVal((b) => Math.min(b + 1, maxSliderVal));
+  }, [maxSliderVal]);
 
   const handleDecrement = React.useCallback(() => {
-    setSliderVal((b) => b - 1);
-  }, []);
+    setSliderVal((b) => Math.max(b - 1, minSliderVal));
+  }, [minSliderVal]);
 
   React.useEffect(() => {
     if (!monthlyListeners) return;
