@@ -152,7 +152,17 @@ export const createBet = async ({
   listeners: number,
   endDate: string,
   spotifyUrl: string,
-}) => {
+}): Promise<
+  | { success: true, error: null }
+  | {
+      success: false,
+      error:
+        | "NETWORK_ERROR"
+        | "INVALID_BET_TIMING"
+        | "STAT_SERVER_ERROR"
+        | "DB_ERROR",
+    }
+> => {
   try {
     const { errors, data } = await client.mutate({
       mutation: gql`
@@ -224,7 +234,7 @@ export const createBet = async ({
       },
     });
     if (errors) {
-      return { success: false, error: errors[0] };
+      return { success: false, error: errors[0].message };
     } else {
       return { success: true, id: data?.createBet?.bet?.id };
     }

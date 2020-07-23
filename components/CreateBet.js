@@ -27,6 +27,12 @@ const SuccessWrapper = styled.View`
   align-items: center;
 `;
 
+const expectedErrors = {
+  NETWORK_ERROR: "Network error. You seem to be offline.",
+  INVALID_BET_TIMING: "Invalid date.",
+  STAT_SERVER_ERROR: "Unexpected Error.",
+};
+
 const CreateBet = ({ artist, onCreatedBet, closePortal, renderPortal }) => {
   const [state, setState] = React.useState({
     monthlyListeners: null,
@@ -39,9 +45,19 @@ const CreateBet = ({ artist, onCreatedBet, closePortal, renderPortal }) => {
 
   const [betId, setBetId] = React.useState(null);
 
+  const handleError = React.useCallback(
+    (errorCode) => {
+      renderPortal({
+        title: "Error",
+        description: expectedErrors[errorCode] || "Unexpected Error",
+      });
+    },
+    [renderPortal]
+  );
+
   const handleSubmit = React.useCallback(async () => {
     setLoading(true);
-    const { success, id } = await createBet({
+    const { success, id, error } = await createBet({
       artistId: artist?.id,
       artistName: artist?.name,
       type:
@@ -55,12 +71,9 @@ const CreateBet = ({ artist, onCreatedBet, closePortal, renderPortal }) => {
     if (success) {
       setBetId(id);
     } else {
-      renderPortal({
-        title: "Error",
-        description: "An unexpected Error occured. Please try again",
-      });
+      handleError(error);
     }
-  }, [state.monthlyListeners, state.dateTime, artist, renderPortal]);
+  }, [artist, state.monthlyListeners, state.dateTime, handleError]);
 
   React.useEffect(() => {
     if (betId) {
