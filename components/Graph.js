@@ -7,17 +7,12 @@ import styled, {
   useTheme,
   useLengthAttribute,
 } from "styled-native-components";
-import { Paragraph } from "../components/Text";
-import {
-  differenceInCalendarWeeks,
-  addWeeks,
-  parseISO,
-  format,
-} from "date-fns";
+import { differenceInCalendarWeeks } from "date-fns";
 import { LineChart } from "react-native-chart-kit";
-import { times } from "lodash";
 
+import { Paragraph } from "../components/Text";
 import { getSuffix, correctNumberForSuffix } from "../util/suffix";
+import interpolate from "../util/interpolate";
 
 const Wrapper = styled.View`
   margin: ${(p) => p.margin};
@@ -29,66 +24,6 @@ const Wrapper = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
-const interpolateData = (
-  data: { id: string, dateTime: string, monthlyListeners: number }[]
-) => {
-  if (!data.length) return null;
-
-  const addWeeksToDateString = (string, weeks) => {
-    return format(addWeeks(parseISO(string), weeks), "yyyy-MM-dd");
-  };
-  const formatYYYMMDD = (string) => format(parseISO(string), "yyyy-MM-dd");
-  const oldestDate = data[0].dateTime;
-  const newestDate = data[data.length - 1].dateTime;
-  const nWeeks = Math.abs(
-    differenceInCalendarWeeks(parseISO(oldestDate), parseISO(newestDate))
-  );
-  const intervalled = times(nWeeks + 1).map((week) => {
-    const startOfWeek = addWeeksToDateString(oldestDate, week);
-    return {
-      dateTime: startOfWeek,
-      monthlyListeners: data.find(
-        ({ dateTime }) => formatYYYMMDD(dateTime) === startOfWeek
-      )?.monthlyListeners,
-    };
-  });
-
-  let first = undefined;
-  let chunked = [];
-  let interpolated = [];
-
-  intervalled.map((interval) => {
-    if (interval.monthlyListeners && !first) {
-      first = interval;
-      interpolated.push(interval);
-    } else if (!interval.monthlyListeners) {
-      chunked.push(interval);
-    } else if (interval.monthlyListeners && first) {
-      const last = interval;
-      const firstLastDifference =
-        last.monthlyListeners - first.monthlyListeners;
-      chunked = chunked.map((interval2, indeX) => ({
-        ...interval2,
-        monthlyListeners: Number(
-          (
-            first.monthlyListeners +
-            ((indeX + 1) / chunked.length) * firstLastDifference
-          ).toFixed(0)
-        ),
-      }));
-      interpolated = [...interpolated, ...chunked, last];
-      first = interval;
-      chunked = [];
-    }
-  });
-  const selectedInterval = Math.ceil(intervalled.length / 10);
-  const interPolatedSelected = interpolated
-    .reverse()
-    .filter((_, index) => index % selectedInterval === 0)
-    .reverse();
-  return interPolatedSelected;
-};
 
 const Graph = ({
   data = [],
@@ -117,7 +52,8 @@ const Graph = ({
     [data]
   );
   const today = React.useMemo(() => new Date(), []);
-  const interpolatedData = React.useMemo(() => interpolateData(data), [data]);
+  const interpolatedData = React.useMemo(() => interpolate(data), [data]);
+
   const decimalPlaces = React.useMemo(
     () =>
       interpolatedData?.length
