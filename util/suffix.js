@@ -21,8 +21,12 @@ export const getNumberWithSuffix = (number): string => {
 export const correctNumberForSuffix = (number, suffix) => {
   return {
     "": number,
-    K: number / 1000,
-    M: number / 1000000,
+    K: (number / 1000).toFixed(
+      Math.max(3 - Math.round(number / 1000).toString().length, 0)
+    ),
+    M: (number / 1000000).toFixed(
+      Math.max(3 - Math.round(number / 1000000).toString().length, 0)
+    ),
     "?": number,
   }[suffix];
 };

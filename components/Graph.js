@@ -33,7 +33,7 @@ const Wrapper = styled.View`
 const interpolateData = (
   data: { id: string, dateTime: string, monthlyListeners: number }[]
 ) => {
-  if (!data.length) return [];
+  if (!data.length) return null;
 
   const addWeeksToDateString = (string, weeks) => {
     return format(addWeeks(parseISO(string), weeks), "yyyy-MM-dd");
@@ -107,15 +107,32 @@ const Graph = ({
     pxMarginBottom,
     pxMarginLeft,
   ] = useLengthAttribute(margin);
-  const pxChartWidth = pxWidth - pxMarginRight - pxMarginLeft;
+  const pxChartWidth = React.useMemo(
+    () => pxWidth - pxMarginRight - pxMarginLeft,
+    [pxMarginLeft, pxMarginRight, pxWidth]
+  );
 
-  const suffix = getSuffix(data?.[data.length - 1]?.monthlyListeners);
+  const suffix = React.useMemo(
+    () => getSuffix(data?.[data.length - 1]?.monthlyListeners),
+    [data]
+  );
+  const today = React.useMemo(() => new Date(), []);
+  const interpolatedData = React.useMemo(() => interpolateData(data), [data]);
+  const decimalPlaces = React.useMemo(
+    () =>
+      interpolatedData?.length
+        ? 3 -
+          Number(
+            correctNumberForSuffix(
+              interpolatedData?.[0]?.monthlyListeners,
+              suffix
+            )
+          ).toFixed().length
+        : 0,
+    [interpolatedData, suffix]
+  );
 
-  const today = new Date();
-
-  const interpolatedData = interpolateData(data);
-
-  return data.length < 2 ? (
+  return !interpolatedData ? (
     <Wrapper margin={margin}>
       <Paragraph color="$neutral3">No history data available</Paragraph>
     </Wrapper>
@@ -124,12 +141,12 @@ const Graph = ({
       <LineChart
         // eslint-disable-next-line react-perf/jsx-no-new-object-as-prop
         data={{
-          labels: interpolatedData?.map(({ dateTime }) =>
+          labels: interpolatedData.map(({ dateTime }) =>
             differenceInCalendarWeeks(new Date(dateTime), today)
           ),
           datasets: [
             {
-              data: interpolatedData?.map(({ monthlyListeners }) =>
+              data: interpolatedData.map(({ monthlyListeners }) =>
                 correctNumberForSuffix(monthlyListeners, suffix)
               ),
             },
@@ -144,7 +161,7 @@ const Graph = ({
         chartConfig={{
           backgroundGradientFrom: theme.colors.background0,
           backgroundGradientTo: theme.colors.background0,
-          decimalPlaces: 0,
+          decimalPlaces,
           color: (opacity = 1) => theme.colors.neutral1,
           labelColor: (opacity = 1) => theme.colors.neutral1,
           fillShadowGradient: theme.colors.accent0,
