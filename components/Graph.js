@@ -54,19 +54,20 @@ const Graph = ({
   const today = React.useMemo(() => new Date(), []);
   const interpolatedData = React.useMemo(() => interpolate(data), [data]);
 
-  const decimalPlaces = React.useMemo(
-    () =>
-      interpolatedData?.length
-        ? 3 -
-          Number(
-            correctNumberForSuffix(
-              interpolatedData?.[0]?.monthlyListeners,
-              suffix
-            )
-          ).toFixed().length
-        : 0,
-    [interpolatedData, suffix]
-  );
+  const decimalPlaces = React.useMemo(() => {
+    if (interpolatedData) {
+      return (
+        3 -
+        Number(
+          correctNumberForSuffix(
+            interpolatedData?.[0]?.monthlyListeners,
+            suffix
+          )
+        ).toFixed().length
+      );
+    }
+    return 0;
+  }, [interpolatedData, suffix]);
 
   return !interpolatedData ? (
     <Wrapper margin={margin}>

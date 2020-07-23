@@ -9,7 +9,7 @@ import {
 
 const interpolateData = (
   data: { id: string, dateTime: string, monthlyListeners: number }[]
-) => {
+): { dateTime: string, monthlyListeners: number }[] | null => {
   if (!data.length) return null;
 
   const addWeeksToDateString = (string, weeks) => {
@@ -65,7 +65,7 @@ const interpolateData = (
     .reverse()
     .filter((_, index) => index % selectedInterval === 0)
     .reverse();
-  return interPolatedSelected.length ? interPolatedSelected : null;
+  return interPolatedSelected.length >= 2 ? interPolatedSelected : null;
 };
 
 export default interpolateData;
