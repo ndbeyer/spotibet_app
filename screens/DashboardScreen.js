@@ -159,8 +159,9 @@ const DashboardScreen = () => {
 
   const [selected, setSelected] = React.useState(filterTypes[0]);
 
-  const filteredBets = data?.currentUser?.bets?.filter(
-    ({ status }) => status === selected
+  const filteredBets = React.useMemo(
+    () => data?.currentUser?.bets?.filter(({ status }) => status === selected),
+    [data, selected]
   );
 
   const renderHeaderContent = React.useCallback(() => {

@@ -71,7 +71,7 @@ const ArtistScreen = ({ route }) => {
       />
       <Graph data={artist.monthlyListenersHistory} />
       <Row>
-        {artist.monthlyListeners ? (
+        {artist.monthlyListeners && artist.joinableBets?.length ? (
           <Button onPress={handleOpenArtistBets} label="Open bets" />
         ) : null}
         <Button onPress={handleCreateNewBet} label="Create new bet" />
