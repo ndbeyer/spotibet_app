@@ -15,9 +15,10 @@ const RowWrapper = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  align-self: stretch;
 `;
 
-const TransactionCard = ({ id, type, amount, betId, datetime }) => {
+const TransactionCard = ({ type, amount, datetime }) => {
   return (
     <>
       <CardWrapper>

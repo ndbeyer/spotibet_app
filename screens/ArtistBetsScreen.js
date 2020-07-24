@@ -45,7 +45,13 @@ const ArtistBetsScreen = ({ route }) => {
             {...bet}
             currentListeners={artist?.monthlyListeners}
             defaultShowDifference={true}
-            onPress={() => handleOpenBet(bet.id)} // TODO: handle press e.g. type should be details in this case
+          />
+          <Button
+            label="Join"
+            backgroundColor="$background0"
+            outline
+            onPress={handleOpenBet}
+            id={bet.id}
           />
         </CardWrapper>
       ))}

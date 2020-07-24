@@ -25,6 +25,7 @@ const Wrapper = styled.TouchableOpacity`
 `;
 
 const Button = ({
+  id,
   label = "I have no label",
   outline,
   loading,
@@ -36,9 +37,13 @@ const Button = ({
   light = true,
   margin = "1rem",
 }) => {
+  const handlePress = React.useCallback(() => {
+    onPress && onPress(id);
+  }, [id, onPress]);
+
   return (
     <Wrapper
-      onPress={onPress}
+      onPress={handlePress}
       disabled={disabled}
       outline={outline}
       backgroundColor={backgroundColor}
