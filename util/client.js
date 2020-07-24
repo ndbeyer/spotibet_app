@@ -8,10 +8,10 @@ import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
 
 import { getToken } from "./token";
-import { SPOTIBET_API_DEV, SPOTIBET_API_PROD } from "../consts";
+import { SPOTIBET_API_ENDPOINT } from "../consts";
 
 const httpLink = createHttpLink({
-  uri: __DEV__ ? SPOTIBET_API_DEV : SPOTIBET_API_PROD,
+  uri: SPOTIBET_API_ENDPOINT,
 });
 const authLink = new ApolloLink((operation, forward) => {
   operation.setContext({ headers: { Authorization: `Bearer ${getToken()}` } });
