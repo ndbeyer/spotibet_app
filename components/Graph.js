@@ -55,7 +55,7 @@ const Graph = ({
   const interpolatedData = React.useMemo(() => interpolate(data), [data]);
 
   const decimalPlaces = React.useMemo(() => {
-    if (interpolatedData) {
+    if (interpolatedData?.[0]?.monthlyListeners) {
       return (
         3 -
         Number(

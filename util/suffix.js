@@ -3,30 +3,32 @@ export const getSuffix = (number): string => {
   return length <= 3 ? "" : length <= 6 ? "K" : length <= 9 ? "M" : "?";
 };
 
+const outputThreeNumbers = (number, quotient): number => {
+  // (1.212, 1000) => 1.21
+  // (12.120, 1000) => 12.1
+  return Number(
+    (number / quotient).toFixed(
+      Math.max(3 - Math.round(number / quotient).toString().length, 0)
+    )
+  );
+};
+
 export const getNumberWithSuffix = (number): string => {
   const length = number?.toString()?.length;
   return length <= 3
     ? String(number)
     : length <= 6
-    ? (number / 1000).toFixed(
-        Math.max(3 - Math.round(number / 1000).toString().length, 0)
-      ) + "K"
+    ? outputThreeNumbers(number, 1000) + "K"
     : length <= 9
-    ? (number / 1000000).toFixed(
-        Math.max(3 - Math.round(number / 1000000).toString().length, 0)
-      ) + "M"
+    ? outputThreeNumbers(number, 1000 * 1000) + "M"
     : "?";
 };
 
-export const correctNumberForSuffix = (number, suffix) => {
+export const correctNumberForSuffix = (number, suffix): number => {
   return {
     "": number,
-    K: (number / 1000).toFixed(
-      Math.max(3 - Math.round(number / 1000).toString().length, 0)
-    ),
-    M: (number / 1000000).toFixed(
-      Math.max(3 - Math.round(number / 1000000).toString().length, 0)
-    ),
+    K: outputThreeNumbers(number, 1000),
+    M: outputThreeNumbers(number, 1000 * 1000),
     "?": number,
   }[suffix];
 };
