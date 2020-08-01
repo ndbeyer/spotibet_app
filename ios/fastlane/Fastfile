@@ -18,9 +18,11 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
+    # `appicon_image_file` defaults to "fastlane/metadata/app_icon.png"
     appicon(
       appicon_devices: [:ipad, :iphone, :ios_marketing], appicon_path: './spotibet_app2/Images.xcassets'
     )
+   
     increment_build_number(xcodeproj: "spotibet_app2.xcodeproj")
     build_app(export_xcargs: "-allowProvisioningUpdates", workspace: "spotibet_app2.xcworkspace", scheme: "Release")
     upload_to_testflight
