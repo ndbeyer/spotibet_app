@@ -129,6 +129,9 @@ android {
     }
 
     defaultConfig {
+        manifestPlaceholders = [
+            appAuthRedirectScheme: 'com.spotibet'
+        ]
         applicationId "com.spotibet_app2"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

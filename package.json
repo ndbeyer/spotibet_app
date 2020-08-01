@@ -8,7 +8,9 @@
     "start": "react-native start",
     "simulator:ios": "open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/",
     "lint": "eslint .",
-    "podinstall": "cd ios && pod install"
+    "podinstall": "cd ios && pod install",
+    "connect-android-device": "adb reverse tcp:8081 tcp:8081",
+    "shake-android": "adb shell input keyevent 82"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.3",
