@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
-    "android-simulator": "emulator Pixel_API_29 -dns-server 8.8.8.8",
+    "simulator:android": "emulator @Pixel_API_29 -dns-server 8.8.8.8",
     "ios": "react-native run-ios --simulator='iPhone 11 Pro'",
     "start": "react-native start",
     "simulator:ios": "open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/",

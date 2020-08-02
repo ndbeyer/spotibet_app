@@ -15,10 +15,9 @@ export const logout = async () => {
 };
 
 const config = {
+  // dangerouslyAllowInsecureHttpRequests: __DEV__, // for local development under android only
   clientId: SPOTIFY_CLIENT_ID,
-  redirectUrl: `com.spotibet:${
-    Platform.OS === "ios" ? "/" : "//"
-  }oauthredirect`,
+  redirectUrl: `com.spotibet:/oauthredirect`,
   scopes: ["user-read-email", "user-read-private"],
   serviceConfiguration: {
     authorizationEndpoint: "https://accounts.spotify.com/authorize",
