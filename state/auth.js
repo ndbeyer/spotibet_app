@@ -1,7 +1,6 @@
 import client from "../util/client";
 import { setToken } from "../util/token";
 import { gql } from "apollo-boost";
-import { Platform } from "react-native";
 import { authorize } from "react-native-app-auth";
 import SecureStorage from "react-native-secure-storage";
 import RNRestart from "react-native-restart";
@@ -15,13 +14,13 @@ export const logout = async () => {
 };
 
 const config = {
-  // dangerouslyAllowInsecureHttpRequests: __DEV__, // for local development under android only
+  dangerouslyAllowInsecureHttpRequests: __DEV__, // for local development under android only
   clientId: SPOTIFY_CLIENT_ID,
   redirectUrl: `com.spotibet:/oauthredirect`,
   scopes: ["user-read-email", "user-read-private"],
   serviceConfiguration: {
     authorizationEndpoint: "https://accounts.spotify.com/authorize",
-    tokenEndpoint: `${SPOTIBET_API_ENDPOINT}/get-jwt-for-auth-code?os=${Platform.OS}`,
+    tokenEndpoint: `${SPOTIBET_API_ENDPOINT}/get-jwt-for-auth-code`,
   },
 };
 
