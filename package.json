@@ -10,7 +10,7 @@
     "simulator:ios": "open /Applications/Xcode.app/Contents/Developer/Applications/Simulator.app/",
     "lint": "eslint .",
     "podinstall": "cd ios && pod install",
-    "connect-android-device": "adb reverse tcp:8081 tcp:8081",
+    "connect-android-device": "adb reverse tcp:8081 tcp:8081 && adb reverse tcp:4000 tcp:4000",
     "shake-android": "adb shell input keyevent 82"
   },
   "dependencies": {
