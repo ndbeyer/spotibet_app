@@ -44,7 +44,9 @@ const ArtistBetsScreen = ({ route }) => {
           <BetStats
             {...bet}
             listenersBefore={artist?.monthlyListeners}
-            listenersAfter={bet?.listeners}
+            listenersAfter={bet.listeners}
+            dateLeft="now"
+            dateRight={bet.endDate}
           />
           <Button
             label="Join"
