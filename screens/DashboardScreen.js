@@ -181,11 +181,17 @@ const DashboardScreen = () => {
                         dateLeft: "now",
                         dateRight: bet.endDate,
                       }
-                    : {
+                    : selected === "INVALID"
+                    ? {
                         listenersBefore: bet.artist.monthlyListeners, // TODO: should be bet.listenersAtBetCreation
                         listenersAfter: bet.listeners,
-                        dateLeft: bet.startDate, // TODO: date.startDate is not supported yet
+                        dateLeft: bet.startDate,
                         dateRight: bet.endDate,
+                      }
+                    : {
+                        listenersBefore: bet.listenersAtEndDate,
+                        listenersAfter: bet.listeners,
+                        hideDifference: true,
                       })}
                 />
               </Row>
