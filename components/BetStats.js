@@ -3,7 +3,7 @@
 
 import React from "react";
 import styled from "styled-native-components";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 
 import { Paragraph } from "./Text";
 import Gradient from "./Gradient";
@@ -211,6 +211,13 @@ const Quote = ({
   );
 };
 
+const Row = styled.View`
+  align-self: stretch;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const XAxis = ({ dateLeft, dateRight }) => {
   return (
     <>
@@ -219,6 +226,15 @@ const XAxis = ({ dateLeft, dateRight }) => {
         <Paragraph margin="0rem 0 0.5rem" size="s" color="$neutral3">
           {formatDistanceToNow(new Date(dateRight))}
         </Paragraph>
+      ) : dateLeft && dateRight ? (
+        <Row>
+          <Paragraph margin="0.5rem" size="s" color="$neutral3">
+            {format(new Date(dateLeft), "yyyy-MM-dd")}
+          </Paragraph>
+          <Paragraph margin="0.5rem" size="s" color="$neutral3">
+            {format(new Date(dateRight), "yyyy-MM-dd")}
+          </Paragraph>
+        </Row>
       ) : null}
     </>
   );
