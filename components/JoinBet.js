@@ -33,9 +33,9 @@ const expectedErrors = {
   NETWORK_ERROR: "Network error. You seem to be offline.",
   BET_NOT_JOINABLE: "You can no longer join this bet.",
   NOT_ENOUGH_MONEY: "You don't have enough money.",
+  NO_SUPPORT_AND_CONTRADICTION_OF_SAME_BET:
+    "You cannot support and contradict the same bet.",
 };
-
-// TOOD: don't allow antagonistic join for same bet
 
 const JoinBet = ({
   betId,
@@ -44,7 +44,7 @@ const JoinBet = ({
 }: {
   betId: string,
   closePortal: () => any,
-  renderPortal: () => any, // TODO
+  renderPortal: () => any,
 }) => {
   const theme = useTheme();
   const bet = useBet(betId);
@@ -52,7 +52,7 @@ const JoinBet = ({
 
   const [state, setState] = React.useState({
     amount: null,
-    support: true,
+    support: bet?.currentUserAmount ? bet?.currentUserSupports : true,
   });
 
   const [loading, setLoading] = React.useState(false);
@@ -75,7 +75,6 @@ const JoinBet = ({
 
   const handleSubmit = React.useCallback(async () => {
     setLoading(true);
-    // TODO: handle api errors
     const { success, error } = await joinBet({
       betId: bet?.id,
       support: state.support,
@@ -98,17 +97,17 @@ const JoinBet = ({
     }
   }, [betId, closePortal, joinedBet]);
 
-  const [supportersAmount, contradictorsAmount] = React.useMemo(() => {
-    return [
-      bet.supportersAmount + state.support ? state.amount : 0,
-      bet.contradictorsAmount + !state.support ? state.amount : 0,
-    ];
-  }, [
-    bet.contradictorsAmount,
-    bet.supportersAmount,
-    state.amount,
-    state.support,
-  ]);
+  const handleSwitch = React.useCallback(() => {
+    // don't allow switching to support if user already contradicted the bet and vice versa
+    if (
+      Number(bet?.currentUserAmount) > 0 &&
+      bet?.currentUserSupports !== !state.support
+    ) {
+      handleError("NO_SUPPORT_AND_CONTRADICTION_OF_SAME_BET");
+    } else {
+      setState((b) => ({ ...b, support: !b.support }));
+    }
+  }, [bet, handleError, state.support]);
 
   return !bet ? (
     <Loading />
@@ -120,10 +119,18 @@ const JoinBet = ({
         listenersAfter={bet.listeners}
         dateLeft="now"
         dateRight={bet.endDate}
-        currentUserAmount={state.amount}
+        currentUserAmount={state.amount + Number(bet.currentUserAmount)}
         currentUserSupports={state.support}
-        supportersAmount={supportersAmount}
-        contradictorsAmount={contradictorsAmount}
+        supportersAmount={
+          state.support
+            ? bet.supportersAmount + state.amount
+            : bet.supportersAmount
+        }
+        contradictorsAmount={
+          !state.support
+            ? bet.contradictorsAmount + state.amount
+            : bet.contradictorsAmount
+        }
       />
       <AmountSlider
         maxSliderVal={currentUser?.money}
@@ -139,7 +146,7 @@ const JoinBet = ({
           }}
           value={state.support}
           // eslint-disable-next-line react-perf/jsx-no-new-function-as-prop
-          onValueChange={() => setState((b) => ({ ...b, support: !b.support }))}
+          onValueChange={handleSwitch}
         />
       </Wrapper>
       <Wrapper margin="0rem 0rem 3rem 0rem">

@@ -64,7 +64,11 @@ export const joinBet = async ({
   | { success: true, error: null }
   | {
       success: false,
-      error: "NETWORK_ERROR" | "BET_NOT_JOINABLE" | "NOT_ENOUGH_MONEY",
+      error:
+        | "NETWORK_ERROR"
+        | "BET_NOT_JOINABLE"
+        | "NOT_ENOUGH_MONEY"
+        | "NO_SUPPORT_AND_CONTRADICTION_OF_SAME_BET",
     }
 > => {
   try {
