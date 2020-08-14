@@ -146,8 +146,12 @@ const BetStats = ({
     defaultShowDifference
   );
 
+  const handleToggleShowDifference = React.useCallback(() => {
+    setShowDifference((b) => !b);
+  }, []);
+
   return !currentListeners || !predictedListeners || !endDate ? null : (
-    <Wrapper onPress={() => setShowDifference((b) => !b)}>
+    <Wrapper onPress={handleToggleShowDifference}>
       <GraphSection
         topPadding={
           !predictedIsHigher || (predictedIsHigher && userType === "LOWER")
