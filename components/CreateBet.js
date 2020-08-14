@@ -89,17 +89,16 @@ const CreateBet = ({ artist, onCreatedBet, closePortal, renderPortal }) => {
     <>
       {artist.monthlyListeners === state.monthlyListeners ? null : (
         <BetStats
-          currentListeners={artist.monthlyListeners}
+          listenersBefore={artist.monthlyListeners}
+          listenersAfter={state.monthlyListeners}
+          dateLeft="now"
+          dateRight={state.dateTime}
           type={
             state.monthlyListeners > artist.monthlyListeners
               ? "HIGHER"
               : "LOWER"
           }
-          predictedListeners={state.monthlyListeners}
-          endDate={state.dateTime}
-          presentationType="CREATE"
-          nBarHeightMax={10}
-          nBarWidth={10}
+          hideQuote={true}
         />
       )}
 

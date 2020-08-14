@@ -98,16 +98,32 @@ const JoinBet = ({
     }
   }, [betId, closePortal, joinedBet]);
 
+  const [supportersAmount, contradictorsAmount] = React.useMemo(() => {
+    return [
+      bet.supportersAmount + state.support ? state.amount : 0,
+      bet.contradictorsAmount + !state.support ? state.amount : 0,
+    ];
+  }, [
+    bet.contradictorsAmount,
+    bet.supportersAmount,
+    state.amount,
+    state.support,
+  ]);
+
   return !bet ? (
     <Loading />
   ) : !joinedBet ? (
     <>
       <BetStats
         {...bet}
-        currentListeners={bet?.artist?.monthlyListeners}
+        listenersBefore={bet.artist?.monthlyListeners}
+        listenersAfter={bet.listeners}
+        dateLeft="now"
+        dateRight={bet.endDate}
+        currentUserAmount={state.amount}
         currentUserSupports={state.support}
-        presentationType="CREATE"
-        startDate={bet.startDate}
+        supportersAmount={supportersAmount}
+        contradictorsAmount={contradictorsAmount}
       />
       <AmountSlider
         maxSliderVal={currentUser?.money}

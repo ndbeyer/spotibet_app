@@ -43,8 +43,8 @@ const ArtistBetsScreen = ({ route }) => {
         <CardWrapper key={bet.id}>
           <BetStats
             {...bet}
-            currentListeners={artist?.monthlyListeners}
-            defaultShowDifference={true}
+            listenersBefore={artist?.monthlyListeners}
+            listenersAfter={bet?.listeners}
           />
           <Button
             label="Join"
