@@ -8,8 +8,10 @@ import { format } from "date-fns";
 import ScrollViewScreen from "../components/ScrollViewScreen";
 import EmptyCard from "../components/EmptyCard";
 import CardWrapper from "../components/CardWrapper";
-import { Paragraph } from "../components/Text";
+import Loading from "../components/Loading";
+import { Paragraph, Label } from "../components/Text";
 import { useTransactions } from "../state/transaction";
+import { useUser } from "../state/user";
 
 const RowWrapper = styled.View`
   flex-direction: row;
@@ -34,11 +36,32 @@ const TransactionCard = ({ type, amount, datetime }) => {
   );
 };
 
+const HeaderWrapper = styled.View`
+  width: 100%;
+  height: 6rem;
+  background-color: $background1;
+  justify-content: center;
+  align-items: center;
+`;
+
 const TransactionsScreen = () => {
   const transactions = useTransactions();
+  const { currentUser } = useUser();
+
+  const MoneyHeader = React.useCallback(() => {
+    return (
+      <HeaderWrapper>
+        {currentUser?.money !== undefined ? (
+          <Label>Money: {currentUser.money}</Label>
+        ) : (
+          <Loading />
+        )}
+      </HeaderWrapper>
+    );
+  }, [currentUser]);
 
   return (
-    <ScrollViewScreen loading={!transactions}>
+    <ScrollViewScreen loading={!transactions} renderHeaderContent={MoneyHeader}>
       {transactions?.length ? (
         transactions.map((transaction) => {
           return <TransactionCard key={transaction.id} {...transaction} />;
