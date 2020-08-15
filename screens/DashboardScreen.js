@@ -176,22 +176,22 @@ const DashboardScreen = () => {
                   {...bet}
                   {...(selected === "JOINABLE" || selected === "RUNNING"
                     ? {
-                        listenersBefore: bet.artist.monthlyListeners,
-                        listenersAfter: bet.listeners,
+                        barLeftValue: bet.artist.monthlyListeners,
+                        barRightValue: bet.listeners,
                         dateLeft: "now",
                         dateRight: bet.endDate,
                       }
                     : selected === "INVALID"
                     ? {
-                        listenersBefore: bet.artist.monthlyListeners, // TODO: should be bet.listenersAtBetCreation
-                        listenersAfter: bet.listeners,
+                        barLeftValue: bet.artist.monthlyListeners, // TODO: should be bet.listenersAtBetCreation
+                        barRightValue: bet.listeners,
                         dateLeft: bet.startDate,
                         dateRight: bet.endDate,
                         hideQuote: true,
                       }
                     : {
-                        listenersBefore: bet.listenersAtEndDate,
-                        listenersAfter: bet.listeners,
+                        barLeftValue: bet.listenersAtEndDate,
+                        barRightValue: bet.listeners,
                         dateRight: bet.endDate,
                         hideDifference: true,
                         highlight: true,

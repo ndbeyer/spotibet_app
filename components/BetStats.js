@@ -84,8 +84,8 @@ const BarSection = styled.View`
 const LeftBar = ({
   nBarHeightMax,
   nBarWidth,
-  listenersBefore,
-  listenersAfter,
+  barLeftValue,
+  barRightValue,
   currentUserSupports,
   type,
   highlight,
@@ -93,16 +93,16 @@ const LeftBar = ({
   const highLightColor = React.useMemo(() => {
     if (!highlight) return null;
     const supportersWin =
-      (type === "HIGHER" && listenersAfter < listenersBefore) ||
-      (type === "LOWER" && listenersAfter > listenersBefore);
+      (type === "HIGHER" && barRightValue < barLeftValue) ||
+      (type === "LOWER" && barRightValue > barLeftValue);
     const userWins = supportersWin === currentUserSupports;
     return userWins ? "accent0" : "error";
-  }, [currentUserSupports, highlight, listenersAfter, listenersBefore, type]);
+  }, [currentUserSupports, highlight, barRightValue, barLeftValue, type]);
   console.log({ highLightColor });
   return (
     <Bar
       height={
-        listenersAfter > listenersBefore
+        barRightValue > barLeftValue
           ? nBarHeightMax / 2 + "rem"
           : nBarHeightMax + "rem"
       }
@@ -110,7 +110,7 @@ const LeftBar = ({
     >
       <StyledGradient highLightColor={highLightColor} />
       <TextPositioner top="-3rem">
-        <Paragraph>{getNumberWithSuffix(listenersBefore)}</Paragraph>
+        <Paragraph>{getNumberWithSuffix(barLeftValue)}</Paragraph>
       </TextPositioner>
     </Bar>
   );
@@ -119,8 +119,8 @@ const LeftBar = ({
 const Difference = ({
   nBarHeightMax,
   nBarWidth,
-  listenersBefore,
-  listenersAfter,
+  barLeftValue,
+  barRightValue,
 }) => {
   return (
     <DifferenceContent height={nBarHeightMax + "rem"} width={nBarWidth + "rem"}>
@@ -128,16 +128,12 @@ const Difference = ({
         Δ
       </Paragraph>
       <Paragraph size="s" margin="0.5rem 0" color="$neutral3">
-        {listenersAfter > listenersBefore ? "+" : null}
-        {getNumberWithSuffix(listenersAfter - listenersBefore)}
+        {barRightValue > barLeftValue ? "+" : null}
+        {getNumberWithSuffix(barRightValue - barLeftValue)}
       </Paragraph>
       <Paragraph size="s" color="$neutral3">
-        {listenersAfter > listenersBefore ? "+" : null}
-        {(
-          ((listenersAfter - listenersBefore) / listenersBefore) *
-          100
-        ).toFixed()}
-        %
+        {barRightValue > barLeftValue ? "+" : null}
+        {(((barRightValue - barLeftValue) / barLeftValue) * 100).toFixed()}%
       </Paragraph>
     </DifferenceContent>
   );
@@ -145,8 +141,8 @@ const Difference = ({
 
 const RightBar = ({
   type,
-  listenersBefore,
-  listenersAfter,
+  barLeftValue,
+  barRightValue,
   nBarHeightMax,
   nBarWidth,
 }) => {
@@ -155,7 +151,7 @@ const RightBar = ({
       {type === "HIGHER" ? <Paragraph align="center">↑</Paragraph> : null}
       <Bar
         height={
-          listenersAfter > listenersBefore
+          barRightValue > barLeftValue
             ? nBarHeightMax + "rem"
             : nBarHeightMax / 2 + "rem"
         }
@@ -163,7 +159,7 @@ const RightBar = ({
       >
         <StyledGradient />
         <TextPositioner top={type === "LOWER" ? "-3rem" : "0"}>
-          <Paragraph>{getNumberWithSuffix(listenersAfter)}</Paragraph>
+          <Paragraph>{getNumberWithSuffix(barRightValue)}</Paragraph>
         </TextPositioner>
         {type === "LOWER" ? <Paragraph align="center">↓</Paragraph> : null}
       </Bar>
@@ -175,8 +171,8 @@ const Quote = ({
   nBarHeightMax,
   nBarWidth,
   type,
-  listenersBefore,
-  listenersAfter,
+  barLeftValue,
+  barRightValue,
   supportersAmount,
   contradictorsAmount,
   currentUserSupports,
@@ -186,7 +182,7 @@ const Quote = ({
     <QuoteWrapper
       width={nBarWidth + "rem"}
       height={
-        listenersAfter > listenersBefore
+        barRightValue > barLeftValue
           ? nBarHeightMax + "rem"
           : nBarHeightMax / 2 + "rem"
       }
@@ -260,8 +256,8 @@ const XAxis = ({ dateLeft, dateRight }) => {
 };
 
 const BetStats = ({
-  listenersBefore,
-  listenersAfter,
+  barLeftValue,
+  barRightValue,
   dateLeft,
   dateRight,
   type,
@@ -278,8 +274,8 @@ const BetStats = ({
   hideDifference,
   highlight,
 }: {
-  listenersBefore: number,
-  listenersAfter: number,
+  barLeftValue: number,
+  barRightValue: number,
   dateLeft: "now" | string,
   dateRight: string,
   type: "HIGHER" | "LOWER",
@@ -296,31 +292,31 @@ const BetStats = ({
   hideDifference?: Boolean,
   highlight?: Boolean,
 }) => {
-  return !listenersBefore || !listenersAfter ? null : (
-    <Wrapper topPadding={listenersAfter < listenersBefore}>
+  return !barLeftValue || !barRightValue ? null : (
+    <Wrapper topPadding={barRightValue < barLeftValue}>
       <BarContent>
         <BarSection>
           <LeftBar
             nBarHeightMax={nBarHeightMax}
             nBarWidth={nBarWidth}
-            listenersBefore={listenersBefore}
-            listenersAfter={listenersAfter}
+            barLeftValue={barLeftValue}
+            barRightValue={barRightValue}
             currentUserSupports={currentUserSupports}
             type={type}
             highlight={highlight}
           />
           {hideDifference ? null : (
             <Difference
-              listenersBefore={listenersBefore}
-              listenersAfter={listenersAfter}
+              barLeftValue={barLeftValue}
+              barRightValue={barRightValue}
               nBarHeightMax={nBarHeightMax}
               nBarWidth={nBarWidth}
             />
           )}
           <RightBar
             type={type}
-            listenersBefore={listenersBefore}
-            listenersAfter={listenersAfter}
+            barLeftValue={barLeftValue}
+            barRightValue={barRightValue}
             nBarHeightMax={nBarHeightMax}
             nBarWidth={nBarWidth}
           />
@@ -329,8 +325,8 @@ const BetStats = ({
               nBarHeightMax={nBarHeightMax}
               nBarWidth={nBarWidth}
               type={type}
-              listenersBefore={listenersBefore}
-              listenersAfter={listenersAfter}
+              barLeftValue={barLeftValue}
+              barRightValue={barRightValue}
               supportersAmount={supportersAmount}
               contradictorsAmount={contradictorsAmount}
               currentUserSupports={currentUserSupports}

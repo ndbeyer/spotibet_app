@@ -89,8 +89,8 @@ const CreateBet = ({ artist, onCreatedBet, closePortal, renderPortal }) => {
     <>
       {artist.monthlyListeners === state.monthlyListeners ? null : (
         <BetStats
-          listenersBefore={artist.monthlyListeners}
-          listenersAfter={state.monthlyListeners}
+          barLeftValue={artist.monthlyListeners}
+          barRightValue={state.monthlyListeners}
           dateLeft="now"
           dateRight={state.dateTime}
           type={

@@ -43,8 +43,8 @@ const ArtistBetsScreen = ({ route }) => {
         <CardWrapper key={bet.id}>
           <BetStats
             {...bet}
-            listenersBefore={artist?.monthlyListeners}
-            listenersAfter={bet.listeners}
+            barLeftValue={artist?.monthlyListeners}
+            barRightValue={bet.listeners}
             dateLeft="now"
             dateRight={bet.endDate}
           />

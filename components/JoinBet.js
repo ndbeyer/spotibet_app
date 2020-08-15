@@ -115,8 +115,8 @@ const JoinBet = ({
     <>
       <BetStats
         {...bet}
-        listenersBefore={bet.artist?.monthlyListeners}
-        listenersAfter={bet.listeners}
+        barLeftValue={bet.artist?.monthlyListeners}
+        barRightValue={bet.listeners}
         dateLeft="now"
         dateRight={bet.endDate}
         currentUserAmount={state.amount + Number(bet.currentUserAmount)}
