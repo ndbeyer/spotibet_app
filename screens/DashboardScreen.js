@@ -174,18 +174,24 @@ const DashboardScreen = () => {
                 </Column>
                 <BetStats
                   {...bet}
-                  {...(selected === "JOINABLE" || selected === "RUNNING"
+                  {...(selected === "JOINABLE"
                     ? {
                         barLeftValue: bet.artist.monthlyListeners,
                         barRightValue: bet.listeners,
                         dateLeft: "now",
                         dateRight: bet.endDate,
                       }
-                    : selected === "INVALID"
+                    : selected === "RUNNING"
                     ? {
-                        barLeftValue: bet.artist.monthlyListeners, // TODO: should be bet.listenersAtBetCreation
+                        barLeftValue: bet.artist.monthlyListeners,
                         barRightValue: bet.listeners,
                         dateLeft: bet.startDate,
+                        dateRight: bet.endDate,
+                        hideQuote: true,
+                      }
+                    : selected === "INVALID"
+                    ? {
+                        barRightValue: bet.listeners,
                         dateRight: bet.endDate,
                         hideQuote: true,
                       }

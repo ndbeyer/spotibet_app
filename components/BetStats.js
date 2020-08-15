@@ -145,8 +145,10 @@ const RightBar = ({
       {type === "HIGHER" ? <Paragraph align="center">↑</Paragraph> : null}
       <Bar
         height={
-          barRightValue > barLeftValue
-            ? nBarHeightMax + "rem"
+          barLeftValue && barRightValue
+            ? barRightValue > barLeftValue
+              ? nBarHeightMax + "rem"
+              : nBarHeightMax / 2 + "rem"
             : nBarHeightMax / 2 + "rem"
         }
         width={nBarWidth + "rem"}
@@ -308,21 +310,24 @@ const BetStats = ({
     return [usrWins, supWins];
   }, [currentUserSupports, barRightValue, barLeftValue, type]);
 
-  return !barLeftValue || !barRightValue ? null : (
+  return (
     <Wrapper topPadding={barRightValue < barLeftValue}>
       <BarContent>
         <BarSection>
-          <LeftBar
-            nBarHeightMax={nBarHeightMax}
-            nBarWidth={nBarWidth}
-            barLeftValue={barLeftValue}
-            barRightValue={barRightValue}
-            currentUserSupports={currentUserSupports}
-            type={type}
-            supportersWin={supportersWin}
-            highlight={highlight}
-          />
-          {hideDifference ? null : (
+          {!barLeftValue ? null : (
+            <LeftBar
+              nBarHeightMax={nBarHeightMax}
+              nBarWidth={nBarWidth}
+              barLeftValue={barLeftValue}
+              barRightValue={barRightValue}
+              currentUserSupports={currentUserSupports}
+              type={type}
+              supportersWin={supportersWin}
+              highlight={highlight}
+            />
+          )}
+
+          {hideDifference || !barLeftValue || !barRightValue ? null : (
             <Difference
               barLeftValue={barLeftValue}
               barRightValue={barRightValue}
@@ -337,7 +342,7 @@ const BetStats = ({
             nBarHeightMax={nBarHeightMax}
             nBarWidth={nBarWidth}
           />
-          {hideQuote ? null : (
+          {hideQuote || !barLeftValue || !barRightValue ? null : (
             <Quote
               nBarHeightMax={nBarHeightMax}
               nBarWidth={nBarWidth}
