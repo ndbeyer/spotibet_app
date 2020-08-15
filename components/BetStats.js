@@ -220,8 +220,10 @@ const Quote = ({
         supportersAmount / (contradictorsAmount + supportersAmount)
       ) ? null : (
         <Paragraph size="s" color="$neutral3">
-          Q:
-          {supportersAmount / (contradictorsAmount + supportersAmount)}
+          {(
+            supportersAmount /
+            (contradictorsAmount + supportersAmount)
+          ).toFixed(2)}
         </Paragraph>
       )}
     </QuoteWrapper>
