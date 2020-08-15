@@ -202,7 +202,6 @@ const DashboardScreen = () => {
                         barLeftValue: bet.listenersAtEndDate,
                         barRightValue: bet.listeners,
                         dateRight: bet.endDate,
-                        hideDifference: true,
                         highlight: true,
                       })}
                 />

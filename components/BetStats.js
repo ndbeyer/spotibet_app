@@ -2,6 +2,7 @@
 //@flow
 
 import React from "react";
+import { View, TouchableOpacity } from "react-native";
 import styled from "styled-native-components";
 import { formatDistanceToNow, format } from "date-fns";
 
@@ -15,12 +16,14 @@ const Wrapper = styled.View`
   justify-content: center;
   align-items: flex-end;
   align-self: center;
-  padding: ${(p) => (p.topPadding ? "3rem" : "0rem")} 0rem 0.5rem;
+  padding: ${(p) => (p.topPadding ? "3.5rem" : "0.5rem")} 0rem 0.5rem;
   margin: 0 1rem;
   flex: 1;
 `;
 
-const Bar = styled.View`
+const Bar = styled((props) =>
+  props.onPress ? <TouchableOpacity {...props} /> : <View {...props} />
+)`
   background-color: $neutral4;
   height: ${(p) => p.height};
   width: ${(p) => p.width};
@@ -33,14 +36,7 @@ const TextPositioner = styled.View`
   width: 100%;
   flex-direction: row;
   justify-content: center;
-  /* border: 1px solid red; */
-`;
-
-const DifferenceContent = styled.View`
-  height: ${(p) => p.height};
-  width: ${(p) => p.width};
-  justify-content: center;
-  align-items: center;
+  /* border: 1px solid green; */
 `;
 
 const Line = styled.View`
@@ -111,28 +107,7 @@ const LeftBar = ({
   );
 };
 
-const Difference = ({
-  nBarHeightMax,
-  nBarWidth,
-  barLeftValue,
-  barRightValue,
-}) => {
-  return (
-    <DifferenceContent height={nBarHeightMax + "rem"} width={nBarWidth + "rem"}>
-      <Paragraph size="s" color="$neutral3">
-        Δ
-      </Paragraph>
-      <Paragraph size="s" margin="0.5rem 0" color="$neutral3">
-        {barRightValue > barLeftValue ? "+" : null}
-        {getNumberWithSuffix(barRightValue - barLeftValue)}
-      </Paragraph>
-      <Paragraph size="s" color="$neutral3">
-        {barRightValue > barLeftValue ? "+" : null}
-        {(((barRightValue - barLeftValue) / barLeftValue) * 100).toFixed()}%
-      </Paragraph>
-    </DifferenceContent>
-  );
-};
+const viewTypes = ["absolute", "difference", "percent"];
 
 const RightBar = ({
   type,
@@ -141,10 +116,16 @@ const RightBar = ({
   nBarHeightMax,
   nBarWidth,
 }) => {
+  const [index, setIndex] = React.useState(0);
+  const toggleValue = React.useCallback(() => {
+    setIndex((b) => (b < 2 ? b + 1 : 0));
+  }, []);
+
   return (
     <Column>
       {type === "HIGHER" ? <Paragraph align="center">↑</Paragraph> : null}
       <Bar
+        onPress={barLeftValue && barRightValue ? toggleValue : null}
         height={
           barLeftValue && barRightValue
             ? barRightValue > barLeftValue
@@ -156,7 +137,26 @@ const RightBar = ({
       >
         <StyledGradient />
         <TextPositioner top={type === "LOWER" ? "-3rem" : "0"}>
-          <Paragraph>{getNumberWithSuffix(barRightValue)}</Paragraph>
+          {viewTypes[index] === "absolute" ? (
+            <Paragraph margin="0">
+              {getNumberWithSuffix(barRightValue)}
+            </Paragraph>
+          ) : viewTypes[index] === "difference" ? (
+            <Paragraph margin="0">
+              {" "}
+              {barRightValue > barLeftValue ? "+" : null}
+              {getNumberWithSuffix(barRightValue - barLeftValue)}
+            </Paragraph>
+          ) : (
+            <Paragraph margin="0">
+              {barRightValue > barLeftValue ? "+" : null}
+              {(
+                ((barRightValue - barLeftValue) / barLeftValue) *
+                100
+              ).toFixed()}
+              %
+            </Paragraph>
+          )}
         </TextPositioner>
         {type === "LOWER" ? <Paragraph align="center">↓</Paragraph> : null}
       </Bar>
@@ -276,13 +276,12 @@ const BetStats = ({
   contradictorsAmount,
   //
   nBarHeightMax = 10,
-  nBarWidth = 6,
+  nBarWidth = 7,
   //
   currentUserSupports = true,
   currentUserAmount,
   //
   hideQuote,
-  hideDifference,
   highlight,
 }: {
   barLeftValue: number,
@@ -300,7 +299,6 @@ const BetStats = ({
   currentUserAmount: number,
   //
   hideQuote?: Boolean,
-  hideDifference?: Boolean,
   highlight?: Boolean,
 }) => {
   const [userWins, supportersWin] = React.useMemo(() => {
@@ -325,15 +323,6 @@ const BetStats = ({
               type={type}
               supportersWin={supportersWin}
               highlight={highlight}
-            />
-          )}
-
-          {hideDifference || !barLeftValue || !barRightValue ? null : (
-            <Difference
-              barLeftValue={barLeftValue}
-              barRightValue={barRightValue}
-              nBarHeightMax={nBarHeightMax}
-              nBarWidth={nBarWidth}
             />
           )}
           <RightBar
