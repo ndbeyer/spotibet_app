@@ -88,6 +88,7 @@ const routeIcons = {
 
 const LoggedInNavigator = () => {
   const theme = useTheme();
+  console.log({ theme });
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {

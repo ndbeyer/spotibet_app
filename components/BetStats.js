@@ -54,7 +54,10 @@ const Column = styled.View`
 `;
 
 const StyledGradient = styled(Gradient).attrs((p) => ({
-  colors: [p.theme.colors.neutral4, p.theme.colors.background0],
+  colors: [
+    p.theme.colors[p.highLightColor || "neutral4"],
+    p.theme.colors.background0,
+  ],
 }))``;
 
 const QuoteWrapper = styled.View`
@@ -83,7 +86,19 @@ const LeftBar = ({
   nBarWidth,
   listenersBefore,
   listenersAfter,
+  currentUserSupports,
+  type,
+  highlight,
 }) => {
+  const highLightColor = React.useMemo(() => {
+    if (!highlight) return null;
+    const supportersWin =
+      (type === "HIGHER" && listenersAfter < listenersBefore) ||
+      (type === "LOWER" && listenersAfter > listenersBefore);
+    const userWins = supportersWin === currentUserSupports;
+    return userWins ? "accent0" : "error";
+  }, [currentUserSupports, highlight, listenersAfter, listenersBefore, type]);
+  console.log({ highLightColor });
   return (
     <Bar
       height={
@@ -93,7 +108,7 @@ const LeftBar = ({
       }
       width={nBarWidth + "rem"}
     >
-      <StyledGradient />
+      <StyledGradient highLightColor={highLightColor} />
       <TextPositioner top="-3rem">
         <Paragraph>{getNumberWithSuffix(listenersBefore)}</Paragraph>
       </TextPositioner>
@@ -261,6 +276,7 @@ const BetStats = ({
   //
   hideQuote,
   hideDifference,
+  highlight,
 }: {
   listenersBefore: number,
   listenersAfter: number,
@@ -278,6 +294,7 @@ const BetStats = ({
   //
   hideQuote?: Boolean,
   hideDifference?: Boolean,
+  highlight?: Boolean,
 }) => {
   return !listenersBefore || !listenersAfter ? null : (
     <Wrapper topPadding={listenersAfter < listenersBefore}>
@@ -288,6 +305,9 @@ const BetStats = ({
             nBarWidth={nBarWidth}
             listenersBefore={listenersBefore}
             listenersAfter={listenersAfter}
+            currentUserSupports={currentUserSupports}
+            type={type}
+            highlight={highlight}
           />
           {hideDifference ? null : (
             <Difference

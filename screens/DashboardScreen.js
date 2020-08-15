@@ -190,10 +190,11 @@ const DashboardScreen = () => {
                         hideQuote: true,
                       }
                     : {
-                        listenersBefore: bet.listenersAtStartDate,
+                        listenersBefore: bet.listenersAtEndDate,
                         listenersAfter: bet.listeners,
-                        dateLeft: bet.startDate,
                         dateRight: bet.endDate,
+                        hideDifference: true,
+                        highlight: true,
                       })}
                 />
               </Row>
