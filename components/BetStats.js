@@ -235,6 +235,10 @@ const XAxis = ({ dateLeft, dateRight }) => {
             {format(new Date(dateRight), "yyyy-MM-dd")}
           </Paragraph>
         </Row>
+      ) : !dateLeft && dateRight ? (
+        <Paragraph margin="0.5rem" size="s" color="$neutral3">
+          {format(new Date(dateRight), "yyyy-MM-dd")}
+        </Paragraph>
       ) : null}
     </>
   );
@@ -243,7 +247,7 @@ const XAxis = ({ dateLeft, dateRight }) => {
 const BetStats = ({
   listenersBefore,
   listenersAfter,
-  dateLeft = "now",
+  dateLeft,
   dateRight,
   type,
   supportersAmount,

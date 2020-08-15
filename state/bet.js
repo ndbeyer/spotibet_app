@@ -21,6 +21,7 @@ export const BetInfoFragment = gql`
     currentUserAmount
     currentUserSupports
     status
+    listenersAtStartDate
     listenersAtEndDate
     artist {
       id

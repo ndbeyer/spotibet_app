@@ -187,11 +187,13 @@ const DashboardScreen = () => {
                         listenersAfter: bet.listeners,
                         dateLeft: bet.startDate,
                         dateRight: bet.endDate,
+                        hideQuote: true,
                       }
                     : {
-                        listenersBefore: bet.listenersAtEndDate,
+                        listenersBefore: bet.listenersAtStartDate,
                         listenersAfter: bet.listeners,
-                        hideDifference: true,
+                        dateLeft: bet.startDate,
+                        dateRight: bet.endDate,
                       })}
                 />
               </Row>
