@@ -16,7 +16,8 @@ const Wrapper = styled.View`
   align-items: flex-end;
   align-self: center;
   padding: ${(p) => (p.topPadding ? "3rem" : "0rem")} 0rem 0.5rem;
-  /* border: 1px solid red; */
+  margin: 0 1rem;
+  flex: 1;
 `;
 
 const Bar = styled.View`
@@ -275,7 +276,7 @@ const BetStats = ({
   contradictorsAmount,
   //
   nBarHeightMax = 10,
-  nBarWidth = 7,
+  nBarWidth = 6,
   //
   currentUserSupports = true,
   currentUserAmount,

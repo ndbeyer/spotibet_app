@@ -9,10 +9,9 @@ import styled from "styled-native-components";
 
 import ScrollViewScreen from "../components/ScrollViewScreen";
 import EmptyCard from "../components/EmptyCard";
-import { Paragraph, Label } from "../components/Text";
-import CardWrapper from "../components/CardWrapper";
+import { Paragraph } from "../components/Text";
 import BetStats from "../components/BetStats";
-import Image from "../components/Image";
+import ArtistImage from "../components/ArtistImage";
 import Loading from "../components/Loading";
 
 import { BetInfoFragment } from "../state/bet";
@@ -45,22 +44,15 @@ const currentUserWins = (
   }
 };
 
-const Row = styled.View`
-  align-self: stretch;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-`;
-
-const Column = styled.View`
-  flex-direction: column;
-`;
-
 const Center = styled.View`
   flex: 1;
   align-items: center;
   justify-content: center;
   padding: 1rem;
+`;
+
+const Image = styled(ArtistImage)`
+  border-radius: 1rem;
 `;
 
 const BetResultRow = ({
@@ -110,6 +102,22 @@ const FilterItem = styled(TouchableOpacity)`
   flex: 1;
   justify-content: center;
   align-items: center;
+`;
+
+const CardWrapper = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: $background0;
+  overflow: hidden;
+  border-radius: 1rem;
+`;
+
+const ElevationWrapper = styled.View`
+  margin: 1rem;
+  align-self: stretch;
+  border-radius: 1rem;
+  elevation: 1;
 `;
 
 const DashboardScreen = () => {
@@ -164,14 +172,9 @@ const DashboardScreen = () => {
       {filteredBets?.length ? (
         filteredBets.map((bet) => {
           return (
-            <CardWrapper key={bet.id}>
-              <Row>
-                <Column>
-                  <Image source={bet.artist.image} />
-                  <Label light size="s" margin="1rem" align="center">
-                    {bet.artist?.name}
-                  </Label>
-                </Column>
+            <ElevationWrapper key={bet.id}>
+              <CardWrapper>
+                <Image artist={bet.artist} width="18rem" textType="label" />
                 <BetStats
                   {...bet}
                   {...(selected === "JOINABLE"
@@ -203,10 +206,8 @@ const DashboardScreen = () => {
                         highlight: true,
                       })}
                 />
-              </Row>
-
-              {bet.status === "ENDED" ? <BetResultRow {...bet} /> : null}
-            </CardWrapper>
+              </CardWrapper>
+            </ElevationWrapper>
           );
         })
       ) : (

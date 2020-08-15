@@ -9,9 +9,17 @@ import styled, {
 
 import Image from "../components/Image";
 import Gradient from "../components/Gradient";
-import { Heading } from "../components/Text";
+import { Heading, Label, Paragraph } from "../components/Text";
 
-const ArtistName = styled(Heading)`
+const ArtistName = styled((props) =>
+  props.textType === "heading" ? (
+    <Heading {...props} />
+  ) : props.textType === "label" ? (
+    <Label {...props} />
+  ) : props.textType === "paragraph" ? (
+    <Paragraph {...props} />
+  ) : null
+)`
   position: absolute;
   bottom: 0;
   left: 0;
@@ -20,6 +28,8 @@ const ArtistName = styled(Heading)`
 const ImageWrapper = styled.View`
   height: ${(p) => p.height}px;
   width: ${(p) => p.width}px;
+  border-radius: ${(p) => p.borderRadius};
+  overflow: hidden;
 `;
 
 const StyledGradient = styled(Gradient).attrs((p) => ({
@@ -31,15 +41,22 @@ const StyledGradient = styled(Gradient).attrs((p) => ({
   ],
 }))``;
 
-const ArtistImage = ({ artist, heightFactor = 1 }) => {
+const ArtistImage = ({
+  artist,
+  heightFactor = 1,
+  width,
+  textSize = "l",
+  textType = "heading",
+  borderRadius = "0rem",
+}) => {
   const theme = useTheme();
-  const { width } = useWindowDimensions();
+  const { width: windowWidth } = useWindowDimensions();
 
-  const widthRem = width / theme.rem + "rem";
-  const heightRem = (width / theme.rem) * heightFactor + "rem";
+  width = width || windowWidth / theme.rem + "rem";
+  const height = Number(width.replace("rem", "")) * heightFactor + "rem";
 
   return (
-    <ImageWrapper width={widthRem} height={heightRem}>
+    <ImageWrapper width={width} height={height} borderRadius={borderRadius}>
       <Image
         width="100%"
         height="100%"
@@ -47,7 +64,12 @@ const ArtistImage = ({ artist, heightFactor = 1 }) => {
         resizeMode={heightFactor ? "cover" : null}
       />
       <StyledGradient />
-      <ArtistName size="l" margin="1rem 1.5rem" color="$background0">
+      <ArtistName
+        size={textSize}
+        textType={textType}
+        margin="1rem 1.5rem"
+        color="$background0"
+      >
         {artist.name}
       </ArtistName>
     </ImageWrapper>
