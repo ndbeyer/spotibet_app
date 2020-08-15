@@ -86,19 +86,9 @@ const LeftBar = ({
   nBarWidth,
   barLeftValue,
   barRightValue,
-  currentUserSupports,
-  type,
+  supportersWin,
   highlight,
 }) => {
-  const highLightColor = React.useMemo(() => {
-    if (!highlight) return null;
-    const supportersWin =
-      (type === "HIGHER" && barRightValue < barLeftValue) ||
-      (type === "LOWER" && barRightValue > barLeftValue);
-    const userWins = supportersWin === currentUserSupports;
-    return userWins ? "accent0" : "error";
-  }, [currentUserSupports, highlight, barRightValue, barLeftValue, type]);
-  console.log({ highLightColor });
   return (
     <Bar
       height={
@@ -108,7 +98,11 @@ const LeftBar = ({
       }
       width={nBarWidth + "rem"}
     >
-      <StyledGradient highLightColor={highLightColor} />
+      <StyledGradient
+        highLightColor={
+          highlight ? (supportersWin ? "accent0" : "error") : null
+        }
+      />
       <TextPositioner top="-3rem">
         <Paragraph>{getNumberWithSuffix(barLeftValue)}</Paragraph>
       </TextPositioner>
@@ -177,6 +171,8 @@ const Quote = ({
   contradictorsAmount,
   currentUserSupports,
   currentUserAmount,
+  highlight,
+  userWins,
 }) => {
   return (
     <QuoteWrapper
@@ -192,8 +188,13 @@ const Quote = ({
           {type === "HIGHER"
             ? getNumberWithSuffix(supportersAmount)
             : getNumberWithSuffix(contradictorsAmount)}
-          {(type === "HIGHER" && currentUserSupports) ||
-          (type === "LOWER" && !currentUserSupports)
+        </Paragraph>
+        <Paragraph
+          size="s"
+          color={highlight ? (userWins ? "$accent0" : "$error") : "$neutral3"}
+        >
+          {(type === "LOWER" && !currentUserSupports) ||
+          (type === "HIGHER" && currentUserSupports)
             ? ` (${Number(currentUserAmount)})`
             : null}
         </Paragraph>
@@ -204,6 +205,11 @@ const Quote = ({
           {type === "LOWER"
             ? getNumberWithSuffix(supportersAmount)
             : getNumberWithSuffix(contradictorsAmount)}
+        </Paragraph>
+        <Paragraph
+          size="s"
+          color={highlight ? (userWins ? "$accent0" : "$error") : "$neutral3"}
+        >
           {(type === "LOWER" && currentUserSupports) ||
           (type === "HIGHER" && !currentUserSupports)
             ? ` (${Number(currentUserAmount)})`
@@ -292,6 +298,14 @@ const BetStats = ({
   hideDifference?: Boolean,
   highlight?: Boolean,
 }) => {
+  const [userWins, supportersWin] = React.useMemo(() => {
+    const supWins =
+      (type === "HIGHER" && barRightValue < barLeftValue) ||
+      (type === "LOWER" && barRightValue > barLeftValue);
+    const usrWins = supWins === currentUserSupports;
+    return [usrWins, supWins];
+  }, [currentUserSupports, barRightValue, barLeftValue, type]);
+
   return !barLeftValue || !barRightValue ? null : (
     <Wrapper topPadding={barRightValue < barLeftValue}>
       <BarContent>
@@ -303,6 +317,7 @@ const BetStats = ({
             barRightValue={barRightValue}
             currentUserSupports={currentUserSupports}
             type={type}
+            supportersWin={supportersWin}
             highlight={highlight}
           />
           {hideDifference ? null : (
@@ -331,6 +346,8 @@ const BetStats = ({
               contradictorsAmount={contradictorsAmount}
               currentUserSupports={currentUserSupports}
               currentUserAmount={currentUserAmount}
+              highlight={highlight}
+              userWins={userWins}
             />
           )}
         </BarSection>
